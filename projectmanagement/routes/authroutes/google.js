@@ -6,7 +6,6 @@ module.exports = app => {
     app.get('/projectmanagement/oauth20/google/login', (req, res) => {
         var grant_type = 'authorization_code';
         var code = req.query.code;
-
         let redirect_url = `${serverkeys.serverAPI}/oauth20/google/login`
         var values = "grant_type=" + grant_type +
             "&code=" + code +
