@@ -1,4 +1,5 @@
-const keys = require('../keys/keys');
+const keys = require('../keys');
+const serverkeys = require('../../keys');
 const request = require("request");
 const parser = require('xml2json');
 const stripe = require("stripe")(keys.stripesecretkey);

@@ -1,4 +1,4 @@
-const keys = require('../keys/keys');
+const keys = require('../keys');
 const request = require("request");
 const parser = require('xml2json');
 const checkLogin = require('../functions/checkLogin');
@@ -8,9 +8,10 @@ const AWS = require('aws-sdk');
 const removeprofilephoto = require('../functions/removeprofilephoto')
 const updateSearchProviders = require('../functions/updatesearchproviders');
 const updateAllProjects = require('../functions/updateallprojects')
+const serverkeys = require('../../keys');
 const s3 = new AWS.S3({
-    accessKeyId: keys.AWS_ACCESS_KEY,
-    secretAccessKey: keys.AWS_SECRET_ACCESS_KEY
+    accessKeyId: serverkeys.AWS_ACCESS_KEY,
+    secretAccessKey: serverkeys.AWS_SECRET_ACCESS_KEY
 });
 
 module.exports = app => {
@@ -68,11 +69,11 @@ module.exports = app => {
                         providerid = response.valid;
                         req.session.user = { providerid: response.providerid }
 
-                        res.redirect(`${keys.rootclient}/${providerid}/myprojects`)
+                        res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
                     }
                     else {
 
-                        res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
                     }
 
                     //values returned from DB
@@ -172,10 +173,10 @@ module.exports = app => {
                     if (response.hasOwnProperty("providerid")) {
                         providerid = response.providerid;
                         req.session.user = { providerid }
-                        res.redirect(`${keys.rootclient}/${providerid}/myprojects`)
+                        res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
                     }
                     else {
-                        res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
                     }
 
                 }
@@ -305,12 +306,12 @@ module.exports = app => {
                     let response = parsedjson.response;
                     req.session.user = { providerid: response.providerid }
 
-                    res.redirect(`${keys.rootclient}/${response.providerid}/myprojects`)
+                    res.redirect(`${keys.clientAPI}/${response.providerid}/myprojects`)
                 }
                 else {
 
                     var message = encodeURIComponent("Error in Client Login ")
-                    res.redirect(keys.rootclient + "/login/" + message)
+                    res.redirect(keys.clientAPI + "/login/" + message)
 
                 }
 
@@ -447,7 +448,7 @@ module.exports = app => {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     req.session.destroy();
-                    res.redirect(keys.rootclient)
+                    res.redirect(keys.clientAPI)
 
                 }
 

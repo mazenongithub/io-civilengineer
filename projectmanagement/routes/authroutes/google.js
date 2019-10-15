@@ -1,4 +1,5 @@
-const keys = require('../../keys/keys');
+const keys = require('../../keys');
+const serverkeys = require('../../../keys');
 const request = require("request");
 const parser = require('xml2json');
 module.exports = app => {
@@ -6,12 +7,12 @@ module.exports = app => {
         var grant_type = 'authorization_code';
         var code = req.query.code;
 
-        let redirect_url = `${keys.rootserver}/oauth20/google/login`
+        let redirect_url = `${serverkeys.serverAPI}/oauth20/google/login`
         var values = "grant_type=" + grant_type +
             "&code=" + code +
             "&redirect_uri=" + encodeURIComponent(redirect_url) +
-            "&client_id=" + keys.googleclientid +
-            "&client_secret=" + keys.googleclientsecret
+            "&client_id=" + serverkeys.googleClientID +
+            "&client_secret=" + serverkeys.googleClientSecret
 
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
@@ -67,23 +68,23 @@ module.exports = app => {
                                             providerid = response.valid;
                                             req.session.user = { providerid: response.providerid }
 
-                                            res.redirect(`${keys.rootclient}/${providerid}/myprojects`)
+                                            res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
 
                                         }
 
                                         else if (response.hasOwnProperty("newuser")) {
                                             providerid = response.newuser;
                                             req.session.user = { providerid: response.providerid }
-                                            res.redirect(`${keys.rootclient}/${providerid}/completeprofile`)
+                                            res.redirect(`${keys.clientAPI}/${providerid}/completeprofile`)
                                         }
                                         else {
 
-                                            res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                                            res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
                                         }
 
                                     }
                                     else {
-                                        res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
                                     }
 
                                     //values returned from DB
@@ -94,7 +95,7 @@ module.exports = app => {
                         }
                         else {
 
-                            res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                            res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
 
                         }
                     })
@@ -102,7 +103,7 @@ module.exports = app => {
 
                 }
                 else {
-                    res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                    res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
 
                 }
 

@@ -1,7 +1,8 @@
 const request = require("request");
 const parser = require('xml2json');
-const keys = require('../keys/keys');
-const stripe = require("stripe")(keys.STRIPE_SECRET);
+const keys = require('../keys');
+const serverkeys = require('../../keys')
+const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const validatestripepayment = require('../middlewares/validatestripepayment');
 const updateActualMaterial = require('../middlewares/updateActualMaterial');
 module.exports = app => {

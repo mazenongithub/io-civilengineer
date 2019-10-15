@@ -1,6 +1,7 @@
-const keys = require('../keys/keys');
+const keys = require('../keys');
 const request = require("request");
 const parser = require('xml2json');
+const serverkeys = require('../../keys')
 const updateUserResponse = require('../middlewares/updateUserResponse');
 module.exports = app => {
     app.get('/geotechical/oauth20/yahoo/login', (req, res) => {
@@ -8,9 +9,9 @@ module.exports = app => {
         let code = req.query.code;
         let values = "grant_type=" + grant_type +
             "&code=" + code +
-            "&redirect_uri=" + encodeURIComponent(`${keys.serverAPI}/oauth20/yahoo/login`) +
-            "&client_id=" + keys.yahooClientID +
-            "&client_secret=" + keys.yahooClientSecret
+            "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/oauth20/yahoo/login`) +
+            "&client_id=" + serverkeys.yahooClientID +
+            "&client_secret=" + serverkeys.yahooClientSecret
         let clientid = "";
         if (req.query.state) {
             clientid = req.query.state;
@@ -86,7 +87,7 @@ module.exports = app => {
 
                     }
                     else {
-                        res.redirect(`${keys.rootclient}/client/login/Invalid login please try again`)
+                        res.redirect(`${keys.clientAPI}/client/login/Invalid login please try again`)
 
                     }
                 }

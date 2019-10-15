@@ -1,6 +1,7 @@
-const keys = require('../keys/keys');
+const keys = require('../keys');
 const request = require("request");
 const parser = require('xml2json');
+const serverkeys = require('../../keys');
 const updateUserResponse = require('../middlewares/updateUserResponse');
 module.exports = app => {
     app.get('/geotechnical/oauth20/google/login', (req, res) => {
@@ -8,9 +9,9 @@ module.exports = app => {
         let code = req.query.code;
         let values = "grant_type=" + grant_type +
             "&code=" + code +
-            "&redirect_uri=" + encodeURIComponent(`${keys.serverAPI}/oauth20/google/login`) +
-            "&client_id=" + keys.googleClientID +
-            "&client_secret=" + keys.googleClientSecret
+            "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/oauth20/google/login`) +
+            "&client_id=" + serverkeys.googleClientID +
+            "&client_secret=" + serverkeys.googleClientSecret
 
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
@@ -93,7 +94,7 @@ module.exports = app => {
                         }
                         else {
 
-                            res.redirect(`${keys.rootclient}/client/login/Invalid login please try again`)
+                            res.redirect(`${keys.clientAPI}/client/login/Invalid login please try again`)
 
                         }
                     })
@@ -101,7 +102,7 @@ module.exports = app => {
 
                 }
                 else {
-                    res.redirect(`${keys.rootclient}/client/login/Invalid login please try again`)
+                    res.redirect(`${keys.clientAPI}/client/login/Invalid login please try again`)
 
                 }
 

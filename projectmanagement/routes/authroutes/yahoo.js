@@ -1,4 +1,4 @@
-const keys = require('../../keys/keys');
+const keys = require('../../keys');
 const request = require("request");
 const parser = require('xml2json');
 

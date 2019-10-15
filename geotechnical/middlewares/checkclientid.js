@@ -1,6 +1,6 @@
 const request = require("request");
 const parser = require('xml2json');
-const keys = require('../keys/keys');
+const keys = require('../keys');
 module.exports = (req, res, next) => {;
     let clientid = req.body.clientid
     let values = { clientid }
