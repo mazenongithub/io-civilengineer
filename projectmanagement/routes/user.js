@@ -595,7 +595,7 @@ module.exports = app => {
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
                     const url = `${keys.secretAPI}/loadmyprojects.php`;
-                    console.log(url)
+
                     request.post({
                             url,
                             form: values,
@@ -614,7 +614,7 @@ module.exports = app => {
                             }
                             else {
 
-                                const errorMessage = `There was an error requesting the projects  ${keys.pr}`
+                                const errorMessage = `There was an error requesting the projects  ${url}`
                                 res.send({ errorMessage });
                             }
 
