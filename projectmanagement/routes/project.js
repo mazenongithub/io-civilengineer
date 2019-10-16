@@ -223,10 +223,10 @@ module.exports = app => {
     app.get('/projectmanagement/:providerid/projects/loadmyproject', checkLogin, (req, res) => {
         let providerid = req.params.providerid;
         let values = { providerid }
-
+        const url = `${keys.secretapi}/loadmyprojects.php`;
 
         request.post({
-                url: `${keys.secretapi}/loadmyprojects.php`,
+                url,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ module.exports = app => {
                 }
                 else {
 
-                    const errorMessage = "There was an error requesting the projects "
+                    const errorMessage = `There was an error requesting the projects ${url} `
                     res.send({ errorMessage });
                 }
 
