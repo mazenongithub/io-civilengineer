@@ -588,6 +588,7 @@ module.exports = app => {
 
     })
     app.get('/projectmanagement/checkuser', (req, res) => {
+        console.log("keys ", keys)
         if (req.hasOwnProperty("session")) {
             if (req.session.hasOwnProperty("user")) {
 

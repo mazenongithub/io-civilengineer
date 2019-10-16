@@ -14,7 +14,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/projects/:projectid/insertinvoice', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/insertinvoice.php`,
+                url: `${keys.secretAPI}/insertinvoice.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/projects/:projectid/insertproposal', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/insertproposal.php`,
+                url: `${keys.secretAPI}/insertproposal.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/projects/:projectid/saveallprojects', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/saveallprojects.php`,
+                url: `${keys.secretAPI}/saveallprojects.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/goandhireme', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/saveallprovider.php`,
+                url: `${keys.secretAPI}/saveallprovider.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/projects/:projectid/providerendpoint', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/providerendpoint.php`,
+                url: `${keys.secretAPI}/providerendpoint.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/projects/insertmyproject', checkLogin, validatenewprojectid, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/insertmyproject.php`,
+                url: `${keys.secretAPI}/insertmyproject.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -196,7 +196,7 @@ module.exports = app => {
         }
 
         request.post({
-                url: `${keys.secretapi}/deletemyproject.php`,
+                url: `${keys.secretAPI}/deletemyproject.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ module.exports = app => {
     app.get('/projectmanagement/:providerid/projects/loadmyproject', checkLogin, (req, res) => {
         let providerid = req.params.providerid;
         let values = { providerid }
-        const url = `${keys.secretapi}/loadmyprojects.php`;
+        const url = `${keys.secretAPI}/loadmyprojects.php`;
 
         request.post({
                 url,
@@ -258,7 +258,7 @@ module.exports = app => {
         let values = {}
 
         request.post({
-                url: `${keys.secretapi}/loadallproviders.php`,
+                url: `${keys.secretAPI}/loadallproviders.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
