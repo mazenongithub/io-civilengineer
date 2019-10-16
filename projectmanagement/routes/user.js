@@ -594,8 +594,10 @@ module.exports = app => {
                 if (req.session.user.hasOwnProperty("providerid")) {
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
+                    const url = `${keys.secretapi}/loadmyprojects.php`;
+                    console.log(url)
                     request.post({
-                            url: `${keys.secretapi}/loadmyprojects.php`,
+                            url,
                             form: values,
                             headers: {
                                 'Content-Type': 'application/json',
@@ -612,7 +614,7 @@ module.exports = app => {
                             }
                             else {
 
-                                const errorMessage = "There was an error requesting the projects "
+                                const errorMessage = `There was an error requesting the projects  ${keys.pr}`
                                 res.send({ errorMessage });
                             }
 
