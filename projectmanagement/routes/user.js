@@ -51,7 +51,7 @@ module.exports = app => {
         // Store hash in your password DB.
 
         request.post({
-                url: `${keys.secretapi}/login.php`,
+                url: `${keys.secretAPI}/login.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ module.exports = app => {
 
         // Store hash in your password DB
         request.post({
-                url: `${keys.secretapi}/login.php`,
+                url: `${keys.secretAPI}/login.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ module.exports = app => {
         let commission = req.params.providerid;
         let values = { providerid, commission }
         request.post({
-                url: `${keys.secretapi}/updatecommission.php`,
+                url: `${keys.secretAPI}/updatecommission.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ module.exports = app => {
     app.post('/projectmanagement/registernewuser', (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/register.php`,
+                url: `${keys.secretAPI}/register.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ module.exports = app => {
     app.post('/projectmanagement/registernewuser/async', (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/register.php`,
+                url: `${keys.secretAPI}/register.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ module.exports = app => {
     app.post('/projectmanagement/:providerid/updateuserpassword', checkLogin, (req, res) => {
 
         request.post({
-                url: `${keys.secretapi}/updateuserpassword.php`,
+                url: `${keys.secretAPI}/updateuserpassword.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -256,7 +256,7 @@ module.exports = app => {
         }
 
         request.post({
-                url: `${keys.secretapi}/updateuserprofile.php`,
+                url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ module.exports = app => {
         };
         values.providerid = providerid;
         request.post({
-                url: `${keys.secretapi}/updateuserprofile.php`,
+                url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -325,7 +325,7 @@ module.exports = app => {
         let values = { providerid }
 
         request.post({
-                url: `${keys.secretapi}/checkproviderid.php`,
+                url: `${keys.secretAPI}/checkproviderid.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -350,7 +350,7 @@ module.exports = app => {
         let values = { providerid }
 
         request.post({
-                url: `${keys.secretapi}/checkcommission.php`,
+                url: `${keys.secretAPI}/checkcommission.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -375,7 +375,7 @@ module.exports = app => {
         let values = { projectid }
 
         request.post({
-                url: `${keys.secretapi}/checknewprojectid.php`,
+                url: `${keys.secretAPI}/checknewprojectid.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -406,7 +406,7 @@ module.exports = app => {
         let values = { emailaddress, providerid }
 
         request.post({
-                url: `${keys.secretapi}/checkemailaddress.php`,
+                url: `${keys.secretAPI}/checkemailaddress.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -436,7 +436,7 @@ module.exports = app => {
 
         let values = { providerid }
         request.post({
-                url: `${keys.secretapi}/logout.php`,
+                url: `${keys.secretAPI}/logout.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -467,7 +467,7 @@ module.exports = app => {
         }
         //let values = { providerid }
         //request.post({
-        //        url: `${keys.secretapi}/logout.php`,
+        //        url: `${keys.secretAPI}/logout.php`,
         //        form: values,
         //        headers: {
         //            'Content-Type': 'application/json',
@@ -534,7 +534,7 @@ module.exports = app => {
                 let values = { providerid, profileurl: data.Location }
 
                 request.post({
-                        url: `${keys.secretapi}/updateprofileurl.php`,
+                        url: `${keys.secretAPI}/updateprofileurl.php`,
                         form: values,
                         headers: {
                             'Permission': `${keys.grantAuthorization}`
@@ -565,7 +565,7 @@ module.exports = app => {
             //};
 
             //request.post({
-            //        url: `${keys.secretapi}/uploadprofilephoto.php`,
+            //        url: `${keys.secretAPI}/uploadprofilephoto.php`,
             //        formData,
             //        headers: {
             //            'Permission': `${keys.grantAuthorization}`
@@ -594,7 +594,7 @@ module.exports = app => {
                 if (req.session.user.hasOwnProperty("providerid")) {
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
-                    const url = `${keys.secretapi}/loadmyprojects.php`;
+                    const url = `${keys.secretAPI}/loadmyprojects.php`;
                     console.log(url)
                     request.post({
                             url,
