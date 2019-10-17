@@ -1,4 +1,9 @@
 module.exports = app => {
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "https://projectmanagement.civilengineer.io");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        next();
+    });
 
     require('./routes/paymentrouter')(app);
     require('./routes/project')(app);
