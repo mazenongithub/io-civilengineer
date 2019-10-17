@@ -69,7 +69,7 @@ module.exports = app => {
 
                                             providerid = response.valid;
                                             req.session.user = { providerid: response.providerid }
-                                            console.log("MYSESSION USER", req.session.user)
+
                                             res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
 
                                         }
