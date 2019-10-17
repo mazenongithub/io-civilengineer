@@ -36,7 +36,7 @@ module.exports = app => {
 
                         }
                         request.post({
-                                url: `${keys.secretapi}/loginclient.php`,
+                                url: `${keys.secretAPI}/loginclient.php`,
                                 form: values,
                                 headers: {
                                     'Content-Type': 'application/json',
