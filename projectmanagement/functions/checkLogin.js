@@ -1,5 +1,6 @@
 module.exports = (req, res, next) => {
     let providerid = req.params.providerid;
+    console.log("CHECK LOGIN MIDDLE WARE", req.session, providerid)
     if (providerid === "rickjones" || providerid === "stevenatwater") {
         return next();
     }
