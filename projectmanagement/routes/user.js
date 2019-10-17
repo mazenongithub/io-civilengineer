@@ -497,7 +497,7 @@ module.exports = app => {
     })
 
     app.post('/projectmanagement/:providerid/nativefileupload', (req, res) => {
-        console.log(req.file)
+
         res.send({ message: 'Hello React Native' })
     })
 
@@ -588,7 +588,7 @@ module.exports = app => {
 
     })
     app.get('/projectmanagement/checkuser', (req, res) => {
-        console.log("keys ", keys)
+
         if (req.hasOwnProperty("session")) {
             if (req.session.hasOwnProperty("user")) {
 
