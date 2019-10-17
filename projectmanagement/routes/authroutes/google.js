@@ -10,8 +10,8 @@ module.exports = app => {
         var values = "grant_type=" + grant_type +
             "&code=" + code +
             "&redirect_uri=" + encodeURIComponent(redirect_url) +
-            "&client_id=" + serverkeys.googleClientID +
-            "&client_secret=" + serverkeys.googleClientSecret
+            "&client_id=" + serverkeys.GOOGLEID +
+            "&client_secret=" + serverkeys.GOOGLE_SECRET
         console.log("VALUES", values)
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
