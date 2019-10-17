@@ -48,7 +48,7 @@ module.exports = app => {
                                 lastname: body.family_name,
                                 emailaddress: body.email
                             }
-                            console.log("google", values, keys.secretAPI)
+
 
                             request.post({
                                     url: `${keys.secretAPI}/loginclient.php`,
@@ -63,6 +63,7 @@ module.exports = app => {
                                         var json = parser.toJson(body);
                                         var parsedjson = JSON.parse(json)
                                         let response = parsedjson.response;
+                                        console.log("RESPONSE", response)
                                         let providerid = "";
                                         if (response.hasOwnProperty("valid")) {
 
