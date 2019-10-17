@@ -12,10 +12,7 @@ const keys = require('./keys');
 app.use(session({
         secret: 'some string',
         cookie: {
-            maxAge: 1000 * 60 * 60 * 30,
-            secure: false,
-            httpOnly: false,
-            sameSite: 'none'
+            maxAge: 1000 * 60 * 60 * 30
         }
     }
 
