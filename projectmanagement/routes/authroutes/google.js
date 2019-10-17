@@ -63,13 +63,13 @@ module.exports = app => {
                                         var json = parser.toJson(body);
                                         var parsedjson = JSON.parse(json)
                                         let response = parsedjson.response;
-                                        console.log("RESPONSE", response)
+
                                         let providerid = "";
                                         if (response.hasOwnProperty("valid")) {
 
                                             providerid = response.valid;
                                             req.session.user = { providerid: response.providerid }
-
+                                            console.log("MYSESSION USER", req.session.user)
                                             res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
 
                                         }
