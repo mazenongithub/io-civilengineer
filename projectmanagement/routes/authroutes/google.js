@@ -12,7 +12,7 @@ module.exports = app => {
             "&redirect_uri=" + encodeURIComponent(redirect_url) +
             "&client_id=" + serverkeys.googleClientID +
             "&client_secret=" + serverkeys.googleClientSecret
-
+        console.log("VALUES", values)
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
                 form: values,
@@ -28,6 +28,7 @@ module.exports = app => {
                     var access_token = body.access_token;
 
                     var auth = "Bearer " + access_token;
+                    console.log('auth', auth)
                     request({
                         url: 'https://www.googleapis.com/oauth2/v2/userinfo',
                         headers: {
