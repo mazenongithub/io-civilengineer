@@ -10,8 +10,8 @@ module.exports = app => {
         let values = "grant_type=" + grant_type +
             "&code=" + code +
             "&redirect_uri=" + encodeURIComponent(`${serverkeys.SERVER_API}/projectmanagement/oauth20/yahoo/login`) +
-            "&client_id=" + keys.yahooClientID +
-            "&client_secret=" + keys.yahooClientSecret
+            "&client_id=" + serverkeys.YAHOOID +
+            "&client_secret=" + serverkeys.YAHOO_SECRET
         let clientid = "";
         if (req.query.state) {
             clientid = req.query.state;
