@@ -7,7 +7,7 @@ var app = express();
 var session = require('express-session')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors())
+
 const keys = require('./keys');
 app.use(session({
         secret: 'some string',
