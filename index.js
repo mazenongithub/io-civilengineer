@@ -9,7 +9,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors())
 const keys = require('./keys');
-app.use(session({ secret: 'some string', cookie: { maxAge: 1000 * 60 * 60 * 30 } }));
+app.use(session({
+        secret: 'some string',
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 30,
+            secure: false,
+            httpOnly: false
+        }
+    }
+
+));
 require('./projectmanagement')(app);
 require('./geotechnical')(app);
 app.get('/', (req, res) => {
