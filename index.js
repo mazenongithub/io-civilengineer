@@ -7,7 +7,7 @@ var app = express();
 var session = require('express-session')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(cors())
 const keys = require('./keys');
 app.use(session({
         secret: 'some string',
@@ -17,11 +17,7 @@ app.use(session({
     }
 
 ));
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://projectmanagement.civilengineer.io");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
+
 require('./projectmanagement')(app);
 require('./geotechnical')(app);
 app.get('/', (req, res) => {
