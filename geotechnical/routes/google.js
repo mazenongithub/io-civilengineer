@@ -9,10 +9,10 @@ module.exports = app => {
         let code = req.query.code;
         let values = "grant_type=" + grant_type +
             "&code=" + code +
-            "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/geotechnical/oauth20/google/login`) +
-            "&client_id=" + serverkeys.googleClientID +
-            "&client_secret=" + serverkeys.googleClientSecret
-        console.log("GOOGLE", values)
+            "&redirect_uri=" + encodeURIComponent(`${serverkeys.SERVER_API}/geotechnical/oauth20/google/login`) +
+            "&client_id=" + serverkeys.GOOGLEID +
+            "&client_secret=" + serverkeys.GOOGLE_SECRET
+
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
                 form: values,
