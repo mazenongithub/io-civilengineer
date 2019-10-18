@@ -9,7 +9,7 @@ module.exports = app => {
         let code = req.query.code;
         let values = "grant_type=" + grant_type +
             "&code=" + code +
-            "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/oauth20/google/login`) +
+            "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/geotechnical/oauth20/google/login`) +
             "&client_id=" + serverkeys.googleClientID +
             "&client_secret=" + serverkeys.googleClientSecret
 
@@ -77,7 +77,7 @@ module.exports = app => {
                                             }
                                         }
                                         else {
-                                           
+
                                             res.redirect(`${keys.clientAPI}/client/login/Invalid login please try again`)
                                         }
 
@@ -85,7 +85,7 @@ module.exports = app => {
 
                                     }
                                     else {
-                                        
+
                                         res.redirect(`${keys.clientAPI}/client/login/Invalid login please try again`)
                                     }
 
