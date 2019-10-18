@@ -2,13 +2,18 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
 const parser = require('xml2json');
-const cors = require('cors')
 var app = express();
 var session = require('express-session')
+const keys = require('./keys');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors())
-const keys = require('./keys');
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", keys.clientAPI);
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Credentials", "true")
+    next();
+});
+
 app.use(session({
         secret: 'some string',
         cookie: {
