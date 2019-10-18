@@ -7,5 +7,5 @@ module.exports = {
     YAHOO_SECRET: process.env.YAHOO_SECRET,
     STRIPE_CONNECT: process.env.STRIPE_CONNECT,
     STRIPE_SECRET: process.env.STRIPE_SECRET,
-    SERVER_API: process.env.SERVER_API,
+    SERVER_API: process.env.SERVER_API
 }

@@ -396,7 +396,7 @@ module.exports = app => {
 
             }) // end request
     })
-    app.get("/geotechnical/clientlogout", (req, res) => {
+    app.get("/geotechnical/:clientid/clientlogout", checkLogin, (req, res) => {
         if (req.hasOwnProperty("session")) {
             if (req.session.hasOwnProperty(("user"))) {
                 if (req.session.user.hasOwnProperty("clientid")) {
