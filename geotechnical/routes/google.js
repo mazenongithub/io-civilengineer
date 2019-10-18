@@ -12,7 +12,7 @@ module.exports = app => {
             "&redirect_uri=" + encodeURIComponent(`${serverkeys.serverAPI}/geotechnical/oauth20/google/login`) +
             "&client_id=" + serverkeys.googleClientID +
             "&client_secret=" + serverkeys.googleClientSecret
-
+        console.log("GOOGLE", values)
         request.post({
                 url: 'https://accounts.google.com/o/oauth2/token',
                 form: values,
