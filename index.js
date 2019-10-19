@@ -5,10 +5,22 @@ const parser = require('xml2json');
 var app = express();
 var session = require('express-session')
 const keys = require('./keys');
+const cors = require('cors')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
+const whitelist = ['http://pm.civilengineer.io', 'http://geotechnical.civilengineer.io']
+var corsOptions = {
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        }
+        else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+app.use(cors(corsOptions))
 app.use(session({
         secret: 'some string',
         cookie: {
