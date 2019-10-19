@@ -10,15 +10,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const cors = {
-    origin: ["http://pm.civilengineer.io", "http://geotechnical.civilengineer.io"],
-    default: "http://pm.civilengineer.io"
+    origin: ["http://geotechnical.civilengineer.io", "http://pm.civilengineer.io"]
 }
 
+
+
 app.all('*', function(req, res, next) {
-    var origin = cors.origin.indexOf(req.header('host').toLowerCase()) > -1 ? req.headers.origin : cors.default;
-    res.header("Access-Control-Allow-Origin", origin);
+    let origin = req.headers.origin;
+    if (cors.origin.indexOf(origin) >= 0) {
+        res.header("Access-Control-Allow-Origin", origin);
+    }
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header("Access-Control-Allow-Credentials", "true")
     next();
 });
 app.use(session({
