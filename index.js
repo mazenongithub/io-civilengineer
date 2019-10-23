@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const cors = {
-    origin: ["http://geotechnical.civilengineer.io", "http://pm.civilengineer.io"]
+    origin: ["http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000"]
 }
 
 

@@ -290,6 +290,7 @@ module.exports = app => {
             }
         };
         values.providerid = providerid;
+        console.log("UPDATEUSERPROFILE", values)
         request.post({
                 url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: values,

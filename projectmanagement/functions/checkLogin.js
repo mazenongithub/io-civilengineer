@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
     let providerid = req.params.providerid;
-    console.log("CHECK LOGIN MIDDLE WARE", req.session, providerid)
+
     if (providerid === "rickjones" || providerid === "stevenatwater") {
         return next();
     }
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
                     return next();
                 }
                 else {
-                    console.log("14", "MIDDLEWARE REJJECTION")
+                
                     return res.send({ errorMessage: `You do not have permission to access this resource ${req.params.providerid} ` });
                 }
             }
