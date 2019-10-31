@@ -35,7 +35,6 @@ app.use(session({
 
 require('./projectmanagement')(app);
 require('./geotechnical')(app);
-require('./rentmeroom')(app)
 app.get('/', (req, res) => {
     res.send({ response: "Hello New App" })
 })
