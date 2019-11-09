@@ -33,6 +33,7 @@ app.use(session({
 
 ));
 
+require('./construction')(app);
 require('./projectmanagement')(app);
 require('./geotechnical')(app);
 app.get('/', (req, res) => {
