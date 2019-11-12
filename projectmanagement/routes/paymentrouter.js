@@ -121,8 +121,6 @@ module.exports = app => {
 
     })
 
-
-
     app.post('/projectmanagement/:providerid/projects/:projectid/invoicepayment/:invoiceid', getstripefrominvoice, (req, res) => {
         let providerid = req.params.providerid;
         let invoiceid = req.params.invoiceid;
@@ -203,10 +201,8 @@ module.exports = app => {
 
             })
 
-
-
-
     })
+
 
     app.get('/projectmanagement/:providerid/stripe/:pass', (req, res) => {
 
