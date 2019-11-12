@@ -73,7 +73,7 @@ module.exports = app => {
                             let values = { amount, invoiceid, projectid, providerid, description }
 
                             request.post({
-                                    url: `${keys.secretapi}/invoicepayment.php`,
+                                    url: `${keys.secretAPI}/invoicepayment.php`,
                                     form: values,
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ module.exports = app => {
                     let values = { amount, invoiceid, projectid, providerid, description }
 
                     request.post({
-                            url: `${keys.secretapi}/invoicepayment.php`,
+                            url: `${keys.secretAPI}/invoicepayment.php`,
                             form: values,
                             headers: {
                                 'Content-Type': 'application/json',
@@ -210,8 +210,10 @@ module.exports = app => {
         let pass = req.params.pass;
         let values = { providerid, pass }
 
+        const url = `${keys.secretAPI}/loginnative.php`
+
         request.post({
-                url: `${keys.secretapi}/loginnative.php`,
+                url,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -230,12 +232,12 @@ module.exports = app => {
                         req.session.user = { providerid: response.providerid }
                         let providerid = response.providerid;
 
-                        let stripe_redirect = `${keys.rootserver}/projectmanagement/stripe/updatepaymentid`
+                        let stripe_redirect = `${serverkeys.SERVER_API}/projectmanagement/stripe/updatepaymentid`
                         stripe_redirect = encodeURIComponent(stripe_redirect);
 
                         //redirect_uri=http://webdevbootcamp-mazenoncloud9.c9users.io:8081/api/stripe/updatepaymentid&response_type=code&client_id=ca_ETdAZ69zcymVDO45aRGOnspAT9xHuv43&scope=read_write
-                        const stripe = `https://connect.stripe.com/oauth/authorize?response_type=code&redirect_uri=${stripe_redirect}&client_id=${keys.stripeconnect}&state=${providerid}&stripe_user[business_type]=company&scope=read_write`
-
+                        const stripe = `https://connect.stripe.com/oauth/authorize?response_type=code&redirect_uri=${stripe_redirect}&client_id=${serverkeys.STRIPE_CONNECT}&state=${providerid}&stripe_user[business_type]=company&scope=read_write`
+                        console.log(stripe)
                         res.redirect(stripe)
 
 
@@ -284,7 +286,7 @@ module.exports = app => {
                     let values = { stripe: parsedjson.stripe_user_id, providerid }
 
                     request.post({
-                            url: `${keys.secretapi}/updatestripeprofile.php`,
+                            url: `${keys.secretAPI}/updatestripeprofile.php`,
                             form: values,
                             headers: {
                                 'Content-Type': 'application/json',
