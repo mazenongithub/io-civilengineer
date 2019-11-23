@@ -7,7 +7,7 @@ const checkLogin = require('../../functions/checkLogin');
 module.exports = app => {
 
     app.post('/projectmanagement/:providerid/nativeclientregister', checkLogin, (req, res) => {
-
+        console.log(req.body)
         request.post({
                 url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: req.body,
@@ -44,6 +44,9 @@ module.exports = app => {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
+                    if (response.hasOwnProperty("providerid")) {
+                        req.session.user = { providerid: response.providerid }
+                    }
                     response = updateAllProjects(response);
                     res.send(response)
 
