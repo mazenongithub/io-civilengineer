@@ -290,7 +290,7 @@ module.exports = app => {
             }
         };
         values.providerid = providerid;
-        console.log("UPDATEUSERPROFILE", values)
+
         request.post({
                 url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: values,
@@ -459,13 +459,19 @@ module.exports = app => {
 
     app.get("/projectmanagement/:providerid/logout", (req, res) => {
         let providerid = req.params.providerid;
-        req.session.destroy();
-        if (!req.session) {
-            res.send({ logout: providerid })
-        }
-        else {
-            res.send(req.session)
-        }
+
+        req.session.destroy(function(err) {
+            if (err) {
+                console.log(err);
+                res.send({ error: err })
+            }
+            else {
+
+
+                res.send({ logout: providerid })
+            }
+        });
+
         //let values = { providerid }
         //request.post({
         //        url: `${keys.secretAPI}/logout.php`,
@@ -588,12 +594,14 @@ module.exports = app => {
 
 
     })
+
     app.get('/projectmanagement/checkuser', (req, res) => {
 
         if (req.hasOwnProperty("session")) {
             if (req.session.hasOwnProperty("user")) {
 
                 if (req.session.user.hasOwnProperty("providerid")) {
+                    console.log(`User Provider ID ${req.session.user.providerid} is still logged in`)
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
                     const url = `${keys.secretAPI}/loadmyprojects.php`;

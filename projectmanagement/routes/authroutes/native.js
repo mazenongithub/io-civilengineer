@@ -7,7 +7,7 @@ const checkLogin = require('../../functions/checkLogin');
 module.exports = app => {
 
     app.post('/projectmanagement/:providerid/nativeclientregister', checkLogin, (req, res) => {
-        console.log(req.body)
+
         request.post({
                 url: `${keys.secretAPI}/updateuserprofile.php`,
                 form: req.body,
@@ -30,7 +30,7 @@ module.exports = app => {
 
     })
     app.post('/projectmanagement/nativelogin', (req, res) => {
-        //let values = { client: 'apple', clientid: 'udderedssdd8444.u', firstname: 'Mazen', lastname: 'Khenaisser', emailaddress: 'mazen@civilengineer.io' }
+
         request.post({
                 url: `${keys.secretAPI}/loginclient.php`,
                 form: req.body,
