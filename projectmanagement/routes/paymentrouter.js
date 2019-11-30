@@ -2,7 +2,7 @@ const keys = require('../keys');
 const serverkeys = require('../../keys');
 const request = require("request");
 const parser = require('xml2json');
-const stripe = require("stripe")(keys.stripesecretkey);
+const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const getstripefrominvoice = require('../functions/getstripefrominvoice');
 const updateAllProjects = require('../functions/updateallprojects')
 const checkLogin = require('../functions/checkLogin');
@@ -10,114 +10,89 @@ const checkLogin = require('../functions/checkLogin');
 module.exports = app => {
 
     app.post('/projectmanagement/:providerid/projects/:projectid/createcharge/:invoiceid', getstripefrominvoice, (req, res) => {
-        const number = req.body.number;
-        const exp_month = req.body.exp_month;
-        const exp_year = req.body.exp_year;
-        const cvc = req.body.cvc;
 
-        stripe.tokens.create({
-            card: {
-                number,
-                exp_month,
-                exp_year,
-                cvc,
-            }
-        }, function(err, token) {
-            // asynchronously called
+        let providerid = req.params.providerid;
+        let invoiceid = req.params.invoiceid;
+        let projectid = req.params.projectid;
+        let stripe_id = req.body.stripe;
+        let commission = req.body.commission;
+        let source = req.body.token
+        let amount = req.body.amount;
+        let application_fee = Math.round((amount * (.058)) + 60)
 
-            if (!err) {
-                let providerid = req.params.providerid;
-                let invoiceid = req.params.invoiceid;
-                let projectid = req.params.projectid;
-                let stripe_id = req.body.stripe;
-                let commission = req.body.commission;
-                let source = token.id
-                let amount = req.body.amount;
-                let application_fee = Math.round((amount * (.058)) + 60)
-                console.log(providerid, invoiceid, projectid, stripe_id, commission, source, amount)
+        let chargeobject = {
+            amount,
+            currency: "usd",
+            description: "Payment Made for Invoice ID " + invoiceid,
+            source,
+            statement_descriptor: 'civilengineer.io',
+            destination: {
+                amount: (amount - application_fee),
+                account: stripe_id
+            },
+            transfer_group: invoiceid
+        }
+        console.log(chargeobject)
+        stripe.charges.create(chargeobject,
+            function(err, charge) {
+                if (charge) {
 
-                stripe.charges.create({
-                        amount,
-                        currency: "usd",
-                        description: "Payment Made for Invoice ID " + invoiceid,
-                        source,
-                        statement_descriptor: 'app.gohireme.com',
-                        destination: {
-                            amount: (amount - application_fee),
-                            account: stripe_id
-                        },
-                        transfer_group: invoiceid
-                    },
-                    function(err, charge) {
-                        if (charge) {
+                    let charge_id = charge.id;
+                    let amount = charge.amount;
+                    let created = charge.created;
+                    let captured = charge.captured;
+                    let status = charge.status;
+                    let description = charge.description
+                    if (commission) {
+                        let award_commission = Math.round(amount * .02);
+                        stripe.transfers.create({
+                            amount: award_commission,
+                            currency: "usd",
+                            destination: commission,
+                            transfer_group: invoiceid,
+                        }).then(function(transfer) {
+                            //insert transfer id
 
-                            let charge_id = charge.id;
-                            let amount = charge.amount;
-                            let created = charge.created;
-                            let captured = charge.captured;
-                            let status = charge.status;
-                            let description = charge.description
-                            if (commission) {
-                                let award_commission = Math.round(amount * .02);
-                                stripe.transfers.create({
-                                    amount: award_commission,
-                                    currency: "usd",
-                                    destination: commission,
-                                    transfer_group: invoiceid,
-                                }).then(function(transfer) {
-                                    //insert transfer id
+                        });
 
-                                });
+                    }
+                    let values = { amount, invoiceid, projectid, providerid, description }
 
+                    request.post({
+                            url: `${keys.secretAPI}/invoicepayment.php`,
+                            form: values,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Permission': `${keys.grantAuthorization}`
                             }
-                            let values = { amount, invoiceid, projectid, providerid, description }
 
-                            request.post({
-                                    url: `${keys.secretAPI}/invoicepayment.php`,
-                                    form: values,
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Permission': `${keys.grantAuthorization}`
-                                    }
-
-                                },
-                                function(err, httpResponse, body) {
-                                    if (!err) {
-                                        var json = parser.toJson(body);
-                                        var parsedjson = JSON.parse(json);
-                                        let response = parsedjson.response;
-                                        response = updateAllProjects(response)
-                                        res.send(response);
-                                    }
-                                    else {
+                        },
+                        function(err, httpResponse, body) {
+                            if (!err) {
+                                var json = parser.toJson(body);
+                                var parsedjson = JSON.parse(json);
+                                let response = parsedjson.response;
+                                response = updateAllProjects(response)
+                                res.send(response);
+                            }
+                            else {
 
 
-                                        err = JSON.parse(err)
-                                        res.send({ errorMessage: "There was a server error making the request" });
-                                    }
+                                err = JSON.parse(err)
+                                res.send({ errorMessage: "There was a server error making the request" });
+                            }
 
-                                }) // end request
+                        }) // end request
 
-                        }
-                        else {
+                }
+                else {
 
-                            res.send({ errorMessage: " Error response from stripe could not capture charge transaction " })
-                        }
-
-
-                    })
+                    res.send({ errorMessage: " Error response from stripe could not capture charge transaction " })
+                }
 
 
+            })
 
-
-            }
-            else {
-                console.log(err)
-                res.send({ errorMessage: err.raw.message })
-            }
-
-
-        });
 
     })
 
