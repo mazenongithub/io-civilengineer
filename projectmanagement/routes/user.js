@@ -601,7 +601,7 @@ module.exports = app => {
             if (req.session.hasOwnProperty("user")) {
 
                 if (req.session.user.hasOwnProperty("providerid")) {
-                    console.log(`User Provider ID ${req.session.user.providerid} is still logged in`)
+
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
                     const url = `${keys.secretAPI}/loadmyprojects.php`;

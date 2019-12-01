@@ -47,6 +47,7 @@ module.exports = app => {
                     if (response.hasOwnProperty("providerid")) {
                         req.session.user = { providerid: response.providerid }
                     }
+
                     response = updateAllProjects(response);
                     res.send(response)
 
