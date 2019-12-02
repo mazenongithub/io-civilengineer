@@ -46,6 +46,60 @@ module.exports = app => {
     };
     app.use(multer({ fileFilter }).single('profilephoto'));
 
+    app.post('/projectmanagement/webclient/loginuser', (req, res) => {
+        const { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl } = req.body;
+        const values = { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl };
+        request.post({
+                url: `${keys.secretAPI}/loginclient.php`,
+                form: values,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (body) {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+
+                    let providerid = "";
+                    if (response.hasOwnProperty("valid")) {
+
+                        providerid = response.valid;
+                        req.session.user = { providerid: response.providerid }
+
+                        res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
+
+                    }
+
+                    else if (response.hasOwnProperty("newuser")) {
+                        providerid = response.newuser;
+                        req.session.user = { providerid: response.providerid }
+                        res.redirect(`${keys.clientAPI}/${providerid}/completeprofile`)
+                    }
+                    else {
+
+                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
+                    }
+
+                }
+                else {
+                    res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
+                }
+
+                //values returned from DB
+
+
+            }) // end request
+        // Store hash in your password DB.
+
+
+
+
+    })
+
+
     app.post('/projectmanagement/loginuser', (req, res) => {
 
         // Store hash in your password DB.

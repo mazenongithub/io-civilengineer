@@ -6,7 +6,7 @@ module.exports = app => {
     //    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     //    next();
     //});
-   
+
     require('./routes/paymentrouter')(app);
     require('./routes/project')(app);
     require('./routes/user')(app);
