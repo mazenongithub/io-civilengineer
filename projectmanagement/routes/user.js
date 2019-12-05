@@ -449,20 +449,13 @@ module.exports = app => {
 
     })
 
-    app.get("/projectmanagement/user/checkemailaddress/:emailaddress", (req, res) => {
+    app.post("/projectmanagement/user/checkemailaddress", (req, res) => {
 
-        const emailaddress = req.params.emailaddress;
-        let providerid = "";
-        if (req.hasOwnProperty("session")) {
-            if (req.session.hasOwnProperty("user")) {
-                providerid = req.session.user.providerid;
-            }
-        }
-        let values = { emailaddress, providerid }
+
 
         request.post({
                 url: `${keys.secretAPI}/checkemailaddress.php`,
-                form: values,
+                form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`

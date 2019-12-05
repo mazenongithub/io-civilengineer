@@ -30,7 +30,7 @@ module.exports = app => {
 
     })
     app.post('/projectmanagement/nativelogin', (req, res) => {
-
+        console.log(req.body)
         request.post({
                 url: `${keys.secretAPI}/loginclient.php`,
                 form: req.body,
@@ -46,9 +46,10 @@ module.exports = app => {
                     let response = parsedjson.response;
                     if (response.hasOwnProperty("providerid")) {
                         req.session.user = { providerid: response.providerid }
+                        response = updateAllProjects(response);
                     }
 
-                    response = updateAllProjects(response);
+                    console.log(response)
                     res.send(response)
 
                 }
