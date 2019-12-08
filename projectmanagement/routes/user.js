@@ -76,7 +76,7 @@ module.exports = app => {
                     else if (response.hasOwnProperty("newuser")) {
                         providerid = response.newuser;
                         req.session.user = { providerid: response.providerid }
-                        res.redirect(`${keys.clientAPI}/${providerid}/completeprofile`)
+                        res.redirect(`${keys.clientAPI}/providers/register`)
                     }
                     else {
 
@@ -450,8 +450,6 @@ module.exports = app => {
     })
 
     app.post("/projectmanagement/user/checkemailaddress", (req, res) => {
-
-
 
         request.post({
                 url: `${keys.secretAPI}/checkemailaddress.php`,
