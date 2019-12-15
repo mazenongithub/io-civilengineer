@@ -19,6 +19,7 @@ app.all('*', function(req, res, next) {
     let origin = req.headers.origin;
     if (cors.origin.indexOf(origin) >= 0) {
         res.header("Access-Control-Allow-Origin", origin);
+        console.log(origin)
     }
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Credentials", "true")
