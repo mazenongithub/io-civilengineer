@@ -18,6 +18,7 @@ const cors = {
 app.all('*', function(req, res, next) {
     let origin = req.headers.origin;
     if (cors.origin.indexOf(origin) >= 0) {
+
         res.header("Access-Control-Allow-Origin", origin);
 
     }
@@ -39,7 +40,7 @@ require('./projectmanagement')(app);
 require('./geotechnical')(app);
 require('./petitions')(app);
 app.get('/', (req, res) => {
-    res.send({ response: "api.civilengineer.io" })
+    res.send({ response: ` api.civilengineer.io ` })
 })
 
 app.listen(process.env.PORT);

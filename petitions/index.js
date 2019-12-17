@@ -6,6 +6,39 @@ const updateAllUsers = require('./functions/updateAllUsers')
 
 
 module.exports = app => {
+    app.post('/petitions/:userid/comments', (req, res) => {
+        console.log(req.body)
+        let url = `http://civilengineer.io/petitions/api/commentsendpoint.php`
+
+
+        request.post({
+                url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                },
+                form: req.body
+            },
+            function(err, httpResponse, body) {
+
+
+                try {
+                    let json = parser.toJson(body);
+                    let parsedjson = JSON.parse(json);
+                    parsedjson.response = updateAllUsers(parsedjson.response);
+                    res.send(parsedjson.response);
+
+                }
+                catch (err) {
+                    res.status(404).send({ error: `BackEnd response error, please try again later` })
+                }
+
+
+            }) // end request
+
+
+    })
+
 
     app.post('/petitions/:userid/userendpoint', (req, res) => {
         console.log(req.body)
@@ -64,7 +97,6 @@ module.exports = app => {
                     let parsedjson = JSON.parse(json);
                     let myuser = parsedjson.response;
                     myuser = updateAllUsers(myuser);
-                    req.session.user = { petitions: myuser.userid };
                     res.send(myuser);
                 }
                 else {
@@ -76,7 +108,7 @@ module.exports = app => {
             }) // end request
 
     })
-    app.get('/petitions/checkuser/application', (req, res) => {
+    app.get('/petitions/users/checkuser', (req, res) => {
         if (req.hasOwnProperty("session")) {
             if (req.session.hasOwnProperty("user")) {
                 if (req.session.user.hasOwnProperty("petitions")) {
@@ -92,13 +124,18 @@ module.exports = app => {
                         function(err, httpResponse, body) {
                             if (!err) {
 
-                                let json = parser.toJson(body);
-                                let parsedjson = JSON.parse(json);
-                                let myuser = parsedjson.myuser;
-                                myuser = updateUserProfile(myuser);
-                                myuser = updateAllUsers(myuser);
-                                req.session.user = { petitions: myuser.userid };
-                                res.send({ myuser });
+                                try {
+                                    let json = parser.toJson(body);
+                                    let parsedjson = JSON.parse(json);
+                                    let myuser = parsedjson.myuser;
+                                    myuser = updateUserProfile(myuser);
+                                    myuser = updateAllUsers(myuser);
+                                    req.session.user = { petitions: myuser.userid };
+                                    res.send({ myuser });
+                                }
+                                catch (err) {
+                                    res.status(404).send({ error: `BackEnd response error, please try again later` })
+                                }
                             }
                             else {
 
@@ -160,9 +197,11 @@ module.exports = app => {
 
 
     })
-    app.post('/petitions/login', (req, res) => {
-        console.log(req.body)
-        let url = `http://civilengineer.io/petitions/login.php`
+
+
+    app.post('/petitions/users/login', (req, res) => {
+
+        let url = `http://civilengineer.io/petitions/api/login.php`
         try {
             request.post({
                     url,
@@ -173,20 +212,33 @@ module.exports = app => {
                     form: req.body
                 },
                 function(err, httpResponse, body) {
-                    if (!err) {
+
+                    try {
+
                         let json = parser.toJson(body);
                         let parsedjson = JSON.parse(json);
-                        let myuser = parsedjson.myuser;
-                        myuser = updateUserProfile(myuser);
-                        myuser = updateAllUsers(myuser);
-                        req.session.user = { petitions: myuser.userid };
-                        res.send({ myuser });
-                    }
-                    else {
 
-                        const errorMessage = `There was an error requesting the projects  ${url}`
-                        res.send({ errorMessage });
+                        if (parsedjson.hasOwnProperty("myuser")) {
+                            let myuser = parsedjson.myuser;
+                            myuser = updateUserProfile(myuser);
+                            myuser = updateAllUsers(myuser);
+                            req.session.user = { petitions: myuser.userid };
+                            console.log(req.session.user)
+                            res.send({ myuser })
+                        }
+
+                        else {
+                            res.send(parsedjson)
+                        }
+
+
+
                     }
+                    catch (err) {
+                        res.status(404).send({ message: 'Back End API request error, try again later' })
+                    }
+
+
 
                 }) // end request
 
@@ -197,6 +249,8 @@ module.exports = app => {
 
 
     })
+
+
 
     app.get('/petitions/:userid', (req, res) => {
         let userid = req.params.userid;
