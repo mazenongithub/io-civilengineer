@@ -61,7 +61,10 @@ module.exports = app => {
                     if (parsedjson.response.hasOwnProperty("myuser")) {
                         let myuser = parsedjson.response.myuser;
                         myuser = updateUserProfile(myuser);
-                        parsedjson.response.myuser = myuser;
+                        if (myuser.hasOwnProperty("allusers")) {
+                            myuser = updateAllUsers(myuser)
+                        }
+
                         req.session.user = { petitions: myuser.userid };
                         res.send({ response: parsedjson.response });
                     }
