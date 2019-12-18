@@ -40,7 +40,8 @@ require('./projectmanagement')(app);
 require('./geotechnical')(app);
 require('./petitions')(app);
 app.get('/', (req, res) => {
-    res.send({ response: ` api.civilengineer.io ` })
+    let response = { response: ` api.civilengineer.io `}
+    res.send(response)
 })
 
 app.listen(process.env.PORT);
