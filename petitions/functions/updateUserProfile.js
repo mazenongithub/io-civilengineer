@@ -38,7 +38,13 @@ module.exports = (myuser) => {
                 myuser.petitions.petition[i].conflicts.conflict.map((conflict, j) => {
 
 
-
+                    if (conflict.hasOwnProperty("images")) {
+                        if (!conflict.images.image.hasOwnProperty("length")) {
+                            let image = [];
+                            image.push(conflict.images.image);
+                            myuser.petitions.petition[i].conflicts.conflict[j].images.image = image;
+                        }
+                    }
                     if (conflict.hasOwnProperty("arguements")) {
                         if (!conflict.arguements.arguement.hasOwnProperty("length")) {
                             let arguement = [];
@@ -47,6 +53,16 @@ module.exports = (myuser) => {
 
 
                         }
+                        conflict.arguements.arguement.map((arguement,k)=> {
+                            if(arguement.hasOwnProperty("images")) {
+                                if(!arguement.images.image.hasOwnProperty("length")) {
+                                    let image = [];
+                                    image.push(arguement.images.image)
+                                    myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k].images.image = image;
+                                }
+                            }
+                            
+                        })
 
 
                     }

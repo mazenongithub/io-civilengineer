@@ -94,7 +94,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
@@ -102,11 +102,11 @@ module.exports = app => {
                     myuser = updateAllUsers(myuser);
                     res.send(myuser);
                 }
-                else {
+                catch (error) {
 
-                    const errorMessage = `There was an error requesting the projects  ${url}`
-                    res.send({ errorMessage });
+                    res.status(404).send({ message: `  BackEnd API error  ${error}` });
                 }
+
 
             }) // end request
 

@@ -26,8 +26,8 @@ module.exports = (user) => {
                             user.allusers.myuser[i].petitions.petition[j].likes.like = like;
                         }
                     }
-                    
-                     if (petition.hasOwnProperty("comments")) {
+
+                    if (petition.hasOwnProperty("comments")) {
                         if (!petition.comments.comment.hasOwnProperty("length")) {
                             let comment = [];
                             comment.push(petition.comments.comment)
@@ -48,10 +48,13 @@ module.exports = (user) => {
 
                         myuser.petitions.petition[j].conflicts.conflict.map((conflict, k) => {
 
-
-
-
-
+                            if (conflict.hasOwnProperty("images")) {
+                                if (!conflict.images.image.hasOwnProperty("length")) {
+                                    let image = [];
+                                    image.push(conflict.images.image);
+                                    user.allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].images.image = image;
+                                }
+                            }
 
                             if (conflict.hasOwnProperty("arguements")) {
                                 if (!conflict.arguements.arguement.hasOwnProperty("length")) {
@@ -61,6 +64,17 @@ module.exports = (user) => {
 
 
                                 }
+
+                                conflict.arguements.arguement.map((arguement, l) => {
+                                    if (arguement.hasOwnProperty("images")) {
+                                        if (!arguement.images.image.hasOwnProperty("length")) {
+                                            let image = [];
+                                            image.push(arguement.images.image)
+                                            user.allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].arguements.arguement[l].images.image = image;
+                                        }
+                                    }
+
+                                })
 
 
                             }
