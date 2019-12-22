@@ -59,7 +59,7 @@ module.exports = (req, res, next) => {
                 }
 
 
-
+                req.body.activeimageid = imageid;
                 req.body.myuser = myuser;
                 next();
             }

@@ -97,6 +97,7 @@ module.exports = app => {
                         let myuser = parsedjson.response.myuser;
                         myuser = updateUserProfile(myuser);
                         parsedjson.response.myuser = myuser;
+                        parsedjson.response.activeimageid = req.body.activeimageid;
                         req.session.user = { petitions: myuser.userid };
                         res.send({ response: parsedjson.response });
                     }
@@ -134,6 +135,7 @@ module.exports = app => {
                         let myuser = parsedjson.response.myuser;
                         myuser = updateUserProfile(myuser);
                         parsedjson.response.myuser = myuser;
+                        parsedjson.response.activeimageid = req.body.activeimageid;
                         req.session.user = { petitions: myuser.userid };
                         res.send({ response: parsedjson.response });
                     }

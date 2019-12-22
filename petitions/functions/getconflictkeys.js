@@ -6,13 +6,13 @@ module.exports = (myuser, conflictid) => {
             if (petition.hasOwnProperty("conflicts")) {
                 // eslint-disable-next-line
                 petition.conflicts.conflict.map((conflict, j) => {
-                if (conflict.conflictid === conflictid) {
-                    keys[0] = i;
-                    keys[1] = j;
-                }
+                    if (conflict.conflictid === conflictid) {
+                        keys[0] = i;
+                        keys[1] = j;
+                    }
 
 
-                    
+
                 })
             }
 
