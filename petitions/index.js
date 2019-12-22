@@ -5,6 +5,7 @@ const updateUserProfile = require('./functions/updateUserProfile');
 const updateAllUsers = require('./functions/updateAllUsers');
 const s3fileuploader = require('./functions/s3fileuploader');
 const s3deleteprofileurl = require('./functions/s3deleteprofileurl');
+const s3petitionuploader = require('./functions/s3petitionuploader');
 
 module.exports = app => {
     app.post('/petitions/:userid/comments', (req, res) => {
@@ -40,11 +41,9 @@ module.exports = app => {
 
     })
 
+    app.post('/petitions/:imageid/uploadpetitionimage', s3petitionuploader, (req, res) => {
 
-    app.post('/petitions/:userid/userendpoint', (req, res) => {
-        console.log(req.body)
         let url = `http://civilengineer.io/petitions/api/userendpoint.php`
-
         request.post({
                 url,
                 headers: {
@@ -61,10 +60,7 @@ module.exports = app => {
                     if (parsedjson.response.hasOwnProperty("myuser")) {
                         let myuser = parsedjson.response.myuser;
                         myuser = updateUserProfile(myuser);
-                        if (myuser.hasOwnProperty("allusers")) {
-                            myuser = updateAllUsers(myuser)
-                        }
-
+                        parsedjson.response.myuser = myuser;
                         req.session.user = { petitions: myuser.userid };
                         res.send({ response: parsedjson.response });
                     }
@@ -74,6 +70,47 @@ module.exports = app => {
 
 
                     res.send({ Error: 'API Submit Failure response' })
+                }
+
+            }) // end request
+
+
+
+    })
+
+    app.post('/petitions/:userid/userendpoint', (req, res) => {
+        console.log(req.body)
+        let url = `http://civilengineer.io/petitions/api/userendpoint.php`
+
+        request.post({
+                url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                },
+                form: req.body
+            },
+            function(err, httpResponse, body) {
+                try {
+
+                    let json = parser.toJson(body);
+                    let parsedjson = JSON.parse(json);
+                    if (parsedjson.response.hasOwnProperty("myuser")) {
+                        let myuser = parsedjson.response.myuser;
+                        myuser = updateUserProfile(myuser);
+                        if (myuser.hasOwnProperty("allusers")) {
+                            myuser = updateAllUsers(myuser)
+                        }
+
+                        req.session.user = { petitions: myuser.userid };
+                        res.send({ response: parsedjson.response });
+                    }
+
+                }
+                catch (err) {
+
+
+                    res.status(404).send({ Error: 'API Submit Failure response' })
                 }
 
             }) // end request
