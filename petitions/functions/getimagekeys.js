@@ -24,11 +24,12 @@ module.exports = (myuser, imageid) => {
                             if (arguement.hasOwnProperty("images")) {
                                 // eslint-disable-next-line
                                 arguement.images.image.map((image, l) => {
-                                    if (image.imageid === imageid);
-                                    keys[0] = i;
-                                    keys[1] = j;
-                                    keys[2] = k;
-                                    keys[3] = l;
+                                    if (image.imageid === imageid) {
+                                        keys[0] = i;
+                                        keys[1] = j;
+                                        keys[2] = k;
+                                        keys[3] = l;
+                                    }
                                 })
                             }
                         })
