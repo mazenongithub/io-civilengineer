@@ -5,7 +5,8 @@ const updateUserProfile = require('./functions/updateUserProfile');
 const updateAllUsers = require('./functions/updateAllUsers');
 const s3fileuploader = require('./functions/s3fileuploader');
 const s3deleteprofileurl = require('./functions/s3deleteprofileurl');
-const s3petitionuploader = require('./functions/s3petitionuploader');
+const s3arguementuploader = require('./functions/s3arguementuploader');
+const s3conflictuploader = require('./functions/s3conflictuploader')
 const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
 
 module.exports = app => {
@@ -42,7 +43,7 @@ module.exports = app => {
 
     })
     app.post('/petitions/:imageid/deleteimage', s3petitiondeletephoto, (req, res) => {
-        
+
         let url = `http://civilengineer.io/petitions/api/userendpoint.php`
         request.post({
                 url,
@@ -76,7 +77,44 @@ module.exports = app => {
 
     })
 
-    app.post('/petitions/:imageid/uploadpetitionimage', s3petitionuploader, (req, res) => {
+    app.post('/petitions/arguements/:arguementid/uploadpetitionimage', s3arguementuploader, (req, res) => {
+
+        let url = `http://civilengineer.io/petitions/api/userendpoint.php`
+        request.post({
+                url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                },
+                form: req.body
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+
+                    let json = parser.toJson(body);
+                    let parsedjson = JSON.parse(json);
+                    if (parsedjson.response.hasOwnProperty("myuser")) {
+                        let myuser = parsedjson.response.myuser;
+                        myuser = updateUserProfile(myuser);
+                        parsedjson.response.myuser = myuser;
+                        req.session.user = { petitions: myuser.userid };
+                        res.send({ response: parsedjson.response });
+                    }
+
+                }
+                else {
+
+
+                    res.send({ Error: 'API Submit Failure response' })
+                }
+
+            }) // end request
+
+
+
+    })
+
+    app.post('/petitions/conflicts/:conflictid/uploadpetitionimage', s3conflictuploader, (req, res) => {
 
         let url = `http://civilengineer.io/petitions/api/userendpoint.php`
         request.post({

@@ -1,6 +1,7 @@
 const serverkeys = require('../../keys');
 const AWS = require('aws-sdk');
-const getImageKeys = require('./getimagekeys')
+const getImageKeys = require('./getimagekeys');
+const makeID = require('./makeid')
 const s3 = new AWS.S3({
     accessKeyId: serverkeys.AWS_ACCESS_KEY,
     secretAccessKey: serverkeys.AWS_SECRET_ACCESS_KEY
@@ -10,7 +11,8 @@ module.exports = (req, res, next) => {
 
     if (req.hasOwnProperty("file")) {
 
-        let imageid = req.params.imageid;
+        let imageid = makeID(16)
+
 
         let ext = "";
         if (req.file.mimetype === "image/jpeg" || req.file.mimetype === "image/jpeg") {
@@ -36,7 +38,8 @@ module.exports = (req, res, next) => {
             if (data.hasOwnProperty("Location")) {
                 let myuser = req.body.myuser;
                 myuser = JSON.parse(myuser);
-                let newImage = data.Location;
+                let image = data.Location;
+                let newImage = { imageid, image }
                 let keys = getImageKeys(myuser, imageid);
                 let i = false;
                 let j = false;
@@ -47,13 +50,35 @@ module.exports = (req, res, next) => {
                     j = keys[1];
                     k = keys[2];
                     l = keys[3];
+
                     myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k].images.image[l].image = newImage;
+
+                    let arguement = myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k];
+                    if (arguement.hasOwnProperty("images")) {
+                        myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k].images.image.push(newImage)
+
+                    }
+                    else {
+                        let images = { image: [newImage] }
+                        myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k].images = images;
+
+                    }
                 }
                 else if (keys.length === 3) {
                     i = keys[0];
                     j = keys[1];
                     k = keys[2];
-                    myuser.petitions.petition[i].conflicts.conflict[j].images.image[k].image = newImage;
+                    let conflict = myuser.petitions.petition[i].conflicts.conflict[k];
+                    if (conflict.hasOwnProperty("images")) {
+                        myuser.petitions.petition[i].conflicts.conflict[j].images.image.push(newImage)
+
+                    }
+                    else {
+                        let images = { image: [newImage] }
+                        myuser.petitions.petition[i].conflicts.conflict[j].images = images;
+
+                    }
+
                 }
 
                 req.body.myuser = myuser;
