@@ -22,7 +22,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     if (parsedjson.hasOwnProperty("response")) {
@@ -37,9 +37,9 @@ module.exports = app => {
 
 
                 }
-                else {
+                catch (err) {
 
-                    res.send({ error: "Something went wrong " })
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -56,7 +56,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     if (parsedjson.hasOwnProperty("response")) {
@@ -72,9 +72,9 @@ module.exports = app => {
 
 
                 }
-                else {
+                catch (err) {
 
-                    res.send({ error: "Something went wrong " })
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -90,7 +90,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     if (parsedjson.hasOwnProperty("response")) {
@@ -108,7 +108,7 @@ module.exports = app => {
 
 
                 }
-                else {
+                catch (err) {
 
                     let message = encodeURIComponent("Invalid login please try again")
                     res.redirect(keys.clientAPI + "/client/login/" + message)
@@ -131,7 +131,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     if (parsedjson.hasOwnProperty("response")) {
@@ -149,7 +149,7 @@ module.exports = app => {
 
 
                 }
-                else {
+                catch (err) {
 
                     let message = encodeURIComponent("Invalid login please try again")
                     res.redirect(keys.clientAPI + "/client/login/" + message)
@@ -171,14 +171,14 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
                     res.send(response)
                 }
-                else {
-                    res.send({ message: "There was an error making the request " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -194,7 +194,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body && !err) {
+                try {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
@@ -202,8 +202,8 @@ module.exports = app => {
                     response = updateEngineers(response)
                     res.send(response);
                 }
-                else {
-                    res.send({ errorMessage: " There was an error making your request" });
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
             }) // end request
     })
@@ -218,7 +218,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
@@ -238,7 +238,7 @@ module.exports = app => {
 
 
                 }
-                else {
+                catch (err) {
 
                     let message = encodeURIComponent("Invalid login please try again")
                     res.redirect(keys.clientAPI + "/client/login/" + message)
@@ -278,7 +278,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -287,8 +287,8 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                else {
-                    res.send({ errorMessage: "Error, please try again " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -304,7 +304,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -313,8 +313,8 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                else {
-                    res.send({ errorMessage: "Error, please try again " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -330,7 +330,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -339,8 +339,8 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                else {
-                    res.send({ errorMessage: "Error, please try again " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -356,7 +356,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -365,8 +365,8 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                else {
-                    res.send({ errorMessage: "Error, please try again " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -382,7 +382,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -390,8 +390,8 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                else {
-                    res.send({ errorMessage: "Error, please try again " })
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request

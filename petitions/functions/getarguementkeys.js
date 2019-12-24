@@ -11,12 +11,12 @@ module.exports = (myuser, arguementid) => {
                     if (conflict.hasOwnProperty("arguements")) {
                         // eslint-disable-next-line
                         conflict.arguements.arguement.map((arguement, k) => {
-                           if(arguement.arguementid === arguementid) {
-                               keys[0] = i;
-                               keys[1] = j;
-                               keys[2] = k;
-                           }
-                            
+                            if (arguement.arguementid === arguementid) {
+                                keys[0] = i;
+                                keys[1] = j;
+                                keys[2] = k;
+                            }
+
                         })
                     }
                 })

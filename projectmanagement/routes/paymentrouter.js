@@ -68,18 +68,17 @@ module.exports = app => {
 
                         },
                         function(err, httpResponse, body) {
-                            if (!err) {
+                            try {
                                 var json = parser.toJson(body);
                                 var parsedjson = JSON.parse(json);
                                 let response = parsedjson.response;
                                 response = updateAllProjects(response)
                                 res.send(response);
                             }
-                            else {
+                            catch (err) {
 
 
-                                err = JSON.parse(err)
-                                res.send({ errorMessage: "There was a server error making the request" });
+                                res.status(404).send({ message: 'API failure could not load response' })
                             }
 
                         }) // end request
@@ -152,17 +151,16 @@ module.exports = app => {
 
                         },
                         function(err, httpResponse, body) {
-                            if (!err) {
+                            try {
                                 var json = parser.toJson(body);
                                 var parsedjson = JSON.parse(json);
                                 let response = parsedjson.response;
                                 response = updateAllProjects(response)
                                 res.send(response);
                             }
-                            else {
+                            catch (err) {
 
-                                err = JSON.parse(err)
-                                res.send({ errorMessage: "There was an error making the request" });
+                                res.status(404).send({ message: 'API failure could not load response' })
                             }
 
                         }) // end request
@@ -196,7 +194,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (body) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
@@ -217,17 +215,18 @@ module.exports = app => {
 
 
                     }
-                    else {
-                        res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
-                        //redirect failed login
+                }
+                catch (err) {
+                    res.redirect(`${keys.rootclient}/providers/login/Invalid login please try again`)
+                    //redirect failed login
 
 
-
-                    }
-
-                    //values returned from DB
 
                 }
+
+                //values returned from DB
+
+
 
             }) // end request
 
@@ -256,7 +255,7 @@ module.exports = app => {
 
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let parsedjson = JSON.parse(body);
                     let values = { stripe: parsedjson.stripe_user_id, providerid }
 
@@ -282,6 +281,9 @@ module.exports = app => {
                         })
 
 
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
 

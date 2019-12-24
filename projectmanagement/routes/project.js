@@ -22,17 +22,16 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response)
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -51,17 +50,16 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response)
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -83,17 +81,16 @@ module.exports = app => {
 
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response)
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -112,17 +109,16 @@ module.exports = app => {
 
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response)
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -141,17 +137,16 @@ module.exports = app => {
 
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response)
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -169,17 +164,16 @@ module.exports = app => {
 
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response);
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -204,15 +198,14 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json);
                     res.send(parsedjson.response);
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -234,17 +227,16 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
                     response = updateAllProjects(response);
                     res.send(response);
                 }
-                else {
+                catch (err) {
 
-                    const errorMessage = `There was an error requesting the projects ${url} `
-                    res.send({ errorMessage });
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
@@ -268,16 +260,15 @@ module.exports = app => {
             },
 
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
 
                     res.send(updateSearchProviders(parsedjson.response))
                 }
-                else {
+                catch (err) {
 
-                    err = JSON.parse(err)
-                    res.send(err);
+                    res.status(404).send({ message: 'API failure could not load response' })
                 }
 
             }) // end request
