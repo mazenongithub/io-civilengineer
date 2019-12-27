@@ -1,6 +1,7 @@
 const keys = require('./keys');
 const request = require("request");
 const parser = require('xml2json');
+const updateUserResponse = require('./functions/updateuserresponse')
 module.exports = app => {
 
     app.get('/construction/:providerid/loaduserprofile', (req, res) => {
@@ -18,6 +19,7 @@ module.exports = app => {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
+                    response = updateUserResponse(response)
                     res.send(response)
                     //values returned from DB
 
