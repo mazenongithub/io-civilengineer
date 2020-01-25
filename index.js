@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const cors = {
-    origin: ["http://rentmeroom.civilengineer.io", "http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io"]
+    origin: ["http://rentmeroom.civilengineer.io", "http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
 }
 
 
@@ -40,7 +40,7 @@ require('./projectmanagement')(app);
 require('./geotechnical')(app);
 require('./petitions')(app);
 app.get('/', (req, res) => {
-    let response = { response: ` api.civilengineer.io `}
+    let response = { response: ` api.civilengineer.io ` }
     res.send(response)
 })
 
