@@ -54,10 +54,10 @@ module.exports = (response) => {
 
                 response.company.office.employees.employee.map((employee, i) => {
                     if (employee.hasOwnProperty("benefits")) {
-                        if (!employee.benefits.mybenefit.hasOwnProperty("length")) {
+                        if (!employee.benefits.benefit.hasOwnProperty("length")) {
                             let mybenefit = [];
-                            mybenefit.push(employee.benefits.mybenefit)
-                            response.company.office.employees.employee[i].benefits.mybenefit = mybenefit;
+                            mybenefit.push(employee.benefits.benefit)
+                            response.company.office.employees.employee[i].benefits.benefit = mybenefit;
                         }
                     }
                 })
@@ -82,6 +82,7 @@ module.exports = (response) => {
 
             // eslint-disable-next-line
             response.company.equipment.myequipment.map((myequipment, i) => {
+                console.log(myequipment)
                 if (myequipment.hasOwnProperty("ownership")) {
                     if (!myequipment.ownership.cost.hasOwnProperty("length")) {
                         let cost = [];
@@ -90,13 +91,7 @@ module.exports = (response) => {
                     }
                 }
 
-                if (myequipment.hasOwnProperty("rentalrates")) {
-                    if (!myequipment.rentalrates.rentalrate.hasOwnProperty("length")) {
-                        let rentalrate = [];
-                        rentalrate.push(myequipment.rentalrates.rentalrate);
-                        response.company.equipment.myequipment[i].rentalrates.rentalrate = rentalrate;
-                    }
-                }
+
 
             })
 
@@ -141,7 +136,7 @@ module.exports = (response) => {
                 if (myproject.hasOwnProperty("actuallabor")) {
                     if (!myproject.actuallabor.mylabor.hasOwnProperty("length")) {
                         let mylabor = [];
-                        mylabor.push(myproject.schedulelabor.mylabor);
+                        mylabor.push(myproject.actuallabor.mylabor);
                         response.company.projects.myproject[i].actuallabor.mylabor = mylabor;
                     }
                 }
@@ -184,6 +179,18 @@ module.exports = (response) => {
                         myproposal.push(myproject.proposals.myproposal);
                         response.company.projects.myproject[i].proposals.myproposal = myproposal;
                     }
+                    // eslint-disable-next-line
+                    response.company.projects.myproject[i].proposals.myproposal.map((myproposal, j) => {
+                        if (myproposal.hasOwnProperty("bidschedule")) {
+                            if (!myproposal.bidschedule.biditem.hasOwnProperty("length")) {
+                                let biditem = [];
+                                biditem.push(myproposal.bidschedule.biditem);
+                                response.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem = biditem;
+
+                            }
+                        }
+                    })
+
                 }
 
                 if (myproject.hasOwnProperty("invoices")) {
@@ -192,24 +199,19 @@ module.exports = (response) => {
                         myinvoice.push(myproject.invoices.myinvoice);
                         response.company.projects.myproject[i].invoices.myinvoice = myinvoice;
                     }
-                }
+                    // eslint-disable-next-line
+                    response.company.projects.myproject[i].invoices.myinvoice.map((myinvoice, j) => {
+                        if (myinvoice.hasOwnProperty("bid")) {
+                            if (!myinvoice.bid.biditem.hasOwnProperty("length")) {
+                                let biditem = [];
+                                biditem.push(myinvoice.bid.biditem);
+                                response.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem = biditem;
 
-                if (myproject.hasOwnProperty("bidschedule")) {
-                    if (!myproject.bidschedule.biditem.hasOwnProperty("length")) {
-                        let biditem = [];
-                        biditem.push(myproject.bidschedule.biditem);
-                        response.company.projects.myproject[i].bidschedule.biditem = biditem;
+                            }
+                        }
+                    })
 
-                    }
-                }
 
-                if (myproject.hasOwnProperty("bidactual")) {
-                    if (!myproject.bidactual.biditem.hasOwnProperty("length")) {
-                        let biditem = [];
-                        biditem.push(myproject.bidactual.biditem);
-                        response.company.projects.myproject[i].bidactual.biditem = biditem;
-
-                    }
                 }
 
 
