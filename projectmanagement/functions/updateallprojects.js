@@ -1,24 +1,24 @@
 module.exports = (response) => {
     //ensures allprojeccts are arrays
-    if (response.hasOwnProperty("projectsmanaging")) {
-        if (!response.projectsmanaging.myproject.hasOwnProperty("length")) {
+    if (response.hasOwnProperty("projects")) {
+        if (!response.projects.myproject.hasOwnProperty("length")) {
             let myproject = [];
-            myproject.push(response.projectsmanaging.myproject)
-            response.projectsmanaging.myproject = myproject;
+            myproject.push(response.projects.myproject)
+            response.projects.myproject = myproject;
         }
 
-        if (response.projectsmanaging.myproject.hasOwnProperty("length")) {
+        if (response.projects.myproject.hasOwnProperty("length")) {
             // eslint-disable-next-line
-            response.projectsmanaging.myproject.map((myproject, i) => {
+            response.projects.myproject.map((myproject, i) => {
 
 
                 if (myproject.hasOwnProperty("projectmilestones")) {
 
                     if (!myproject.projectmilestones.mymilestone.hasOwnProperty("length")) {
                         let mymilestone = [];
-                        mymilestone.push(response.projectsmanaging.myproject[i].projectmilestones.mymilestone)
+                        mymilestone.push(response.projects.myproject[i].projectmilestones.mymilestone)
 
-                        response.projectsmanaging.myproject[i].projectmilestones.mymilestone = mymilestone;
+                        response.projects.myproject[i].projectmilestones.mymilestone = mymilestone;
                     }
                 }
 
@@ -26,30 +26,30 @@ module.exports = (response) => {
 
                     if (!myproject.projectteam.myteam.hasOwnProperty("length")) {
                         let myteam = [];
-                        myteam.push(response.projectsmanaging.myproject[i].projectteam.myteam)
+                        myteam.push(response.projects.myproject[i].projectteam.myteam)
 
-                        response.projectsmanaging.myproject[i].projectteam.myteam = myteam;
+                        response.projects.myproject[i].projectteam.myteam = myteam;
                     }
                 }
                 if (myproject.hasOwnProperty("schedulelabor")) {
                     if (!myproject.schedulelabor.mylabor.hasOwnProperty("length")) {
                         let mylabor = [];
                         mylabor.push(myproject.schedulelabor.mylabor)
-                        response.projectsmanaging.myproject[i].schedulelabor.mylabor = mylabor;
+                        response.projects.myproject[i].schedulelabor.mylabor = mylabor;
                     }
                 }
                 if (myproject.hasOwnProperty("actuallabor")) {
                     if (!myproject.actuallabor.mylabor.hasOwnProperty("length")) {
                         let mylabor = [];
                         mylabor.push(myproject.actuallabor.mylabor)
-                        response.projectsmanaging.myproject[i].actuallabor.mylabor = mylabor;
+                        response.projects.myproject[i].actuallabor.mylabor = mylabor;
                     }
                 }
                 if (myproject.hasOwnProperty("schedulematerials")) {
                     if (!myproject.schedulematerials.mymaterial.hasOwnProperty("length")) {
                         let mymaterial = [];
                         mymaterial.push(myproject.schedulematerials.mymaterial)
-                        response.projectsmanaging.myproject[i].schedulematerials.mymaterial = mymaterial;
+                        response.projects.myproject[i].schedulematerials.mymaterial = mymaterial;
                     }
                 }
 
@@ -57,7 +57,23 @@ module.exports = (response) => {
                     if (!myproject.actualmaterials.mymaterial.hasOwnProperty("length")) {
                         let mymaterial = [];
                         mymaterial.push(myproject.actualmaterials.mymaterial)
-                        response.projectsmanaging.myproject[i].actualmaterials.mymaterial = mymaterial;
+                        response.projects.myproject[i].actualmaterials.mymaterial = mymaterial;
+                    }
+                }
+
+                if (myproject.hasOwnProperty("scheduleequipment")) {
+                    if (!myproject.scheduleequipment.myequipment.hasOwnProperty("length")) {
+                        let myequipment = [];
+                        myequipment.push(myproject.scheduleequipment.myequipment)
+                        response.projects.myproject[i].scheduleequipment.myequipment = myequipment;
+                    }
+                }
+
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    if (!myproject.actualequipment.myequipment.hasOwnProperty("length")) {
+                        let myequipment = [];
+                        myequipment.push(myproject.actualequipment.myequipment)
+                        response.projects.myproject[i].actualequipment.myequipment = myequipment;
                     }
                 }
 
@@ -65,14 +81,39 @@ module.exports = (response) => {
                     if (!myproject.proposals.myproposal.hasOwnProperty("length")) {
                         let myproposal = [];
                         myproposal.push(myproject.proposals.myproposal)
-                        response.projectsmanaging.myproject[i].proposals.myproposal = myproposal;
+                        response.projects.myproject[i].proposals.myproposal = myproposal;
+
+                        // esline-disable-next-line
+                        response.projects.myproject[i].proposals.myproposal.map((myproposal, j) => {
+                            if (myproposal.hasOwnProperty("bidschedule")) {
+                                if (!myproposal.bidschedule.biditem.hasOwnProperty("length")) {
+                                    let biditem = [];
+                                    biditem.push(myproposal.bidschedule.biditem)
+                                    response.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem = biditem;
+                                }
+
+                            }
+
+                        })
                     }
                 }
                 if (myproject.hasOwnProperty("invoices")) {
                     if (!myproject.invoices.myinvoice.hasOwnProperty("length")) {
                         let myinvoice = [];
                         myinvoice.push(myproject.invoices.myinvoice)
-                        response.projectsmanaging.myproject[i].invoices.myinvoice = myinvoice;
+                        response.projects.myproject[i].invoices.myinvoice = myinvoice;
+
+                        response.projects.myproject[i].invoices.myinvoice.map((myinvoice, j) => {
+                            if (myinvoice.hasOwnProperty("bid")) {
+                                if (!myinvoice.bid.biditem.hasOwnProperty("length")) {
+                                    let biditem = [];
+                                    biditem.push(myinvoice.bid.biditem)
+                                    response.projects.myproject[i].invoices.myinvoice[j].bid.biditem = biditem;
+                                }
+
+                            }
+
+                        })
                     }
                 }
 
@@ -81,81 +122,6 @@ module.exports = (response) => {
 
         }
     }
-
-    if (response.hasOwnProperty("projectsprovider")) {
-        if (!response.projectsprovider.myproject.hasOwnProperty("length")) {
-            let myproject = [];
-            myproject.push(response.projectsprovider.myproject)
-            response.projectsprovider.myproject = myproject;
-        }
-        // eslint-disable-next-line
-        response.projectsprovider.myproject.map((myproject, i) => {
-            if (myproject.hasOwnProperty("projectmilestones")) {
-                if (!myproject.projectmilestones.mymilestone.hasOwnProperty("length")) {
-                    let mymilestone = [];
-                    mymilestone.push(myproject.projectmilestones.mymilestone)
-                    response.projectsprovider.myproject[i].projectmilestones.mymilestone = mymilestone
-                }
-            }
-            if (myproject.hasOwnProperty("schedulelabor")) {
-                if (!myproject.schedulelabor.mylabor.hasOwnProperty("length")) {
-                    let mylabor = [];
-                    mylabor.push(myproject.schedulelabor.mylabor)
-                    response.projectsprovider.myproject[i].schedulelabor.mylabor = mylabor;
-                }
-            }
-            if (myproject.hasOwnProperty("actuallabor")) {
-                if (!myproject.actuallabor.mylabor.hasOwnProperty("length")) {
-                    let mylabor = [];
-                    mylabor.push(myproject.actuallabor.mylabor)
-                    response.projectsprovider.myproject[i].actuallabor.mylabor = mylabor;
-                }
-            }
-            if (myproject.hasOwnProperty("schedulematerials")) {
-                if (!myproject.schedulematerials.mymaterial.hasOwnProperty("length")) {
-                    let mymaterial = [];
-                    mymaterial.push(myproject.schedulematerials.mymaterial)
-                    response.projectsprovider.myproject[i].schedulematerials.mymaterial = mymaterial;
-                }
-            }
-            if (myproject.hasOwnProperty("actualmaterials")) {
-                if (!myproject.actualmaterials.mymaterial.hasOwnProperty("length")) {
-                    let mymaterial = [];
-                    mymaterial.push(myproject.actualmaterials.mymaterial)
-                    response.projectsprovider.myproject[i].actualmaterials.mymaterial = mymaterial;
-                }
-            }
-
-
-            if (myproject.hasOwnProperty("projectteam")) {
-                if (!myproject.projectteam.myteam.hasOwnProperty("length")) {
-                    let myteam = [];
-                    myteam.push(myproject.projectteam.myteam)
-                    response.projectsprovider.myproject[i].projectteam.myteam = myteam;
-                }
-            }
-
-            if (myproject.hasOwnProperty("proposals")) {
-                if (!myproject.proposals.myproposal.hasOwnProperty("length")) {
-                    let myproposal = [];
-                    myproposal.push(myproject.proposals.myproposal)
-                    response.projectsprovider.myproject[i].proposals.myproposal = myproposal;
-                }
-            }
-
-            if (myproject.hasOwnProperty("invoices")) {
-                if (!myproject.invoices.myinvoice.hasOwnProperty("length")) {
-                    let myinvoice = [];
-                    myinvoice.push(myproject.invoices.myinvoice)
-                    response.projectsprovider.myproject[i].invoices.myinvoice = myinvoice;
-                }
-            }
-        })
-
-    }
-
-
-    //End of failure check
 
     return response;
 }

@@ -7,8 +7,10 @@ const multer = require("multer");
 const AWS = require('aws-sdk');
 const removeprofilephoto = require('../functions/removeprofilephoto')
 const updateSearchProviders = require('../functions/updatesearchproviders');
-const updateAllProjects = require('../functions/updateallprojects')
+const updateAllProjects = require('../functions/updateallprojects');
+const updateAllUsers = require('../../construction/functions/updateallusers');
 const serverkeys = require('../../keys');
+const uploadprofileimage = require('../functions/uploadprofileimage');
 const s3 = new AWS.S3({
     accessKeyId: serverkeys.AWS_ACCESS_KEY,
     secretAccessKey: serverkeys.AWS_SECRET_ACCESS_KEY
@@ -99,13 +101,10 @@ module.exports = app => {
 
     })
 
-
-    app.post('/projectmanagement/loginuser', (req, res) => {
-
-        // Store hash in your password DB.
-
+    app.post('/projectmanagement/clientlogin', (req, res) => {
+        console.log(req.body)
         request.post({
-                url: `${keys.secretAPI}/login.php`,
+                url: `https://civilengineer.io/projectmanagement/api/loginclient.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,24 +116,67 @@ module.exports = app => {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
-
-                    let providerid = "";
-                    if (response.hasOwnProperty("valid")) {
-                        providerid = response.valid;
-                        req.session.user = { providerid: response.providerid }
-
-                        res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
+                    if (response.hasOwnProperty("providerid")) {
+                        let user = { providerid: response.providerid }
+                        req.session.user = user;
+                        response = updateAllProjects(response);
+                        res.send(response)
                     }
                     else {
-
-                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
+                        res.send(response)
                     }
 
-                    //values returned from DB
 
                 }
                 catch (err) {
-                    res.status(404).send({ message: 'API failure could not load response ' })
+                    res.status(404).send({ message: 'Server is Down please try again later ' })
+                }
+
+                //values returned from DB
+
+
+            }) // end request
+        // Store hash in your password DB.
+
+
+
+
+    })
+
+
+
+    app.post('/projectmanagement/loginuser', (req, res) => {
+        console.log(req.body)
+        // Store hash in your password DB.
+
+        request.post({
+                url: `https://civilengineer.io/projectmanagement/api/login.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+                    if (response.hasOwnProperty("providerid")) {
+                        let user = { providerid: response.providerid }
+                        req.session.user = user;
+                        response = updateAllProjects(response);
+                        res.send(response)
+                    }
+                    else {
+                        res.send(response)
+                    }
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'Server is Down please try again later ' })
                 }
 
             }) // end request
@@ -215,10 +257,11 @@ module.exports = app => {
 
 
     })
-    app.post('/projectmanagement/registernewuser', (req, res) => {
 
+    app.post('/projectmanagement/registernewuser', (req, res) => {
+        console.log(req.body)
         request.post({
-                url: `${keys.secretAPI}/register.php`,
+                url: `https://civilengineer.io/projectmanagement/api/register.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -226,30 +269,31 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                let providerid = "";
                 try {
-
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
                     if (response.hasOwnProperty("providerid")) {
-                        providerid = response.providerid;
-                        req.session.user = { providerid }
-                        res.redirect(`${keys.clientAPI}/${providerid}/myprojects`)
+                        let user = { providerid: response.providerid }
+                        req.session.user = user;
+                        response = updateAllProjects(response);
+                        res.send(response)
                     }
                     else {
-                        res.redirect(`${keys.clientAPI}/providers/login/Invalid login please try again`)
+                        res.send(response)
                     }
+
 
                 }
                 catch (err) {
-                    res.status(404).send({ message: ' API failure could not load response ' })
+                    res.status(404).send({ message: 'Server is Down please try again later ' })
                 }
 
-            }) // end request
 
+            })
 
     })
+
     app.post('/projectmanagement/registernewuser/async', (req, res) => {
 
         request.post({
@@ -284,6 +328,7 @@ module.exports = app => {
 
 
     })
+
 
     app.post('/projectmanagement/:providerid/updateuserpassword', checkLogin, (req, res) => {
 
@@ -415,6 +460,32 @@ module.exports = app => {
             }) // end request
 
     })
+    app.get("/projectmanagement/:providerid/loadcsi", (req, res) => {
+        const providerid = req.params.providerid;
+
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/loadcsi.php?providerid=${providerid}`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    const json = parser.toJson(body);
+                    const parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+                    response = updateCSI(response)
+                    res.send(response)
+
+                }
+                catch (err) {
+
+                    res.status(404).send({ message: 'API failure could not load response' })
+                }
+
+            }) // end request
+
+    })
 
     app.get("/projectmanagement/:providerid/checkcommission", (req, res) => {
 
@@ -422,7 +493,7 @@ module.exports = app => {
         let values = { providerid }
 
         request.post({
-                url: `${keys.secretAPI}/checkcommission.php`,
+                url: `https://civilengineer.io/projectmanagement/api/checkcommission.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -447,11 +518,9 @@ module.exports = app => {
 
         const projectid = req.params.projectid;
 
-        let values = { projectid }
 
-        request.post({
-                url: `${keys.secretAPI}/checknewprojectid.php`,
-                form: values,
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/checknewprojectid.php?projectid=${projectid}`,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`
@@ -472,10 +541,11 @@ module.exports = app => {
 
     })
 
-    app.post("/projectmanagement/user/checkemailaddress", (req, res) => {
 
+    app.post("/projectmanagement/user/checkemailaddress", (req, res) => {
+        console.log(req.body)
         request.post({
-                url: `${keys.secretAPI}/checkemailaddress.php`,
+                url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -497,37 +567,10 @@ module.exports = app => {
 
     })
     app.get("/projectmanagement/user/logout", (req, res) => {
-        let providerid = "";
-        if (req.hasOwnProperty("session")) {
-            if (req.session.hasOwnProperty("user")) {
-                if (req.session.user.hasOwnProperty("providerid")) {
-                    providerid = req.session.user.providerid;
-                }
-            }
-        }
 
-        let values = { providerid }
-        request.post({
-                url: `${keys.secretAPI}/logout.php`,
-                form: values,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    req.session.destroy();
-                    res.redirect(keys.clientAPI)
+        req.session.destroy();
+        res.redirect(keys.clientAPI)
 
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'API failure could not load response' })
-                }
-
-            }) // end request
 
     })
 
@@ -582,92 +625,60 @@ module.exports = app => {
         res.send({ message: 'Hello React Native' })
     })
 
-    app.post("/projectmanagement/:providerid/uploadprofileimage", removeprofilephoto, (req, res) => {
+    app.post("/projectmanagement/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
+   
+   request.post({
+                url: `https://civilengineer.io/projectmanagement/api/userendpoint.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
 
-        if (req.hasOwnProperty("file")) {
+            },
+            function(err, httpResponse, body) {
+                try {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json);
+                    let response = parsedjson.response;
+                    response = updateAllProjects(response);
+                    response = updateAllUsers(response);
+                    res.send(response)
+                }
+                catch (err) {
+                    console.log(err)
 
-            let providerid = req.params.providerid;
+                    res.status(404).send({ message: 'Server Could Not Load Response, Please Try again later' })
+                }
 
-            let ext = "";
-            if (req.file.mimetype === "image/jpeg" || req.file.mimetype === "image/jpeg") {
-                ext = "jpg";
-            }
-            else if (req.file.mimetype === "image/png") {
-                ext = "png";
-            }
-            let fileName = `./routes/temp/${ providerid }.${ext}`;
-            const S3_BUCKET = "goandhireme";
-            var rand = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            }) // end request
 
-            for (var i = 0; i < 5; i++)
-                rand += possible.charAt(Math.floor(Math.random() * possible.length));
+        //var formData = {
+        //    providerid,
+        //    access,
+        //    my_file: fs.createReadStream(fileName),
+        //};
 
-            //fs.readFile(fileName, (err, data) => {
-            //if (err) throw err;
-            const params = {
-                Bucket: 'goandhireme', // pass your bucket name
-                Key: `${rand}${providerid}.${ext}`, // file will be saved as testBucket/contacts.csv
-                Body: req.file.buffer
-            };
-            s3.upload(params, function(s3Err, data) {
-                if (s3Err) throw s3Err
-                let values = { providerid, profileurl: data.Location }
-
-                request.post({
-                        url: `${keys.secretAPI}/updateprofileurl.php`,
-                        form: values,
-                        headers: {
-                            'Permission': `${keys.grantAuthorization}`
-                        }
-                    },
-                    function(err, httpResponse, body) {
-                        try {
-                            var json = parser.toJson(body);
-                            var parsedjson = JSON.parse(json)
-                            res.send(parsedjson.response)
-
-                        }
-                        catch (err) {
-                            res.status(404).send({ message: 'API failure could not load response' })
-                        }
-
-                    }) // end request               
+        //request.post({
+        //        url: `${keys.secretAPI}/uploadprofilephoto.php`,
+        //        formData,
+        //        headers: {
+        //            'Permission': `${keys.grantAuthorization}`
+        //        }
+        //    },
+        //    function(err, httpResponse, body) {
+        //        if (!err) {
+        //            var json = parser.toJson(body);
+        //            var parsedjson = JSON.parse(json)
+        //            fs.unlink(fileName)
+        //            res.send(parsedjson.response)
 
 
-            })
-            //});
-            //});
+        //        }
+
+        //    }) // end request
 
 
-
-
-            //var formData = {
-            //    providerid,
-            //    access,
-            //    my_file: fs.createReadStream(fileName),
-            //};
-
-            //request.post({
-            //        url: `${keys.secretAPI}/uploadprofilephoto.php`,
-            //        formData,
-            //        headers: {
-            //            'Permission': `${keys.grantAuthorization}`
-            //        }
-            //    },
-            //    function(err, httpResponse, body) {
-            //        if (!err) {
-            //            var json = parser.toJson(body);
-            //            var parsedjson = JSON.parse(json)
-            //            fs.unlink(fileName)
-            //            res.send(parsedjson.response)
-
-
-            //        }
-
-            //    }) // end request
-
-        }
 
 
     })
@@ -681,13 +692,11 @@ module.exports = app => {
 
                     let providerid = req.session.user.providerid;
                     let values = { providerid };
-                    const url = `${keys.secretAPI}/loadmyprojects.php`;
+                    const url = `https://civilengineer.io/projectmanagement/api/loadresponse.php?providerid=${providerid}`;
 
-                    request.post({
+                    request({
                             url,
-                            form: values,
                             headers: {
-                                'Content-Type': 'application/json',
                                 'Permission': `${keys.grantAuthorization}`
                             }
                         },
@@ -697,6 +706,7 @@ module.exports = app => {
                                 let parsedjson = JSON.parse(json);
                                 let response = parsedjson.response;
                                 response = updateAllProjects(response);
+                                response = updateAllUsers(response)
                                 res.send(response);
                             }
                             catch (err) {

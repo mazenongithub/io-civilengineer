@@ -188,11 +188,12 @@ module.exports = app => {
 
 
     })
+
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         let providerid = req.session.user.construction;
 
-        request.get(`http://civilengineer.io/construction/api/loadmyprofile.php?providerid=${providerid}`, {
+        request.get(`https://civilengineer.io/construction/api/loadmyprofile.php?providerid=${providerid}`, {
                 headers: {
                     'Permission': `${keys.grantAuthorization}`
                 }

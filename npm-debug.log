@@ -2,10 +2,10 @@
 1 verbose cli [ '/home/ubuntu/.nvm/versions/node/v6.17.0/bin/node',
 1 verbose cli   '/home/ubuntu/.nvm/versions/node/v6.17.0/bin/npm',
 1 verbose cli   'run',
-1 verbose cli   'sever' ]
+1 verbose cli   'serve' ]
 2 info using npm@3.10.10
 3 info using node@v6.17.0
-4 verbose stack Error: missing script: sever
+4 verbose stack Error: missing script: serve
 4 verbose stack     at run (/home/ubuntu/.nvm/versions/node/v6.17.0/lib/node_modules/npm/lib/run-script.js:151:19)
 4 verbose stack     at /home/ubuntu/.nvm/versions/node/v6.17.0/lib/node_modules/npm/lib/run-script.js:61:5
 4 verbose stack     at /home/ubuntu/.nvm/versions/node/v6.17.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:356:5
@@ -18,10 +18,10 @@
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:444:12)
 5 verbose cwd /home/ubuntu/environment/civilengineer
 6 error Linux 4.15.0-1039-aws
-7 error argv "/home/ubuntu/.nvm/versions/node/v6.17.0/bin/node" "/home/ubuntu/.nvm/versions/node/v6.17.0/bin/npm" "run" "sever"
+7 error argv "/home/ubuntu/.nvm/versions/node/v6.17.0/bin/node" "/home/ubuntu/.nvm/versions/node/v6.17.0/bin/npm" "run" "serve"
 8 error node v6.17.0
 9 error npm  v3.10.10
-10 error missing script: sever
+10 error missing script: serve
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>
 12 verbose exit [ 1, true ]
