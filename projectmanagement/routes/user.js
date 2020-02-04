@@ -103,6 +103,7 @@ module.exports = app => {
 
     app.post('/projectmanagement/clientlogin', (req, res) => {
         console.log(req.body)
+        
         request.post({
                 url: `https://civilengineer.io/projectmanagement/api/loginclient.php`,
                 form: req.body,
@@ -120,6 +121,7 @@ module.exports = app => {
                         let user = { providerid: response.providerid }
                         req.session.user = user;
                         response = updateAllProjects(response);
+                        response = updateAllUsers(response);
                         res.send(response)
                     }
                     else {
@@ -167,7 +169,8 @@ module.exports = app => {
                         let user = { providerid: response.providerid }
                         req.session.user = user;
                         response = updateAllProjects(response);
-                        res.send(response)
+                        response = updateAllUsers(response)
+                        res.send(response);
                     }
                     else {
                         res.send(response)
@@ -176,6 +179,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
+                    console.log(err)
                     res.status(404).send({ message: 'Server is Down please try again later ' })
                 }
 
@@ -436,11 +440,9 @@ module.exports = app => {
 
         const providerid = req.params.providerid;
 
-        let values = { providerid }
 
-        request.post({
-                url: `${keys.secretAPI}/checkproviderid.php`,
-                form: values,
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/checkproviderid.php?providerid=${providerid}`,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`
@@ -454,7 +456,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
-                    res.status(404).send({ message: 'API failure could not load response' })
+                    res.status(404).send({ message: 'Server Could Not Load Response' })
                 }
 
             }) // end request
@@ -542,10 +544,10 @@ module.exports = app => {
     })
 
 
-    app.post("/projectmanagement/user/checkemailaddress", (req, res) => {
-        console.log(req.body)
+    app.get("/projectmanagement/:emailaddress/checkemailaddress", (req, res) => {
+        const emailaddress = req.params.emailaddress;
         request.post({
-                url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php`,
+                url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php?emailaddress=${emailaddress}`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -626,8 +628,8 @@ module.exports = app => {
     })
 
     app.post("/projectmanagement/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
-   
-   request.post({
+
+        request.post({
                 url: `https://civilengineer.io/projectmanagement/api/userendpoint.php`,
                 form: req.body,
                 headers: {
