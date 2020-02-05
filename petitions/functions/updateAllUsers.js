@@ -91,7 +91,7 @@ module.exports = (user) => {
         })
     }
 
-    console.log(user)
+
     return user;
 
 }

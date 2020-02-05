@@ -17,36 +17,7 @@ const s3 = new AWS.S3({
 });
 
 module.exports = app => {
-    const fileStorage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, './routes/temp');
-        },
-        filename: (req, file, cb) => {
-            let providerid = req.session.user.providerid;
-            let access = req.session.user.access;
-            let ext = "";
-            if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-                ext = "jpg"
-            }
-            else if (file.mimetype === "image/png") {
-                ext = "png"
-            }
-            cb(null, `${providerid}.${ext}`);
-        }
-    });
-    const fileFilter = (req, file, cb) => {
-        if (
-            file.mimetype === 'image/png' ||
-            file.mimetype === 'image/jpg' ||
-            file.mimetype === 'image/jpeg'
-        ) {
-            cb(null, true);
-        }
-        else {
-            cb(null, false);
-        }
-    };
-    app.use(multer({ fileFilter }).single('profilephoto'));
+
 
     app.post('/projectmanagement/webclient/loginuser', (req, res) => {
         const { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl } = req.body;
@@ -103,7 +74,7 @@ module.exports = app => {
 
     app.post('/projectmanagement/clientlogin', (req, res) => {
         console.log(req.body)
-        
+
         request.post({
                 url: `https://civilengineer.io/projectmanagement/api/loginclient.php`,
                 form: req.body,

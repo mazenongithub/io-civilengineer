@@ -10,6 +10,13 @@ const s3conflictuploader = require('./functions/s3conflictuploader')
 const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
 
 module.exports = app => {
+    app.post("/construction/fuckmylife", (req, res) => {
+
+        console.log("FUCK MY LIFE", req.body, req.file)
+
+        res.send({ fuckmylife: 'fuckmylife' })
+    })
+
     app.post('/petitions/:userid/comments', (req, res) => {
         console.log(req.body)
         let url = `http://civilengineer.io/petitions/api/commentsendpoint.php`
@@ -76,6 +83,7 @@ module.exports = app => {
             }) // end request
 
     })
+
 
     app.post('/petitions/arguements/:arguementid/uploadpetitionimage', s3arguementuploader, (req, res) => {
 
@@ -401,6 +409,7 @@ module.exports = app => {
 
 
     })
+
 
     app.post("/petitions/:userid/uploadprofileimage", s3deleteprofileurl, s3fileuploader, (req, res) => {
         let url = `http://civilengineer.io/petitions/api/userendpoint.php`

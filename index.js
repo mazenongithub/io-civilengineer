@@ -5,14 +5,28 @@ const parser = require('xml2json');
 var app = express();
 var session = require('express-session')
 const keys = require('./keys');
+const multer = require("multer");
 //const cors = require('cors')
+
+const fileFilter = (req, file, cb) => {
+    if (
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
+        cb(null, true);
+    }
+    else {
+        cb(null, false);
+    }
+};
+app.use(multer({ fileFilter }).single('profilephoto'))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const cors = {
     origin: ["http://rentmeroom.civilengineer.io", "http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
 }
-
 
 
 app.all('*', function(req, res, next) {
@@ -35,10 +49,13 @@ app.use(session({
 
 ));
 
+
 require('./construction')(app);
 require('./projectmanagement')(app);
-require('./geotechnical')(app);
 require('./petitions')(app);
+require('./geotechnical')(app);
+
+
 app.get('/', (req, res) => {
     let response = { response: ` api.civilengineer.io ` }
     res.send(response)

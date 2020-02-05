@@ -6,44 +6,14 @@ const updateAllUsers = require('./functions/updateallusers');
 const checkUserLogin = require('./functions/checkuserlogin');
 const removeprofilephoto = require('../projectmanagement/functions/removeprofilephoto');
 const uploadprofileimage = require('../projectmanagement/functions/uploadprofileimage');
-const multer = require("multer");
+
 
 module.exports = app => {
-    const fileStorage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, './routes/temp');
-        },
-        filename: (req, file, cb) => {
-            let providerid = req.session.user.providerid;
-            let access = req.session.user.access;
-            let ext = "";
-            if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-                ext = "jpg"
-            }
-            else if (file.mimetype === "image/png") {
-                ext = "png"
-            }
-            cb(null, `${providerid}.${ext}`);
-        }
-    });
-    const fileFilter = (req, file, cb) => {
-        if (
-            file.mimetype === 'image/png' ||
-            file.mimetype === 'image/jpg' ||
-            file.mimetype === 'image/jpeg'
-        ) {
-            cb(null, true);
-        }
-        else {
-            cb(null, false);
-        }
-    };
-    app.use(multer({ fileFilter }).single('profilephoto'));
-
+   
     app.post("/construction/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
 
         let url = `https://civilengineer.io/construction/api/userendpoint.php`;
-        console.log(req.body)
+
 
         request.post({
                 url,
@@ -369,6 +339,8 @@ module.exports = app => {
             }) // end request
 
     })
+
+
     app.post('/construction/:providerid/saveprofile', (req, res) => {
 
         let url = `https://civilengineer.io/construction/api/userendpoint.php`;

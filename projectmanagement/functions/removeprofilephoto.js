@@ -8,7 +8,7 @@ const s3 = new AWS.S3({
 });
 
 module.exports = (req, res, next) => {
-
+    console.log(req.body, req.file)
     let providerid = req.params.providerid;
     console.log(providerid, req.body)
     let myuser = req.body.myuser;

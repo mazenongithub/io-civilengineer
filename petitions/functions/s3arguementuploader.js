@@ -7,9 +7,13 @@ const s3 = new AWS.S3({
     secretAccessKey: serverkeys.AWS_SECRET_ACCESS_KEY
 });
 
+
 module.exports = (req, res, next) => {
 
+
+
     if (req.hasOwnProperty("file")) {
+        console.log(req.file)
 
         let imageid = makeID(16)
 
@@ -46,6 +50,7 @@ module.exports = (req, res, next) => {
                 let i = keys[0];
                 let j = keys[1];
                 let k = keys[2];
+
 
                 let arguement = myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k];
                 if (arguement.hasOwnProperty("images")) {

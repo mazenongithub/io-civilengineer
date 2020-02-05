@@ -38,6 +38,7 @@ module.exports = (req, res, next) => {
             if (data.hasOwnProperty("Location")) {
                 let myuser = req.body.myuser;
                 myuser = JSON.parse(myuser);
+                
                 let image = data.Location;
                 let newImage = { imageid, image }
                 let keys = getImageKeys(myuser, imageid);
