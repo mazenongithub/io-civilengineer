@@ -180,7 +180,7 @@ module.exports = app => {
                 }
                 catch (err) {
                     console.log(err)
-                    res.status(404).send({ message: 'Server is Down please try again later ' })
+                    res.status(404).send({ message: 'Server is Not Responding please try again later ' })
                 }
 
             }) // end request

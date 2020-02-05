@@ -10,7 +10,9 @@ const s3 = new AWS.S3({
 module.exports = (req, res, next) => {
 
     let providerid = req.params.providerid;
+    console.log(providerid, req.body)
     let myuser = req.body.myuser;
+    console.log(myuser)
     myuser = JSON.parse(myuser);
     const profileurl = myuser.profileurl;
     const keypos = profileurl.lastIndexOf('/');

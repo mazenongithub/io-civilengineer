@@ -4,7 +4,74 @@ const parser = require('xml2json');
 const updateUserResponse = require('./functions/updateuserresponse')
 const updateAllUsers = require('./functions/updateallusers');
 const checkUserLogin = require('./functions/checkuserlogin');
+const removeprofilephoto = require('../projectmanagement/functions/removeprofilephoto');
+const uploadprofileimage = require('../projectmanagement/functions/uploadprofileimage');
+const multer = require("multer");
+
 module.exports = app => {
+    const fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, './routes/temp');
+        },
+        filename: (req, file, cb) => {
+            let providerid = req.session.user.providerid;
+            let access = req.session.user.access;
+            let ext = "";
+            if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
+                ext = "jpg"
+            }
+            else if (file.mimetype === "image/png") {
+                ext = "png"
+            }
+            cb(null, `${providerid}.${ext}`);
+        }
+    });
+    const fileFilter = (req, file, cb) => {
+        if (
+            file.mimetype === 'image/png' ||
+            file.mimetype === 'image/jpg' ||
+            file.mimetype === 'image/jpeg'
+        ) {
+            cb(null, true);
+        }
+        else {
+            cb(null, false);
+        }
+    };
+    app.use(multer({ fileFilter }).single('profilephoto'));
+
+    app.post("/construction/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
+
+        let url = `https://civilengineer.io/construction/api/userendpoint.php`;
+        console.log(req.body)
+
+        request.post({
+                url,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+                    response = updateUserResponse(response);
+                    response = updateAllUsers(response)
+                    res.send(response)
+                    //values returned from DB
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'Server is unable to load response ' })
+                }
+
+            }) // end request
+
+
+    })
     app.post('/construction/register', (req, res) => {
 
         request.post({
@@ -109,8 +176,8 @@ module.exports = app => {
 
 
     app.post('/construction/loginclient', (req, res) => {
-        const { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl } = req.body;
-        const values = { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl };
+        const { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl, pass } = req.body;
+        const values = { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl, pass };
         console.log(values)
         request.post({
                 url: `https://civilengineer.io/construction/api/loginclient.php`,
@@ -302,7 +369,36 @@ module.exports = app => {
             }) // end request
 
     })
+    app.post('/construction/:providerid/saveprofile', (req, res) => {
 
+        let url = `https://civilengineer.io/construction/api/userendpoint.php`;
+        console.log(url, req.body)
+        request.post({
+                url,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+                    response = updateUserResponse(response);
+                    response = updateAllUsers(response)
+                    res.send(response)
+                    //values returned from DB
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'Server is down' })
+                }
+
+            }) // end request
+
+    })
 
     app.post('/construction/:providerid/project/:projectid', (req, res) => {
 
