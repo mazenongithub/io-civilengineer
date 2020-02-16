@@ -273,58 +273,68 @@ module.exports = app => {
 
     })
     app.get('/petitions/users/checkuser', (req, res) => {
-        if (req.hasOwnProperty("session")) {
-            if (req.session.hasOwnProperty("user")) {
-                if (req.session.user.hasOwnProperty("petitions")) {
-                    let userid = req.session.user.petitions;
-                    let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
-                    request({
-                            url,
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Permission': `${keys.grantAuthorization}`
-                            }
-                        },
-                        function(err, httpResponse, body) {
-                            if (!err) {
+        const checkuser = () => {
+            let usercheck = false;
+            if (req.hasOwnProperty("session")) {
+                if (req.session.hasOwnProperty("user")) {
+                    if (req.session.user.hasOwnProperty("petitions")) {
+                        usercheck = req.session.user.petitions;
+                    }
+                }
 
-                                try {
-                                    let json = parser.toJson(body);
-                                    let parsedjson = JSON.parse(json);
-                                    let response = parsedjson.response;
-                                    response = updateUserProfile(response);
-                                    response = updateAllUsers(response);
-                                    if (response.hasOwnProperty("myuser")) {
-                                        req.session.user = { petitions: response.myuser.userid };
-                                    }
+            }
+            return usercheck;
 
-                                    res.send(response);
-                                }
-                                catch (err) {
-                                    res.status(404).send({ error: `BackEnd response error, please try again later` })
-                                }
-                            }
-                            else {
+        }
 
-                                const errorMessage = `There was an error requesting the projects  ${url}`
-                                res.send({ errorMessage });
-                            }
-
-                        }) // end request
+        const userID = () => {
+            let userid = "";
+            let usercheck = checkuser();
+            if (usercheck) {
+                userid = checkuser();
 
 
+            }
+            return userid;
+        }
+        let userid = userID();
+
+        let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
+        request({
+                url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+
+                    try {
+                        let json = parser.toJson(body);
+                        let parsedjson = JSON.parse(json);
+                        let response = parsedjson.response;
+                        response = updateUserProfile(response);
+                        response = updateAllUsers(response);
+                        if (response.hasOwnProperty("myuser")) {
+                            req.session.user = { petitions: response.myuser.userid };
+                        }
+
+                        res.send(response);
+                    }
+                    catch (err) {
+                        res.status(404).send({ error: `BackEnd response error, please try again later` })
+                    }
                 }
                 else {
-                    res.send({ message: ' There is no user logged into this application' })
+
+                    const errorMessage = `There was an error requesting the projects  ${url}`
+                    res.send({ errorMessage });
                 }
-            }
-            else {
-                res.send({ message: ' There is no user logged into this application' })
-            }
-        }
-        else {
-            res.send({ message: ' There is no user logged into this application' })
-        }
+
+            }) // end request
+
+
     })
     app.post('/petitions/users/register', (req, res) => {
         console.log(req.body)
