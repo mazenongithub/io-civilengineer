@@ -78,8 +78,12 @@ module.exports = app => {
                 try {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    parsedjson.response = updateAllUsers(parsedjson.response);
-                    res.send(parsedjson.response);
+                    let response = parsedjson.response;
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(parsedjson.response);
+                    }
+
+                    res.send(response);
 
                 }
                 catch (err) {
@@ -107,13 +111,16 @@ module.exports = app => {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    if (parsedjson.response.hasOwnProperty("myuser")) {
-                        let myuser = parsedjson.response.myuser;
-                        myuser = updateUserProfile(myuser);
-                        parsedjson.response.myuser = myuser;
-                        req.session.user = { petitions: myuser.userid };
-                        res.send({ response: parsedjson.response });
+                    let response = parsedjson.response;
+                    if (response.hasOwnProperty("myuser")) {
+                        response = updateUserProfile(response);
+
                     }
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(response);
+                    }
+                    res.send(response)
+
 
                 }
                 else {
@@ -143,14 +150,15 @@ module.exports = app => {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    if (parsedjson.response.hasOwnProperty("myuser")) {
-                        let myuser = parsedjson.response.myuser;
-                        myuser = updateUserProfile(myuser);
-                        parsedjson.response.myuser = myuser;
-                        parsedjson.response.activeimageid = req.body.activeimageid;
-                        req.session.user = { petitions: myuser.userid };
-                        res.send({ response: parsedjson.response });
+                    let response = parsedjson.response;
+                    if (response.hasOwnProperty("myuser")) {
+                        response = updateUserProfile(response);
+
                     }
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(response);
+                    }
+                    res.send(response)
 
                 }
                 else {
@@ -181,14 +189,15 @@ module.exports = app => {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    if (parsedjson.response.hasOwnProperty("myuser")) {
-                        let myuser = parsedjson.response.myuser;
-                        myuser = updateUserProfile(myuser);
-                        parsedjson.response.myuser = myuser;
-                        parsedjson.response.activeimageid = req.body.activeimageid;
-                        req.session.user = { petitions: myuser.userid };
-                        res.send({ response: parsedjson.response });
+                    let response = parsedjson.response;
+                    if (response.hasOwnProperty("myuser")) {
+                        response = updateUserProfile(response);
+
                     }
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(response);
+                    }
+                    res.send(response)
 
                 }
                 else {
@@ -221,11 +230,13 @@ module.exports = app => {
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
                     let response = parsedjson.response;
-                    response = updateUserProfile(response);
-                    response = updateAllUsers(response);
                     if (response.hasOwnProperty("myuser")) {
-                        req.session.user = { petitions: response.myuser.userid };
+                        response = updateUserProfile(response);
                     }
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(response);
+                    }
+
 
                     res.send(response);
 
@@ -259,9 +270,12 @@ module.exports = app => {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    let myuser = parsedjson.response;
-                    myuser = updateAllUsers(myuser);
-                    res.send(myuser);
+                    let response = parsedjson.response;
+
+                    if (response.hasOwnProperty("allusers")) {
+                        response = updateAllUsers(response);
+                    }
+                    res.send(response)
                 }
                 catch (error) {
 
@@ -409,6 +423,7 @@ module.exports = app => {
 
                     }
                     catch (err) {
+                        console.log(err)
                         res.status(404).send({ message: 'Back End API request error, try again later' })
                     }
 
@@ -444,7 +459,7 @@ module.exports = app => {
                         let response = parsedjson.response;
                         if (response.hasOwnProperty("myuser")) {
                             response = updateUserProfile(response);
-                            req.session.user = { petitions: response.myuser.userid };
+
                         }
                         if (response.hasOwnProperty("allusers")) {
                             response = updateAllUsers(response);
@@ -489,9 +504,11 @@ module.exports = app => {
                         let response = parsedjson.response;
                         if (response.hasOwnProperty("myuser")) {
                             response = updateUserProfile(response);
-                            req.session.user = { petitions: response.myuser.userid };
-                        }
 
+                        }
+                        if (response.hasOwnProperty("allusers")) {
+                            response = updateAllUsers(response);
+                        }
 
                         res.send(response);
                     }
