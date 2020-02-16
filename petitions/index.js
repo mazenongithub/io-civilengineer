@@ -10,13 +10,55 @@ const s3conflictuploader = require('./functions/s3conflictuploader')
 const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
 
 module.exports = app => {
-    app.post("/construction/fuckmylife", (req, res) => {
 
-        console.log("FUCK MY LIFE", req.body, req.file)
+    app.get("/petitions/:userid/checkuserid", (req, res) => {
 
-        res.send({ fuckmylife: 'fuckmylife' })
+        const userid = req.params.userid;
+        request.get(`https://civilengineer.io/petitions/api/checkuserid.php?userid=${userid}`, {
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+
+            },
+            function(err, httpResponse, body) {
+                try {
+                    const json = parser.toJson(body);
+                    const parsedjson = JSON.parse(json)
+                    res.send(parsedjson.response)
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'Server Could Not Load Response' })
+                }
+
+            }) // end request
+
     })
+    app.get("/petitions/:emailaddress/checkemailaddress", (req, res) => {
+        const emailaddress = req.params.emailaddress;
 
+        let url = `https://civilengineer.io/petitions/api/checkemailaddress.php?emailaddress=${emailaddress}`
+
+        request({
+                url,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    const json = parser.toJson(body);
+                    const parsedjson = JSON.parse(json)
+                    res.send(parsedjson.response)
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'API failure could not load response' })
+                }
+
+            }) // end request
+
+    })
     app.post('/petitions/:userid/comments', (req, res) => {
         console.log(req.body)
         let url = `http://civilengineer.io/petitions/api/commentsendpoint.php`
@@ -178,16 +220,15 @@ module.exports = app => {
 
                     let json = parser.toJson(body);
                     let parsedjson = JSON.parse(json);
-                    if (parsedjson.response.hasOwnProperty("myuser")) {
-                        let myuser = parsedjson.response.myuser;
-                        myuser = updateUserProfile(myuser);
-                        if (myuser.hasOwnProperty("allusers")) {
-                            myuser = updateAllUsers(myuser)
-                        }
-
-                        req.session.user = { petitions: myuser.userid };
-                        res.send({ response: parsedjson.response });
+                    let response = parsedjson.response;
+                    response = updateUserProfile(response);
+                    response = updateAllUsers(response);
+                    if (response.hasOwnProperty("myuser")) {
+                        req.session.user = { petitions: response.myuser.userid };
                     }
+
+                    res.send(response);
+
 
                 }
                 catch (err) {
@@ -250,11 +291,14 @@ module.exports = app => {
                                 try {
                                     let json = parser.toJson(body);
                                     let parsedjson = JSON.parse(json);
-                                    let myuser = parsedjson.myuser;
-                                    myuser = updateUserProfile(myuser);
-                                    myuser = updateAllUsers(myuser);
-                                    req.session.user = { petitions: myuser.userid };
-                                    res.send({ myuser });
+                                    let response = parsedjson.response;
+                                    response = updateUserProfile(response);
+                                    response = updateAllUsers(response);
+                                    if (response.hasOwnProperty("myuser")) {
+                                        req.session.user = { petitions: response.myuser.userid };
+                                    }
+
+                                    res.send(response);
                                 }
                                 catch (err) {
                                     res.status(404).send({ error: `BackEnd response error, please try again later` })
@@ -282,42 +326,35 @@ module.exports = app => {
             res.send({ message: ' There is no user logged into this application' })
         }
     })
-    app.post('/petitions/newusers/register', (req, res) => {
-
-
+    app.post('/petitions/users/register', (req, res) => {
+        console.log(req.body)
         let url = `http://civilengineer.io/petitions/api/register.php`
-        try {
-            request.post({
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Permission': `${keys.grantAuthorization}`
-                    },
-                    form: req.body
+        request.post({
+                url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
                 },
-                function(err, httpResponse, body) {
-                    if (!err) {
-                        let json = parser.toJson(body);
-                        let parsedjson = JSON.parse(json);
-                        let myuser = parsedjson.myuser;
-                        myuser = updateUserProfile(myuser);
-                        console.log(myuser)
-                        req.session.user = { petitions: myuser.userid };
-                        res.redirect(`${keys.clientAPI}`)
-                    }
-                    else {
+                form: req.body
+            },
+            function(err, httpResponse, body) {
 
+                try {
+                    let json = parser.toJson(body);
+                    let parsedjson = JSON.parse(json);
+                    let myuser = parsedjson.myuser;
+                    myuser = updateUserProfile(myuser);
+                    console.log(myuser)
+                    req.session.user = { petitions: myuser.userid };
+                    res.send(myuser)
 
-                        res.redirect(`${keys.clientAPI}`)
-                    }
+                }
+                catch (err) {
 
-                }) // end request
+                    res.status(404).send({ message: `Server could not load response` })
+                }
 
-        }
-        catch (err) {
-            res.send({ error: err })
-        }
-
+            }) // end request
 
     })
 
@@ -347,7 +384,7 @@ module.exports = app => {
                             myuser = updateAllUsers(myuser);
                             req.session.user = { petitions: myuser.userid };
                             console.log(req.session.user)
-                            res.send({ myuser })
+                            res.send(myuser)
                         }
 
                         else {

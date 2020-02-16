@@ -54,6 +54,7 @@ require('./construction')(app);
 require('./projectmanagement')(app);
 require('./petitions')(app);
 require('./geotechnical')(app);
+require('./gfk')(app);
 
 
 app.get('/', (req, res) => {
