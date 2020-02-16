@@ -1,21 +1,23 @@
-module.exports = (user) => {
-    if (user.hasOwnProperty("allusers")) {
+module.exports = (response) => {
 
-        if (!user.allusers.myuser.hasOwnProperty("length")) {
+    if (response.hasOwnProperty("allusers")) {
+
+        let allusers = response.allusers;
+        if (!allusers.myuser.hasOwnProperty("length")) {
             let myusers = [];
-            myusers.push(user.allusers.myuser)
-            user.allusers.myuser = myusers;
+            myusers.push(allusers.myuser)
+            allusers.myuser = myusers;
         }
 
         // eslint-disable-next-line
-        user.allusers.myuser.map((myuser, i) => {
+        allusers.myuser.map((myuser, i) => {
 
             if (myuser.hasOwnProperty("petitions")) {
 
                 if (!myuser.petitions.petition.hasOwnProperty("length")) {
                     let petition = [];
                     petition.push(myuser.petitions.petition);
-                    user.allusers.myuser[i].petitions.petition = petition;
+                    allusers.myuser[i].petitions.petition = petition;
                 }
 
                 myuser.petitions.petition.map((petition, j) => {
@@ -23,7 +25,7 @@ module.exports = (user) => {
                         if (!petition.likes.like.hasOwnProperty("length")) {
                             let like = [];
                             like.push(petition.likes.like)
-                            user.allusers.myuser[i].petitions.petition[j].likes.like = like;
+                            allusers.myuser[i].petitions.petition[j].likes.like = like;
                         }
                     }
 
@@ -31,7 +33,7 @@ module.exports = (user) => {
                         if (!petition.comments.comment.hasOwnProperty("length")) {
                             let comment = [];
                             comment.push(petition.comments.comment)
-                            user.allusers.myuser[i].petitions.petition[j].comments.comment = comment;
+                            allusers.myuser[i].petitions.petition[j].comments.comment = comment;
                         }
                     }
 
@@ -41,7 +43,7 @@ module.exports = (user) => {
 
                             let conflict = [];
                             conflict.push(petition.conflicts.conflict);
-                            user.allusers.myuser[i].petitions.petition[j].conflicts.conflict = conflict;
+                            allusers.myuser[i].petitions.petition[j].conflicts.conflict = conflict;
 
                         }
 
@@ -52,7 +54,7 @@ module.exports = (user) => {
                                 if (!conflict.images.image.hasOwnProperty("length")) {
                                     let image = [];
                                     image.push(conflict.images.image);
-                                    user.allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].images.image = image;
+                                    allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].images.image = image;
                                 }
                             }
 
@@ -60,7 +62,7 @@ module.exports = (user) => {
                                 if (!conflict.arguements.arguement.hasOwnProperty("length")) {
                                     let arguement = [];
                                     arguement.push(conflict.arguements.arguement);
-                                    user.allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].arguements.arguement = arguement;
+                                    allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].arguements.arguement = arguement;
 
 
                                 }
@@ -70,7 +72,7 @@ module.exports = (user) => {
                                         if (!arguement.images.image.hasOwnProperty("length")) {
                                             let image = [];
                                             image.push(arguement.images.image)
-                                            user.allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].arguements.arguement[l].images.image = image;
+                                            allusers.myuser[i].petitions.petition[j].conflicts.conflict[k].arguements.arguement[l].images.image = image;
                                         }
                                     }
 
@@ -89,9 +91,10 @@ module.exports = (user) => {
 
 
         })
+        response.allusers = allusers;
     }
 
 
-    return user;
+    return response;;
 
 }

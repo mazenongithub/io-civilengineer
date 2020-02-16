@@ -1,5 +1,5 @@
-module.exports = (myuser) => {
-
+module.exports = (response) => {
+    let myuser = response.myuser;
     if (myuser.hasOwnProperty("petitions")) {
 
         if (!myuser.petitions.petition.hasOwnProperty("length")) {
@@ -53,15 +53,15 @@ module.exports = (myuser) => {
 
 
                         }
-                        conflict.arguements.arguement.map((arguement,k)=> {
-                            if(arguement.hasOwnProperty("images")) {
-                                if(!arguement.images.image.hasOwnProperty("length")) {
+                        conflict.arguements.arguement.map((arguement, k) => {
+                            if (arguement.hasOwnProperty("images")) {
+                                if (!arguement.images.image.hasOwnProperty("length")) {
                                     let image = [];
                                     image.push(arguement.images.image)
                                     myuser.petitions.petition[i].conflicts.conflict[j].arguements.arguement[k].images.image = image;
                                 }
                             }
-                            
+
                         })
 
 
@@ -74,6 +74,7 @@ module.exports = (myuser) => {
 
     }
 
-    return myuser;
+    response.myuser = myuser;
+    return response;
 
 }
