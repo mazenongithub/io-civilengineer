@@ -4,6 +4,7 @@ const parser = require('xml2json');
 const updateUser = require('./functions/updateuser');
 const updateFieldReports = require('./functions/updatefieldreports')
 const uploadfieldimage = require('./functions/uploadfieldimage')
+const updateBorings = require('./functions/updateborings')
 module.exports = app => {
 
     app.post('/gfk/:imageid/uploadfieldimage', uploadfieldimage, (req, res) => {
@@ -60,6 +61,35 @@ module.exports = app => {
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
                     response = updateFieldReports(response)
+                    res.send(response)
+                    //values returned from DB
+
+                }
+                catch (err) {
+                    console.log(err)
+                    res.status(404).send({ message: 'Server is not responding' })
+                }
+
+            }) // end request
+    })
+
+    app.post('/gfk/:projectid/saveborings', (req, res) => {
+
+        console.log(req.body)
+        request.post({
+                url: 'https://civilengineer.io/gfk/api/saveborings.php',
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    var json = parser.toJson(body);
+                    var parsedjson = JSON.parse(json)
+                    let response = parsedjson.response;
+                    response = updateBorings(response)
                     res.send(response)
                     //values returned from DB
 

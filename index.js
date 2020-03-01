@@ -22,7 +22,8 @@ const fileFilter = (req, file, cb) => {
 };
 app.use(multer({ fileFilter }).single('profilephoto'))
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+
 
 const cors = {
     origin: ["http://rentmeroom.civilengineer.io", "http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]

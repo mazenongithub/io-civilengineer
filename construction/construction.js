@@ -9,7 +9,37 @@ const uploadprofileimage = require('../projectmanagement/functions/uploadprofile
 
 
 module.exports = app => {
-   
+    app.post('/construction/csi/addcsis', (req, res) => {
+        let url = `https://civilengineer.io/construction/api/insertcsis.php`;
+
+        console.log(req.body.csis.length)
+        request.post({
+                url,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`,
+                    'Content-Length': Buffer.byteLength(req.body.csis.length)
+                },
+
+            },
+            function(err, httpResponse, body) {
+                try {
+                    // var json = parser.toJson(body);
+                    // var parsedjson = JSON.parse(json)
+                    // let response = parsedjson.response;
+                    res.send(body)
+                    //values returned from DB
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: 'Server is unable to load response ' })
+                }
+
+            }) // end request
+
+    })
+
     app.post("/construction/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
 
         let url = `https://civilengineer.io/construction/api/userendpoint.php`;
@@ -310,6 +340,7 @@ module.exports = app => {
     })
     app.post('/construction/:providerid/company/:companyid', (req, res) => {
 
+
         let url = `https://civilengineer.io/construction/api/savecompany.php`;
         console.log(url, req.body)
         request.post({
@@ -320,12 +351,12 @@ module.exports = app => {
                     'Permission': `${keys.grantAuthorization}`
                 }
             },
+
             function(err, httpResponse, body) {
                 try {
                     var json = parser.toJson(body);
                     var parsedjson = JSON.parse(json)
                     let response = parsedjson.response;
-
                     response = updateUserResponse(response);
                     response = updateAllUsers(response)
                     res.send(response)
@@ -333,13 +364,13 @@ module.exports = app => {
 
                 }
                 catch (err) {
+                    console.log(err)
                     res.status(404).send({ message: 'Server is down' })
                 }
 
             }) // end request
 
     })
-
 
     app.post('/construction/:providerid/saveprofile', (req, res) => {
 
