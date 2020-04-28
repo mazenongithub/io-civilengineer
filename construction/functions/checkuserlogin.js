@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
     if (req.hasOwnProperty("session")) {
-        console.log(req.session)
+
         if (req.session.hasOwnProperty("user")) {
 
             if (req.session.user.hasOwnProperty("construction")) {

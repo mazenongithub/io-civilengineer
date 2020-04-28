@@ -1,266 +1,126 @@
-const keys = require('./keys');
+const serverkeys = require('../keys');
+const keys = require('./keys')
 const request = require("request");
-const parser = require('xml2json');
-const updateUserResponse = require('./functions/updateuserresponse')
-const updateAllUsers = require('./functions/updateallusers');
 const checkUserLogin = require('./functions/checkuserlogin');
-const removeprofilephoto = require('../projectmanagement/functions/removeprofilephoto');
-const uploadprofileimage = require('../projectmanagement/functions/uploadprofileimage');
-
+const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
+const getaccountsfrominvoice = require('./functions/getaccountsfrominvoice');
+const authenticateStripe = require('./functions/authenticatestripe')
+var bodyParser = require("body-parser");
 
 module.exports = app => {
-    app.post('/construction/csi/addcsis', (req, res) => {
-        let url = `https://civilengineer.io/construction/api/insertcsis.php`;
 
-        console.log(req.body.csis.length)
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`,
-                    'Content-Length': Buffer.byteLength(req.body.csis.length)
+
+    app.post('/construction/webhookendpoint', authenticateStripe, (req, res) => {
+
+        const stripe = () => {
+            return (req.body)
+        }
+        const balanceavailable = () => {
+
+            return (req.body)
+        }
+
+        const type = stripe().type;
+
+        if (type === 'charge.succeeded') {
+
+            const livemode = stripe().data.object.livemode
+            const charge = stripe().data.object.object;
+            const succeeded = stripe().data.object.status;
+            const captured = stripe().data.object.captured;
+            const amount = stripe().data.object.amount;
+            const description = stripe().data.object.description
+            let invoiceid = description.substring(19, 35)
+            invoiceid = invoiceid.trim();
+            const values = { invoiceid }
+
+            if (captured) {
+
+                request.post({
+                        url: 'https://civilengineer.io/construction/api/invoicecaptured.php',
+                        form: values,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Permission': `${keys.grantAuthorization}`
+                        }
+                    },
+                    function(err, httpResponse, body) {
+                        if (!err) {
+                            body = JSON.parse(body)
+                            res.send(body);
+
+                        }
+                        else {
+                            res.status(404).send(`There was an error making the request`)
+                        }
+
+                    });
+            }
+
+
+        }
+        else if (type === 'balance.available') {
+
+            let amount = balanceavailable().data.object.available[0].amount;
+            request.post({
+                    url: 'https://civilengineer.io/construction/api/settlements.php',
+                    form: { amount },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Permission': `${keys.grantAuthorization}`
+                    }
                 },
+                function(err, httpResponse, body) {
+                    if (!err) {
+                        body = JSON.parse(body)
+                        const invoices = body.invoices;
+                        invoices.map(invoice => {
+                            if (invoice.accounts) {
 
-            },
-            function(err, httpResponse, body) {
-                try {
-                    // var json = parser.toJson(body);
-                    // var parsedjson = JSON.parse(json)
-                    // let response = parsedjson.response;
-                    res.send(body)
-                    //values returned from DB
+                                invoice.accounts.map(account => {
 
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is unable to load response ' })
-                }
+                                    stripe.transfers.create({
+                                        amount: account.amount,
+                                        currency: "usd",
+                                        destination: account.stripe,
+                                        transfer_group: invoice.invoiceid
+                                    }).then(function(transfer) {
+                                        //insert transfer id
 
-            }) // end request
-
-    })
-
-    app.post("/construction/:providerid/uploadprofileimage", removeprofilephoto, uploadprofileimage, (req, res) => {
-
-        let url = `https://civilengineer.io/construction/api/userendpoint.php`;
+                                    });
 
 
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateUserResponse(response);
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
+                                })
+                            }
+                        })
+                        res.send(body)
 
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is unable to load response ' })
-                }
-
-            }) // end request
-
-
-    })
-    app.post('/construction/register', (req, res) => {
-
-        request.post({
-                url: `https://civilengineer.io/construction/api/register.php`,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    console.log(response)
-                    if (response.hasOwnProperty("providerid")) {
-                        let user = { construction: response.providerid }
-                        req.session.user = user;
-                        response = updateUserResponse(response);
-                        response = updateAllUsers(response)
-                        res.send(response)
-
-                    }
-                    else if (response.hasOwnProperty("invalid")) {
-
-                        const message = response.invalid
-                        res.send({ message })
                     }
                     else {
-                        const fail = 'Could not retrieve response from server  ';
-                        res.status(499).send({ message: fail })
+                        res.status(404).send(`There was an error making the request`)
                     }
 
+                });
 
 
 
-                }
-                catch (err) {
-                    err = 'Server could not log in user, please try again later ';
-                    res.status(499).send({ message: err })
-
-                }
-
-                //values returned from DB
-
-
-            }) // end request
-    })
-
-    app.post('/construction/loginlocal', (req, res) => {
-        const { emailaddress, pass } = req.body;
-        const values = { emailaddress, pass };
-        console.log(values)
-        request.post({
-                url: `https://civilengineer.io/construction/api/login.php`,
-                form: values,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    console.log(response)
-                    if (response.hasOwnProperty("providerid")) {
-                        let user = { construction: response.providerid }
-                        req.session.user = user;
-                        response = updateUserResponse(response);
-                        response = updateAllUsers(response)
-                        res.send(response)
-
-                    }
-                    else if (response.hasOwnProperty("invalid")) {
-
-                        const message = response.invalid
-                        res.send({ message })
-                    }
-                    else {
-                        const fail = 'Could not retrieve response from server  ';
-                        res.status(499).send({ message: fail })
-                    }
+        }
 
 
 
-
-                }
-                catch (err) {
-                    err = 'Server could not log in user, please try again later ';
-                    res.status(499).send({ message: err })
-
-                }
-
-                //values returned from DB
-
-
-            }) // end request
-    })
-
-
-    app.post('/construction/loginclient', (req, res) => {
-        const { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl, pass } = req.body;
-        const values = { clientid, client, firstname, lastname, emailaddress, phonenumber, profileurl, pass };
-        console.log(values)
-        request.post({
-                url: `https://civilengineer.io/construction/api/loginclient.php`,
-                form: values,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    console.log(response)
-                    if (response.hasOwnProperty("providerid")) {
-                        let user = { construction: response.providerid }
-                        req.session.user = user;
-                        response = updateUserResponse(response);
-                        response = updateAllUsers(response)
-                        res.send(response)
-
-                    }
-                    else if (response.hasOwnProperty("invalid")) {
-
-                        const message = response.invalid
-                        res.status(499).send({ message })
-                    }
-                    else {
-                        const fail = 'Could not retrieve response from server  ';
-                        res.status(499).send({ message: fail })
-                    }
-
-
-
-
-                }
-                catch (err) {
-                    err = 'Server could not log in user, please try again later ';
-                    res.status(499).send({ message: err })
-
-                }
-
-                //values returned from DB
-
-
-            }) // end request
-    })
-
-
-    app.get('/construction/:companyid/validatecompanyid', (req, res) => {
-
-        let companyid = req.params.companyid;
-        request.get(`https://civilengineer.io/construction/api/checkcompanyid.php?companyid=${companyid}`, {
-                headers: {
-                    'Permission': `${keys.grantAuthorization}`
-                }
-
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    console.log(err)
-                    res.status(404).send({ message: 'Server is not responding' })
-                }
-
-            }) // end request
 
 
     })
 
+
+
+
+   
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         let providerid = req.session.user.construction;
 
-        request.get(`https://civilengineer.io/construction/api/loadmyprofile.php?providerid=${providerid}`, {
+        request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
                     'Permission': `${keys.grantAuthorization}`
                 }
@@ -268,11 +128,8 @@ module.exports = app => {
             },
             function(err, httpResponse, body) {
                 try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateUserResponse(response);
-                    response = updateAllUsers(response)
+
+                    let response = JSON.parse(body)
                     res.send(response)
                     //values returned from DB
 
@@ -286,212 +143,119 @@ module.exports = app => {
 
 
     })
-    app.get('/construction/logout', (req, res) => {
-        if (req.hasOwnProperty("session")) {
-            if (req.session.hasOwnProperty("user")) {
-                if (req.session.user.hasOwnProperty("construction")) {
-                    req.session.destroy();
-                    res.redirect(keys.clientAPI)
+
+    app.get('/construction/logout', checkUserLogin, (req, res) => {
+        req.session.destroy();
+        res.send({ "response": 'Logout Successful' })
+
+    })
+
+    app.post('/construction/clientlogin', (req, res) => {
+        const { clientid, client, emailaddress } = req.body;
+        const values = { clientid, client, emailaddress };
+
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/loginclientnode.php`,
+                form: values,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    console.log(response)
+                    if (response.hasOwnProperty("myuser")) {
+                        let user = { construction: response.myuser.providerid }
+                        req.session.user = user;
+                        res.send(response)
+
+                    }
+
+                    else {
+                        res.status(404).send('Invalid Login')
+                    }
+
+                }
+
+                else {
+                    res.status(404).send('Error making request')
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+    })
+
+    app.get('/construction/:providerid/getuserloginlink/:stripe', checkUserLogin, (req, res) => {
+
+        stripe.accounts.createLoginLink(
+            req.params.stripe,
+            function(err, link) {
+                console.log(link)
+                // asynchronously called
+                if (!err) {
+                    res.send(link)
                 }
                 else {
-                    res.redirect(keys.clientAPI)
+                    res.status(404).send(err);
                 }
             }
-            else {
-
-            }
-            res.redirect(keys.clientAPI)
-
-        }
-        else {
-            res.redirect(keys.clientAPI)
-        }
-
-
+        )
     })
 
-    app.get('/construction/users/allusers', (req, res) => {
 
-        let providerid = req.params.providerid;
+    app.get('/construction/stripe/accounts', (req, res) => {
 
-        request.get(`http://civilengineer.io/construction/api/loadallusers.php`, {
-                headers: {
-                    'Permission': `${keys.grantAuthorization}`
-                }
-
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is not responding' })
-                }
-
-            }) // end request
+        const grant_type = 'authorization_code';
+        const code = req.query.code;
+        const client_secret = serverkeys.STRIPE_SECRET;
+        const accountid = req.query.state;
+        const values = { grant_type, code, client_secret, accountid }
 
 
-    })
-    app.post('/construction/:providerid/company/:companyid', (req, res) => {
 
-
-        let url = `https://civilengineer.io/construction/api/savecompany.php`;
-        console.log(url, req.body)
         request.post({
-                url,
-                form: req.body,
+                url: 'https://connect.stripe.com/oauth/token',
+                form: values,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateUserResponse(response);
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    console.log(err)
-                    res.status(404).send({ message: 'Server is down' })
                 }
 
-            }) // end request
-
-    })
-
-    app.post('/construction/:providerid/saveprofile', (req, res) => {
-
-        let url = `https://civilengineer.io/construction/api/userendpoint.php`;
-        console.log(url, req.body)
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
             },
             function(err, httpResponse, body) {
                 try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateUserResponse(response);
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
+                    let parsedjson = JSON.parse(body);
+                    let params = { stripe: parsedjson.stripe_user_id, accountid, providerid: req.session.user.construction }
+
+                    request.post({
+                            url: `https://civilengineer.io/construction/api/updateaccountid.php`,
+                            form: params,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Permission': `${keys.grantAuthorization}`
+                            }
+                        },
+                        function(err, httpResponse, body) {
+
+                            const response = JSON.parse(body)
+                            const profile = response.myuser.profile;
+                            const companyid = response.myuser.company.companyid;
+                            res.redirect(`${keys.clientAPI}/${profile}/company/${companyid}/accounts`)
+
+                        })
+
 
                 }
                 catch (err) {
-                    res.status(404).send({ message: 'Server is down' })
+                    res.status(404).send('API failure could not load response')
                 }
 
-            }) // end request
-
-    })
-
-    app.post('/construction/:providerid/project/:projectid', (req, res) => {
-
-        let url = `https://civilengineer.io/construction/api/saveproject.php`;
-        console.log(url, req.body)
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-                    response = updateUserResponse(response);
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is down' })
-                }
-
-            }) // end request
-
-    })
-
-    app.post('/construction/users/registernewcompany', (req, res) => {
-        let url = `https://civilengineer.io/construction/api/createcompany.php`;
-        console.log(url, req.body)
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-
-                    response = updateUserResponse(response)
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is not responding' })
-                }
-
-            }) // end request
-
-
-    })
-
-    app.post('/construction/users/addexistingcompany', (req, res) => {
-        let url = `https://civilengineer.io/construction/api/addexistingcompany.php`;
-        console.log(url, req.body)
-        request.post({
-                url,
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    var json = parser.toJson(body);
-                    var parsedjson = JSON.parse(json)
-                    let response = parsedjson.response;
-
-                    response = updateUserResponse(response)
-                    response = updateAllUsers(response)
-                    res.send(response)
-                    //values returned from DB
-
-                }
-                catch (err) {
-                    res.status(404).send({ message: 'Server is not responding' })
-                }
 
             }) // end request
 

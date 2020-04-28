@@ -43,19 +43,20 @@ module.exports = (response) => {
                     response.borings.boring[i].samples.sample = sample;
                 }
 
-            }
-            // eslint-disable-next-line
-            boring.samples.sample.map((sample, j) => {
 
-                if (sample.hasOwnProperty("unconfined")) {
+                // eslint-disable-next-line
+                boring.samples.sample.map((sample, j) => {
 
-                    if (!sample.unconfined.testdata.data.hasOwnProperty("length")) {
-                        let data = [];
-                        data.push(sample.unconfined.testdata.data)
-                        response.borings.boring[i].samples.sample[j].unconfined.testdata.data = data;
+                    if (sample.hasOwnProperty("unconfined")) {
+
+                        if (!sample.unconfined.testdata.data.hasOwnProperty("length")) {
+                            let data = [];
+                            data.push(sample.unconfined.testdata.data)
+                            response.borings.boring[i].samples.sample[j].unconfined.testdata.data = data;
+                        }
                     }
-                }
-            })
+                })
+            }
 
 
         })

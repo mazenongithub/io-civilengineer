@@ -22,11 +22,16 @@ const fileFilter = (req, file, cb) => {
 };
 app.use(multer({ fileFilter }).single('profilephoto'))
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({
+    limit: '50mb',
+    verify: (req, res, buf) => {
+        req.rawBody = buf
+    }
+}));
 
 
 const cors = {
-    origin: ["http://rentmeroom.civilengineer.io", "http://geotechnical.civilengineer.io", "http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
+    origin: ["http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
 }
 
 
@@ -51,11 +56,8 @@ app.use(session({
 ));
 
 
-require('./construction')(app);
-require('./projectmanagement')(app);
-require('./petitions')(app);
-require('./geotechnical')(app);
-require('./gfk')(app);
+require('./construction')(app)
+require('./projectmanagement')(app)
 
 
 app.get('/', (req, res) => {
