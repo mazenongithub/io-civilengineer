@@ -74,7 +74,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 if (!err) {
                     const response = JSON.parse(body)
-                  
+
                     if (response.hasOwnProperty("myuser")) {
                         let user = { pm: response.myuser.providerid }
                         req.session.user = user;

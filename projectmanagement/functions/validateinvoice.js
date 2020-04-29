@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
             if (!err) {
 
                 const response = JSON.parse(body);
-                console.log("validateinvoice", response)
+
                 if (response.validate) {
                     next();
                 }
