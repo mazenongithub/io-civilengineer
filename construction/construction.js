@@ -3,7 +3,6 @@ const keys = require('./keys')
 const request = require("request");
 const checkUserLogin = require('./functions/checkuserlogin');
 const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
-const getaccountsfrominvoice = require('./functions/getaccountsfrominvoice');
 const authenticateStripe = require('./functions/authenticatestripe')
 var bodyParser = require("body-parser");
 
@@ -115,7 +114,7 @@ module.exports = app => {
 
 
 
-   
+
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         let providerid = req.session.user.construction;
