@@ -106,6 +106,7 @@ module.exports = app => {
         let providerid = req.params.providerid;
         let invoiceid = req.params.invoiceid;
         let source = "";
+
         if (req.body.token.hasOwnProperty("id")) {
             source = req.body.token.id;
         }
@@ -114,7 +115,7 @@ module.exports = app => {
         }
 
         let amount = req.body.amount;
-        let message = `Charging amount ${amount}`
+
         stripe.charges.create({
             amount: req.body.amount,
             currency: "usd",
