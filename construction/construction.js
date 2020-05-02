@@ -216,7 +216,7 @@ module.exports = app => {
         const client_secret = serverkeys.STRIPE_SECRET;
         const accountid = req.query.state;
         const values = { grant_type, code, client_secret, accountid }
-
+        console.log(values)
 
 
         request.post({
@@ -231,7 +231,7 @@ module.exports = app => {
                 try {
                     let parsedjson = JSON.parse(body);
                     let params = { stripe: parsedjson.stripe_user_id, accountid, providerid: req.session.user.construction }
-
+                    console.log(params)
                     request.post({
                             url: `https://civilengineer.io/construction/api/updateaccountid.php`,
                             form: params,
@@ -252,6 +252,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
+                    console.log(err)
                     res.status(404).send('API failure could not load response')
                 }
 
