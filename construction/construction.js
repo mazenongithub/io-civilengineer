@@ -143,19 +143,22 @@ module.exports = app => {
 
     })
 
-    app.get('/construction/logout', checkUserLogin, (req, res) => {
+    app.get('/construction/:providerid/logout', checkUserLogin, (req, res) => {
         req.session.destroy();
-        res.send({ "response": 'Logout Successful' })
+        res.send({
+            "message": `${req.params.providerid} has been logged out of payments`
+        })
 
     })
 
     app.post('/construction/clientlogin', (req, res) => {
         const { clientid, client, emailaddress } = req.body;
         const values = { clientid, client, emailaddress };
-
+        console.log(values)
 
         request.post({
-                url: `https://civilengineer.io/construction/api/loginclientnode.php`,
+                url: `
+                https://civilengineer.io/construction/api/loginclientnode.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -169,6 +172,7 @@ module.exports = app => {
                     if (response.hasOwnProperty("myuser")) {
                         let user = { construction: response.myuser.providerid }
                         req.session.user = user;
+                        console.log(response)
                         res.send(response)
 
                     }
@@ -209,7 +213,7 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/stripe/accounts', (req, res) => {
+    app.get('/construction/stripe/accounts', checkUserLogin, (req, res) => {
 
         const grant_type = 'authorization_code';
         const code = req.query.code;
@@ -245,7 +249,7 @@ module.exports = app => {
                             const response = JSON.parse(body)
                             const profile = response.myuser.profile;
                             const companyid = response.myuser.company.companyid;
-                            res.redirect(`${keys.clientAPI}/${profile}/company/${companyid}/accounts`)
+                            res.redirect(`${keys.clientAPI}/${profile}/company/${companyid}/accounts/${accountid}`)
 
                         })
 
