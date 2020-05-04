@@ -8,6 +8,32 @@ var bodyParser = require("body-parser");
 
 module.exports = app => {
 
+    app.post('/construction/:providerid/uploadprofilephoto', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/saveprofile.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+
+
+    })
 
     app.post('/construction/webhookendpoint', authenticateStripe, (req, res) => {
 
