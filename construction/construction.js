@@ -154,7 +154,7 @@ module.exports = app => {
     app.post('/construction/clientlogin', (req, res) => {
         const { clientid, client, emailaddress } = req.body;
         const values = { clientid, client, emailaddress };
-        console.log(values)
+
 
         request.post({
                 url: `
@@ -168,11 +168,11 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 if (!err) {
                     const response = JSON.parse(body)
-                    console.log(response)
+
                     if (response.hasOwnProperty("myuser")) {
                         let user = { construction: response.myuser.providerid }
                         req.session.user = user;
-                        console.log(response)
+
                         res.send(response)
 
                     }
@@ -200,7 +200,7 @@ module.exports = app => {
         stripe.accounts.createLoginLink(
             req.params.stripe,
             function(err, link) {
-                console.log(link)
+
                 // asynchronously called
                 if (!err) {
                     res.send(link)
@@ -220,7 +220,6 @@ module.exports = app => {
         const client_secret = serverkeys.STRIPE_SECRET;
         const accountid = req.query.state;
         const values = { grant_type, code, client_secret, accountid }
-        console.log(values)
 
 
         request.post({
@@ -235,7 +234,7 @@ module.exports = app => {
                 try {
                     let parsedjson = JSON.parse(body);
                     let params = { stripe: parsedjson.stripe_user_id, accountid, providerid: req.session.user.construction }
-                    console.log(params)
+
                     request.post({
                             url: `https://civilengineer.io/construction/api/updateaccountid.php`,
                             form: params,
@@ -265,6 +264,132 @@ module.exports = app => {
 
 
     })
+
+    app.post('/construction/:providerid/createnewcompany', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/createcompany.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add company, please try again later`)
+                }
+
+
+            })
+
+    })
+
+    app.post('/construction/:providerid/addexistingcompany', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/addexistingcompany.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+    })
+
+    app.post('/construction/:providerid/savecompany', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/savecompany.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+    })
+
+    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/saveproject.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+    })
+
+    app.post('/construction/:providerid/saveprofile', checkUserLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/saveprofile.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+    })
+
 
 
 }
