@@ -3,16 +3,19 @@ const keys = require('./keys')
 const request = require("request");
 const checkUserLogin = require('./functions/checkuserlogin');
 const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
-const authenticateStripe = require('./functions/authenticatestripe')
+const authenticateStripe = require('./functions/authenticatestripe');
+const removeProfilePhoto = require('./functions/removeprofilephoto');
+const uploadProfilePhoto = require('./functions/uploadprofilephoto');
+
 var bodyParser = require("body-parser");
 
 module.exports = app => {
 
-    app.post('/construction/:providerid/uploadprofilephoto', checkUserLogin, (req, res) => {
-
+    app.post('/construction/:providerid/uploadprofilephoto', checkUserLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
+        const values = { myuser: req.body.myuser }
         request.post({
-                url: `https://civilengineer.io/construction/api/saveprofile.php`,
-                form: req.body,
+                url: `https://civilengineer.io/construction/api/userendpoint.php`,
+                form: values,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`
@@ -172,7 +175,7 @@ module.exports = app => {
     app.get('/construction/:providerid/logout', checkUserLogin, (req, res) => {
         req.session.destroy();
         res.send({
-            "message": `${req.params.providerid} has been logged out of payments`
+            "message": `${req.params.providerid} has been logged out`
         })
 
     })
@@ -291,7 +294,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/createnewcompany', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/createcompany', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/createcompany.php`,
@@ -394,7 +397,7 @@ module.exports = app => {
     app.post('/construction/:providerid/saveprofile', checkUserLogin, (req, res) => {
 
         request.post({
-                url: `https://civilengineer.io/construction/api/saveprofile.php`,
+                url: `https://civilengineer.io/construction/api/userendpoint.php`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',

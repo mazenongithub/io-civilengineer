@@ -11,6 +11,7 @@ module.exports = (req, res, next) => {
     let myuser = req.body.myuser;
     myuser = JSON.parse(myuser);
     const profileurl = myuser.profileurl;
+    if(profileurl) {
     const keypos = profileurl.lastIndexOf('/');
     const Key = profileurl.substr(keypos + 1);
 
@@ -30,4 +31,7 @@ module.exports = (req, res, next) => {
         }
     });
 
+} else {
+    next();
+}
 }
