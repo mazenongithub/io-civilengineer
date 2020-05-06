@@ -183,11 +183,10 @@ module.exports = app => {
     app.post('/construction/clientlogin', (req, res) => {
         const { clientid, client, emailaddress } = req.body;
         const values = { clientid, client, emailaddress };
-
+        console.log(values)
 
         request.post({
-                url: `
-                https://civilengineer.io/construction/api/loginclientnode.php`,
+                url: `https://civilengineer.io/construction/api/loginclientnode.php`,
                 form: values,
                 headers: {
                     'Content-Type': 'application/json',
@@ -201,18 +200,20 @@ module.exports = app => {
                     if (response.hasOwnProperty("myuser")) {
                         let user = { construction: response.myuser.providerid }
                         req.session.user = user;
-
+                        console.log(response)
                         res.send(response)
 
                     }
 
                     else {
-                        res.status(404).send('Invalid Login')
+                        console.log(response)
+                        res.status(404).send({ message: response.message })
                     }
 
                 }
 
                 else {
+                    console.log()
                     res.status(404).send('Error making request')
                 }
 
