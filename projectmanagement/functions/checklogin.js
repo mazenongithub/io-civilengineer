@@ -1,33 +1,25 @@
 module.exports = (req, res, next) => {
-    let providerid = req.params.providerid;
-
-    if (providerid) {
+    if (req.hasOwnProperty("session")) {
 
         if (req.session.hasOwnProperty("user")) {
-            if (req.session.user.hasOwnProperty("pm")) {
 
-                if (req.session.user.pm === req.params.providerid) {
-                    next();
-                }
-                else {
-                    res.status(401).send(`User Parameter mismatch unauthorized not allowed`)
-                }
+            if (req.session.user.hasOwnProperty("pm")) {
+                return next();
             }
             else {
-
-                res.status(401).send(`User Parameter mismatch unauthorized not allowed`)
+                res.status(404).send({ message: `There is no user logged in, Please Login to Access Content ` })
             }
+
         }
         else {
-            console.log("User does not exist")
-            res.status(401).send(`User Parameter mismatch unauthorized not allowed`)
+            res.status(404).send({ message: 'There is no user logged in, Please Login to Access Content ' })
         }
 
     }
     else {
-        console.log(`Provider ID does not exist`)
-        res.status(401).send(`Missing Parameter mismatch unauthorized not allowed`)
+        res.status(404).send({ message: 'There is no user logged in, Please Login to Access Content ' })
     }
+
 
 
 }

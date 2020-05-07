@@ -4,7 +4,8 @@ const request = require("request");
 const checkLogin = require('./functions/checklogin');
 const validateInvoice = require('./functions/validateinvoice');
 const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
-
+const removeProfilePhoto = require('./functions/removeprofilephoto');
+const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 module.exports = app => {
     //app.use(function(req, res, next) {
     //    res.header("Access-Control-Allow-Origin", keys.clientAPI);
@@ -13,20 +14,48 @@ module.exports = app => {
     //    next();
     //});
 
+    app.post('/construction/:providerid/uploadprofilephoto', checkLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
+        const values = { myuser: req.body.myuser }
+        request.post({
+                url: `https://civilengineer.io/projectmanagement/api/userendpoint.php`,
+                form: values,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+                }
+                else {
+                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                }
+
+
+            })
+
+
+
+    })
+
     app.get('/projectmanagement/:providerid/logout', checkLogin, (req, res) => {
         req.session.destroy();
-        res.send({ "response": 'Logout Successful' })
+        res.send({ "message": 'Logout Successful' })
 
     })
 
 
-    app.get('/projectmanagement/:providerid/checkuser', checkLogin, (req, res) => {
-        const providerid = req.params.providerid;
+
+
+    app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
+        const providerid = req.session.user.pm
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
-                    'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`
                 }
             },
@@ -56,6 +85,45 @@ module.exports = app => {
 
             }) // end request
 
+
+    })
+
+    app.post('/projectmanagement/:providerid/saveallprofile', checkLogin, (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/projectmanagement/api/userendpoint.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+
+                    if (response.hasOwnProperty("myuser")) {
+                        let user = { pm: response.myuser.providerid }
+                        req.session.user = user;
+                        res.send(response)
+
+                    }
+
+                    else {
+                        res.status(404).send({ message: 'Invalid Login' })
+                    }
+
+                }
+
+                else {
+                    res.status(404).send({ message: 'Error making request' })
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
 
     })
 
@@ -149,14 +217,14 @@ module.exports = app => {
                                 res.send(response)
                             }
                             else {
-                                console.log(err, `Could not update charge`)
+                                res.status(404).send({ message: `Charge was valid, error occurred updating invoice, check charge` });
                             }
 
                         });
 
                 }
                 else {
-                    res.status(404).send(`Charge capture failed`);
+                    res.status(404).send({ message: `Could not validate charge or the charge was invalid` });
 
 
                 }
@@ -164,7 +232,7 @@ module.exports = app => {
 
             }
             else {
-                res.status(404).send(`Could not capture charge `)
+                res.status(404).send({ message: `Charge failed ` })
             }
 
         })

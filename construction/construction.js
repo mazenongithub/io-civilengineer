@@ -50,44 +50,7 @@ module.exports = app => {
 
         const type = stripe().type;
 
-        if (type === 'charge.succeeded') {
-
-            const livemode = stripe().data.object.livemode
-            const charge = stripe().data.object.object;
-            const succeeded = stripe().data.object.status;
-            const captured = stripe().data.object.captured;
-            const amount = stripe().data.object.amount;
-            const description = stripe().data.object.description
-            let invoiceid = description.substring(19, 35)
-            invoiceid = invoiceid.trim();
-            const values = { invoiceid }
-
-            if (captured) {
-
-                request.post({
-                        url: 'https://civilengineer.io/construction/api/invoicecaptured.php',
-                        form: values,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Permission': `${keys.grantAuthorization}`
-                        }
-                    },
-                    function(err, httpResponse, body) {
-                        if (!err) {
-                            body = JSON.parse(body)
-                            res.send(body);
-
-                        }
-                        else {
-                            res.status(404).send(`There was an error making the request`)
-                        }
-
-                    });
-            }
-
-
-        }
-        else if (type === 'balance.available') {
+        if (type === 'balance.available') {
 
             let amount = balanceavailable().data.object.available[0].amount;
             request.post({
@@ -163,7 +126,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
-                    console.log(err)
+
                     res.status(404).send({ message: 'Server is not responding' })
                 }
 
@@ -183,7 +146,6 @@ module.exports = app => {
     app.post('/construction/clientlogin', (req, res) => {
         const { clientid, client, emailaddress } = req.body;
         const values = { clientid, client, emailaddress };
-        console.log(values)
 
         request.post({
                 url: `https://civilengineer.io/construction/api/loginclientnode.php`,
@@ -200,20 +162,19 @@ module.exports = app => {
                     if (response.hasOwnProperty("myuser")) {
                         let user = { construction: response.myuser.providerid }
                         req.session.user = user;
-                        console.log(response)
                         res.send(response)
 
                     }
 
                     else {
-                        console.log(response)
+
                         res.status(404).send({ message: response.message })
                     }
 
                 }
 
                 else {
-                    console.log()
+
                     res.status(404).send('Error making request')
                 }
 
@@ -285,7 +246,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
-                    console.log(err)
+
                     res.status(404).send('API failure could not load response')
                 }
 
