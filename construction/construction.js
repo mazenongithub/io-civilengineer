@@ -39,66 +39,162 @@ module.exports = app => {
     })
 
     app.post('/construction/webhookendpoint', authenticateStripe, (req, res) => {
-
-        const stripe = () => {
+        console.log(req.body)
+        const getstripe = () => {
             return (req.body)
         }
         const balanceavailable = () => {
 
             return (req.body)
         }
+        const transfercreated = () => {
+            return (req.body)
+        }
+        const createTransfer = (transferid, created, amount, destination, invoiceid) => {
+            return ({ transferid, created, amount, destination, invoiceid })
+        }
+        const UTCString = (dateobj) => {
+            const zeroPadding = (num) => {
+                if (num < 10) {
+                    num = `0${num}`
 
-        const type = stripe().type;
+                }
+                return num
 
-        if (type === 'balance.available') {
+            }
+            const getOffsetTime = (timein) => {
+                let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
+                let offset = datein.getTimezoneOffset() / 60;
 
-            let amount = balanceavailable().data.object.available[0].amount;
-            request.post({
-                    url: 'https://civilengineer.io/construction/api/settlements.php',
-                    form: { amount },
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Permission': `${keys.grantAuthorization}`
-                    }
-                },
-                function(err, httpResponse, body) {
-                    if (!err) {
-                        body = JSON.parse(body)
-                        const invoices = body.invoices;
-                        invoices.map(invoice => {
-                            if (invoice.accounts) {
+                return offset;
 
-                                invoice.accounts.map(account => {
+            }
 
-                                    stripe.transfers.create({
-                                        amount: account.amount,
-                                        currency: "usd",
-                                        destination: account.stripe,
-                                        transfer_group: invoice.invoiceid
-                                    }).then(function(transfer) {
-                                        //insert transfer id
+            let month = dateobj.getMonth() + 1;
+            month = zeroPadding(month)
+            let day = dateobj.getDate();
+            day = zeroPadding(day)
+            let year = dateobj.getFullYear();
+            let hours = dateobj.getHours();
+            let minutes = dateobj.getMinutes();
+            let seconds = dateobj.getSeconds();
+            seconds = zeroPadding(seconds)
+            minutes = zeroPadding(minutes)
+            hours = zeroPadding(hours);
+            let timein = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+            let offset = getOffsetTime(timein) * 2;
+            let sym = '+';
+            if (offset > 0) {
+                sym = '-';
+            }
+            if (Math.abs(offset) < 10) {
+                offset = `0${offset}`
+            }
 
-                                    });
+            const newDate = new Date(`${timein}${sym}${offset}:00`)
+            hours = newDate.getHours();
+            hours = zeroPadding(hours)
+            year = newDate.getFullYear();
+            day = newDate.getDate();
+            day = zeroPadding(day);
+            month = newDate.getMonth() + 1;
+            month = zeroPadding(month);
+            minutes = newDate.getMinutes();
+            minutes = zeroPadding(minutes);
+            seconds = newDate.getSeconds(seconds);
+            seconds = zeroPadding(seconds);
 
-
-                                })
-                            }
-                        })
-                        res.send(body)
-
-                    }
-                    else {
-                        res.status(404).send(`There was an error making the request`)
-                    }
-
-                });
-
-
-
+            timein = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+            return timein
         }
 
+        const type = getstripe().type;
+
+        let amount = 0;
+
+        switch (type) {
+
+            case 'balance.available':
+
+                amount = balanceavailable().data.object.available[0].amount;
+
+                request.post({
+                        url: 'https://civilengineer.io/construction/api/settlements.php',
+                        form: { amount },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Permission': `${keys.grantAuthorization}`
+                        }
+                    },
+                    function(err, httpResponse, body) {
+                        if (!err) {
+                            body = JSON.parse(body)
+
+                            const invoices = body.invoices;
+                            invoices.map(invoice => {
+                                if (invoice.accounts) {
+
+                                    invoice.accounts.map(account => {
+
+                                        stripe.transfers.create({
+                                            amount: account.amount,
+                                            currency: "usd",
+                                            destination: account.stripe,
+                                            transfer_group: invoice.invoiceid
+                                        }).then(function(transfer) {
+                                            //insert transfer id
+                                            console.log(transfer)
+                                        });
 
 
+                                    })
+                                }
+                            })
+                            res.send(body)
+
+                        }
+                        else {
+                            res.status(404).send(`There was an error making the request`)
+                        }
+
+                    });
+
+            case 'transfer.created':
+                const getstripe = transfercreated();
+                const transferid = getstripe.data.object.id
+                amount = getstripe.data.object.amount;
+                amount = Number(amount / 100).toFixed(2)
+                let created = getstripe.created;
+                created = new Date(getstripe.created * 1000)
+                created = UTCString(created)
+                const destination = getstripe.data.object.destination;
+                const invoiceid = getstripe.data.object.transfer_group;
+                const transfer = { transfer: createTransfer(transferid, created, amount, destination, invoiceid) }
+                console.log(transfer)
+                request.post({
+                        url: 'https://civilengineer.io/construction/api/transfer.php',
+                        form: transfer,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Permission': `${keys.grantAuthorization}`
+                        }
+                    },
+                    function(err, httpResponse, body) {
+                        if (!err) {
+                            console.log(body)
+                            body = JSON.parse(body)
+                            res.send(body);
+                        }
+                        else {
+                            res.status(404).send({ message: `Error Updating Transfer ` })
+                        }
+
+                    })
+
+            default:
+                break;
+
+        }
 
 
     })

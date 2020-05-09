@@ -7,17 +7,17 @@ module.exports = (req, res, next) => {
                 return next();
             }
             else {
-                res.status(404).send({ message: `You should be logged in to access this location, no user is logged into construction ` })
+                res.status(404).send({ message: `There is no user logged in. Login to access content ` })
             }
 
         }
         else {
-            res.status(404).send({ message: 'You should be logged in to access this location, no user exists ' })
+            res.status(404).send({ message: 'There is no user logged in. Login to access content ' })
         }
 
     }
     else {
-        res.status(404).send({ message: 'You should be logged in to access this location, no session exists ' })
+        res.status(404).send({ message: 'There is no user logged in. Login to access content ' })
     }
 
 
