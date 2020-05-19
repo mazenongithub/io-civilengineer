@@ -6,6 +6,7 @@ const validateInvoice = require('./functions/validateinvoice');
 const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
+const UTCString = require('./functions/utcstring');
 module.exports = app => {
     //app.use(function(req, res, next) {
     //    res.header("Access-Control-Allow-Origin", keys.clientAPI);
@@ -13,6 +14,7 @@ module.exports = app => {
     //    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     //    next();
     //});
+
 
     app.post('/construction/:providerid/uploadprofilephoto', checkLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
         const values = { myuser: req.body.myuser }
@@ -131,6 +133,7 @@ module.exports = app => {
         const { clientid, client, emailaddress } = req.body;
         const values = { clientid, client, emailaddress };
 
+
         request.post({
                 url: `https://civilengineer.io/projectmanagement/api/loginclientnode.php`,
                 form: values,
@@ -151,13 +154,13 @@ module.exports = app => {
                     }
 
                     else {
-                        res.status(404).send('Invalid Login')
+                        res.status(404).send({ message: 'Login was not successful ' })
                     }
 
                 }
 
                 else {
-                    res.status(404).send('Error making request')
+                    res.status(404).send({ message: 'Login was not successful ', err })
                 }
 
 
@@ -173,6 +176,7 @@ module.exports = app => {
 
         let providerid = req.params.providerid;
         let invoiceid = req.params.invoiceid;
+        console.log(providerid, invoiceid)
         let source = "";
 
         if (req.body.token.hasOwnProperty("id")) {
@@ -188,7 +192,8 @@ module.exports = app => {
             amount: req.body.amount,
             currency: "usd",
             description: "Payment for Invoice " + invoiceid,
-            source
+            source,
+            transfer_group: invoiceid
 
         }, function(err, charge) {
             if (charge) {
@@ -203,9 +208,17 @@ module.exports = app => {
 
                 if (validatecharge()) {
 
+                    invoiceid = charge.transfer_group;
+                    const amount = charge.amount;
+                    const chargeid = charge.id;
+                    let created = charge.created
+                    created = new Date(created * 1000)
+                    created = UTCString(created)
+                    const values = { invoiceid, amount, chargeid, created }
+                    console.log(values)
                     request.post({
                             url: 'https://civilengineer.io/projectmanagement/api/invoicecaptured.php',
-                            form: { invoiceid },
+                            form: values,
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Permission': `${keys.grantAuthorization}`

@@ -39,7 +39,7 @@ module.exports = app => {
     })
 
     app.post('/construction/webhookendpoint', authenticateStripe, (req, res) => {
-        console.log(req.body)
+
         const getstripe = () => {
             return (req.body)
         }
@@ -143,7 +143,7 @@ module.exports = app => {
                                             transfer_group: invoice.invoiceid
                                         }).then(function(transfer) {
                                             //insert transfer id
-                                            console.log(transfer)
+
                                         });
 
 
@@ -170,7 +170,7 @@ module.exports = app => {
                 const destination = getstripe.data.object.destination;
                 const invoiceid = getstripe.data.object.transfer_group;
                 const transfer = { transfer: createTransfer(transferid, created, amount, destination, invoiceid) }
-                console.log(transfer)
+
                 request.post({
                         url: 'https://civilengineer.io/construction/api/transfer.php',
                         form: transfer,
@@ -181,7 +181,7 @@ module.exports = app => {
                     },
                     function(err, httpResponse, body) {
                         if (!err) {
-                            console.log(body)
+
                             body = JSON.parse(body)
                             res.send(body);
                         }
