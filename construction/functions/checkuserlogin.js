@@ -7,17 +7,17 @@ module.exports = (req, res, next) => {
                 return next();
             }
             else {
-                res.status(404).send({ message: `You are not logged in ` })
+                res.status(404).send({ message: `Please login to access profile content  ` })
             }
 
         }
         else {
-            res.status(404).send({ message: 'You are not logged in ' })
+            res.status(404).send({ message: 'Please login to access profile content ' })
         }
 
     }
     else {
-        res.status(404).send({ message: 'You are not logged in ' })
+        res.status(404).send({ message: 'Please login to access profile content ' })
     }
 
 
