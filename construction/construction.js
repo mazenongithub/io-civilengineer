@@ -10,6 +10,16 @@ const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 var bodyParser = require("body-parser");
 
 module.exports = app => {
+   
+
+    app.get('/stripe/getbalance', (req, res) => {
+
+        stripe.balance.retrieve(function(err, balance) {
+            // asynchronously called
+            console.log(balance)
+        })
+
+    })
 
     app.post('/construction/:providerid/uploadprofilephoto', checkUserLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
         const values = { myuser: req.body.myuser }
@@ -158,6 +168,7 @@ module.exports = app => {
                         }
 
                     });
+                break;
 
             case 'transfer.created':
                 const getstripe = transfercreated();
@@ -190,6 +201,7 @@ module.exports = app => {
                         }
 
                     })
+                break;
 
             default:
                 break;

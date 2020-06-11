@@ -103,7 +103,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 if (!err) {
                     const response = JSON.parse(body)
-
+                    console.log(response, body)
                     if (response.hasOwnProperty("myuser")) {
                         let user = { pm: response.myuser.providerid }
                         req.session.user = user;
@@ -112,13 +112,13 @@ module.exports = app => {
                     }
 
                     else {
-                        res.status(404).send({ message: 'Invalid Login' })
+                        res.status(404).send({ message: `Error Making Request ` })
                     }
 
                 }
 
                 else {
-                    res.status(404).send({ message: 'Error making request' })
+                    res.status(404).send({ message: `Error Making Request ${err}` })
                 }
 
 
@@ -168,6 +168,54 @@ module.exports = app => {
 
 
             }) // end request
+
+    })
+
+    app.post('/projectmanagement/settleinvoice', (req, res) => {
+        console.log(req.body)
+
+
+
+        request.post({
+                url: 'https://civilengineer.io/projectmanagement/api/settleinvoice.php',
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    const invoice = JSON.parse(body);
+                    if (invoice.hasOwnProperty("accounts")) {
+
+                        invoice.accounts.map(account => {
+
+                            stripe.transfers.create({
+                                amount: account.amount,
+                                currency: "usd",
+                                destination: account.stripe,
+                                transfer_group: invoice.invoiceid
+                            }).then(function(transfer) {
+                                //insert transfer id
+
+                            });
+
+
+                        })
+
+                    }
+
+                    res.send(invoice)
+
+                }
+                catch (error) {
+                    res.status(404).send({ message: `Could not settle Invoice ${error} ` })
+                }
+
+            })
+
+
 
     })
 
@@ -245,7 +293,8 @@ module.exports = app => {
 
             }
             else {
-                res.status(404).send({ message: `Charge failed ` })
+                console.log(erre)
+                res.status(404).send({ message: `Charge failed ${err}` })
             }
 
         })
