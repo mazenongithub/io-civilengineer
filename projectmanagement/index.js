@@ -7,6 +7,7 @@ const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 const UTCString = require('./functions/utcstring');
+const balanceavailable = require('./functions/balanceavailable')
 module.exports = app => {
     //app.use(function(req, res, next) {
     //    res.header("Access-Control-Allow-Origin", keys.clientAPI);
@@ -171,9 +172,8 @@ module.exports = app => {
 
     })
 
-    app.post('/projectmanagement/settleinvoice', (req, res) => {
+    app.post('/projectmanagement/settleinvoice', checkLogin, validateInvoice, balanceavailable, (req, res) => {
         console.log(req.body)
-
 
 
         request.post({

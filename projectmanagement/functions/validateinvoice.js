@@ -1,9 +1,8 @@
 const keys = require('../keys');
 const request = require("request");
 module.exports = (req, res, next) => {
-    const invoiceid = req.params.invoiceid;
-    const providerid = req.params.providerid;
-
+    const invoiceid = req.body.invoiceid;
+    const providerid = req.session.user.pm;
     request({
             url: `https://civilengineer.io/projectmanagement/api/validateinvoiceid.php?invoiceid=${invoiceid}&providerid=${providerid}`,
             headers: {
@@ -19,13 +18,18 @@ module.exports = (req, res, next) => {
                 if (response.validate) {
                     next();
                 }
+                else if (response.message) {
+                    res.status(404).send({ message: `${response.message} transaction failed ` });
+
+                }
                 else {
-                    res.status(404).send(`Invalid matching parameters for invoiceid ${invoiceid} and providerid ${providerid}`);
+
+                    res.status(404).send({ message: `Invalid matching parameters for invoiceid ${invoiceid} and providerid ${providerid}` });
                 }
 
             }
             else {
-                res.status(404).send(`Could not validate invoice`);
+                res.status(404).send({ message: `Could not validate invoice` });
             }
 
 
