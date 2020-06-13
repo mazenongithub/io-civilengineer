@@ -10,7 +10,7 @@ const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 var bodyParser = require("body-parser");
 
 module.exports = app => {
-   
+
 
     app.get('/stripe/getbalance', (req, res) => {
 
@@ -53,10 +53,7 @@ module.exports = app => {
         const getstripe = () => {
             return (req.body)
         }
-        const balanceavailable = () => {
 
-            return (req.body)
-        }
         const transfercreated = () => {
             return (req.body)
         }
@@ -124,51 +121,6 @@ module.exports = app => {
 
         switch (type) {
 
-            case 'balance.available':
-
-                amount = balanceavailable().data.object.available[0].amount;
-
-                request.post({
-                        url: 'https://civilengineer.io/construction/api/settlements.php',
-                        form: { amount },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Permission': `${keys.grantAuthorization}`
-                        }
-                    },
-                    function(err, httpResponse, body) {
-                        if (!err) {
-                            body = JSON.parse(body)
-
-                            const invoices = body.invoices;
-                            invoices.map(invoice => {
-                                if (invoice.accounts) {
-
-                                    invoice.accounts.map(account => {
-
-                                        stripe.transfers.create({
-                                            amount: account.amount,
-                                            currency: "usd",
-                                            destination: account.stripe,
-                                            transfer_group: invoice.invoiceid
-                                        }).then(function(transfer) {
-                                            //insert transfer id
-
-                                        });
-
-
-                                    })
-                                }
-                            })
-                            res.send(body)
-
-                        }
-                        else {
-                            res.status(404).send(`There was an error making the request`)
-                        }
-
-                    });
-                break;
 
             case 'transfer.created':
                 const getstripe = transfercreated();

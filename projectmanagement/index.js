@@ -7,7 +7,9 @@ const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 const UTCString = require('./functions/utcstring');
-const balanceavailable = require('./functions/balanceavailable')
+const balanceavailable = require('./functions/balanceavailable');
+const checkuser = require('./functions/checkuser');
+const checkproject = require('./functions/checkproject');
 module.exports = app => {
     //app.use(function(req, res, next) {
     //    res.header("Access-Control-Allow-Origin", keys.clientAPI);
@@ -220,11 +222,11 @@ module.exports = app => {
     })
 
 
-    app.post('/projectmanagement/:providerid/invoicepayment/:invoiceid', checkLogin, validateInvoice, (req, res) => {
+    app.post('/projectmanagement/:providerid/charges/:projectid', checkLogin, checkuser, checkproject, (req, res) => {
 
         let providerid = req.params.providerid;
-        let invoiceid = req.params.invoiceid;
-        console.log(providerid, invoiceid)
+        let projectid = req.params.projectid;
+
         let source = "";
 
         if (req.body.token.hasOwnProperty("id")) {
@@ -237,11 +239,11 @@ module.exports = app => {
         let amount = req.body.amount;
 
         stripe.charges.create({
-            amount: req.body.amount,
+            amount: Math.round(req.body.amount * 100),
             currency: "usd",
-            description: "Payment for Invoice " + invoiceid,
+            description: "Payment for ProjectID " + projectid,
             source,
-            transfer_group: invoiceid
+            transfer_group: projectid
 
         }, function(err, charge) {
             if (charge) {
@@ -256,16 +258,16 @@ module.exports = app => {
 
                 if (validatecharge()) {
 
-                    invoiceid = charge.transfer_group;
+                    projectid = charge.transfer_group;
                     const amount = charge.amount;
                     const chargeid = charge.id;
                     let created = charge.created
                     created = new Date(created * 1000)
                     created = UTCString(created)
-                    const values = { invoiceid, amount, chargeid, created }
+                    const values = { providerid, projectid, amount, chargeid, created }
                     console.log(values)
                     request.post({
-                            url: 'https://civilengineer.io/projectmanagement/api/invoicecaptured.php',
+                            url: 'https://civilengineer.io/projectmanagement/api/chargecaptured.php',
                             form: values,
                             headers: {
                                 'Content-Type': 'application/json',
@@ -293,7 +295,7 @@ module.exports = app => {
 
             }
             else {
-                console.log(erre)
+
                 res.status(404).send({ message: `Charge failed ${err}` })
             }
 

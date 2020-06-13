@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         const amount = req.body.amount;
         if (balance.hasOwnProperty("available")) {
             const accountbalance = balance.available[0].amount;
-            console.log(balance, amount)
+
             if (Number(accountbalance) > Number(amount)) {
                 next();
             }
