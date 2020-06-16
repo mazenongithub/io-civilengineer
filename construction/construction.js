@@ -21,6 +21,43 @@ module.exports = app => {
 
     })
 
+    app.get('/construction/loadcsi', (req, res) => {
+
+        request({
+                url: `https://civilengineer.io/construction/api/loadcsi.php`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+
+                    const response = JSON.parse(body)
+                    if (response.hasOwnProperty("csis")) {
+
+                        res.send(response)
+
+                    }
+
+                    else {
+                        res.status(404).send({ message: `Could not retrieve csis` })
+                    }
+
+                }
+
+                else {
+                    res.status(404).send('Error making request')
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+
+    })
+
     app.post('/construction/:providerid/uploadprofilephoto', checkUserLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
         const values = { myuser: req.body.myuser }
         request.post({

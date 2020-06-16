@@ -52,6 +52,43 @@ module.exports = app => {
 
     })
 
+    app.get('/projectmanagement/loadcsi', checkLogin, (req, res) => {
+
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/loadcsi.php`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                if (!err) {
+                    const response = JSON.parse(body)
+                    if (response.hasOwnProperty("csis")) {
+
+                        res.send(response)
+
+                    }
+
+                    else {
+                        res.status(404).send({ message: `Could not retrieve csis` })
+                    }
+
+                }
+
+                else {
+                    res.status(404).send('Error making request')
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+
+    })
+
+
 
 
 
