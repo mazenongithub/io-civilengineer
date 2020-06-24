@@ -30,8 +30,8 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
 
+                try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("csis")) {
 
@@ -39,15 +39,12 @@ module.exports = app => {
 
                     }
 
-                    else {
-                        res.status(404).send({ message: `Could not retrieve csis` })
-                    }
-
+                }
+                catch (error) {
+                    res.status(404).send(`Error making request for csis ${error}`)
                 }
 
-                else {
-                    res.status(404).send('Error making request')
-                }
+
 
 
                 //values returned from DB
@@ -224,7 +221,7 @@ module.exports = app => {
                 }
                 catch (err) {
 
-                    res.status(404).send({ message: 'Server is not responding' })
+                    res.status(404).send({ message: `Server is not responding ${err}` })
                 }
 
             }) // end request
