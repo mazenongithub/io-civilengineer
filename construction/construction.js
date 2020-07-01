@@ -386,13 +386,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                catch (err) {
+                    res.status(404).send({ message: `Cound not make request to add existing company, please try again later ${err}` })
                 }
 
 
@@ -436,13 +436,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                catch (err) {
+                    res.status(404).send(`Cound not make request to save project please try again later ${err}`)
                 }
 
 
