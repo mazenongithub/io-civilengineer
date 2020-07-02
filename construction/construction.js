@@ -198,9 +198,6 @@ module.exports = app => {
     })
 
 
-
-
-
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         let providerid = req.session.user.construction;
@@ -238,9 +235,10 @@ module.exports = app => {
     })
 
     app.post('/construction/clientlogin', (req, res) => {
-        const { clientid, client, emailaddress } = req.body;
-        const values = { clientid, client, emailaddress };
 
+        const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
+        const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
+        console.log(values)
         request.post({
                 url: `https://civilengineer.io/construction/api/loginclientnode.php`,
                 form: values,

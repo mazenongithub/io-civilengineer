@@ -170,8 +170,9 @@ module.exports = app => {
     })
 
     app.post('/projectmanagement/clientlogin', (req, res) => {
-        const { clientid, client, emailaddress } = req.body;
-        const values = { clientid, client, emailaddress };
+        const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
+        const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
+        console.log(values)
 
 
         request.post({
@@ -185,6 +186,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 if (!err) {
                     const response = JSON.parse(body)
+                    console.log(response)
 
                     if (response.hasOwnProperty("myuser")) {
                         let user = { pm: response.myuser.providerid }
@@ -194,7 +196,12 @@ module.exports = app => {
                     }
 
                     else {
-                        res.status(404).send({ message: 'Login was not successful ' })
+                        let message = "";
+                        if (response.hasOwnProperty("message")) {
+                            message = response.message;
+                            res.status(404).send({ message: `Login was not successful ${message}` })
+                        }
+
                     }
 
                 }
