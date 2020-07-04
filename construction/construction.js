@@ -177,7 +177,7 @@ module.exports = app => {
 
                         }
                         catch (error) {
-                            res.status(404).send(`Tranfer request failed: ${error} ${err}`)
+                            res.status(404).send(`Transfer request failed: ${error} ${err}`)
                         }
 
                     })
@@ -261,7 +261,7 @@ module.exports = app => {
 
                 catch (error) {
 
-                    res.status(404).send(`Error making request ${error} ${err}`)
+                    res.status(404).send(`Error making login request ${error} ${err}`)
                 }
 
 
@@ -321,11 +321,19 @@ module.exports = app => {
                             }
                         },
                         function(err, httpResponse, body) {
+                            try {
 
-                            const response = JSON.parse(body)
-                            const profile = response.myuser.profile;
-                            const companyid = response.myuser.company.companyid;
-                            res.redirect(`${keys.clientAPI}/${profile}/company/${companyid}/accounts/${accountid}`)
+                                const response = JSON.parse(body)
+                                const profile = response.myuser.profile;
+                                const companyid = response.myuser.company.companyid;
+                                res.redirect(`${keys.clientAPI}/${profile}/company/${companyid}/accounts/${accountid}`)
+
+
+                            }
+                            catch (errors) {
+                                console.log(errors)
+                                res.redirect(`${keys.clientAPI}`)
+                            }
 
                         })
 
@@ -333,7 +341,9 @@ module.exports = app => {
                 }
                 catch (error) {
 
-                    res.status(404).send(`Request failed ${err} ${error}`)
+                    console.log(error)
+                    res.redirect(`${keys.clientAPI}`)
+
                 }
 
 
