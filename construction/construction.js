@@ -12,14 +12,7 @@ var bodyParser = require("body-parser");
 module.exports = app => {
 
 
-    app.get('/stripe/getbalance', (req, res) => {
 
-        stripe.balance.retrieve(function(err, balance) {
-            // asynchronously called
-            console.log(balance)
-        })
-
-    })
 
     app.get('/construction/loadcsi', (req, res) => {
 
@@ -41,7 +34,7 @@ module.exports = app => {
 
                 }
                 catch (error) {
-                    res.status(404).send(`Error making request for csis ${error}`)
+                    res.status(404).send(`Error making request for csis ${error} ${err}`)
                 }
 
 
@@ -66,13 +59,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                catch (error) {
+                    res.status(404).send(`Uplaod profile request failed: ${error} ${err}`)
                 }
 
 
@@ -177,13 +170,14 @@ module.exports = app => {
                         }
                     },
                     function(err, httpResponse, body) {
-                        if (!err) {
 
-                            body = JSON.parse(body)
-                            res.send(body);
+                        try {
+                            const response = JSON.parse(body)
+                            res.send(response)
+
                         }
-                        else {
-                            res.status(404).send({ message: `Error Updating Transfer ` })
+                        catch (error) {
+                            res.status(404).send(`Tranfer request failed: ${error} ${err}`)
                         }
 
                     })
@@ -216,9 +210,9 @@ module.exports = app => {
                     //values returned from DB
 
                 }
-                catch (err) {
+                catch (error) {
 
-                    res.status(404).send({ message: `Server is not responding ${err}` })
+                    res.status(404).send({ message: `Could not make server request ${error} ${err}` })
                 }
 
             }) // end request
@@ -248,7 +242,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
 
                     if (response.hasOwnProperty("myuser")) {
@@ -265,9 +259,9 @@ module.exports = app => {
 
                 }
 
-                else {
+                catch (error) {
 
-                    res.status(404).send('Error making request')
+                    res.status(404).send(`Error making request ${error} ${err}`)
                 }
 
 
@@ -337,9 +331,9 @@ module.exports = app => {
 
 
                 }
-                catch (err) {
+                catch (error) {
 
-                    res.status(404).send('API failure could not load response')
+                    res.status(404).send(`Request failed ${err} ${error}`)
                 }
 
 
@@ -359,13 +353,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add company, please try again later`)
+                catch (error) {
+                    res.status(404).send(`Create company request failed ${error} ${err}`)
                 }
 
 
@@ -389,8 +383,8 @@ module.exports = app => {
                     res.send(response)
 
                 }
-                catch (err) {
-                    res.status(404).send({ message: `Cound not make request to add existing company, please try again later ${err}` })
+                catch (error) {
+                    res.status(404).send({ message: `Add Company request failed ${err} ${error}` })
                 }
 
 
@@ -409,13 +403,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                catch (error) {
+                    res.status(404).send(`Save Company request failed: ${error} ${err}`)
                 }
 
 
@@ -439,8 +433,8 @@ module.exports = app => {
                     res.send(response)
 
                 }
-                catch (err) {
-                    res.status(404).send(`Cound not make request to save project please try again later ${err}`)
+                catch (error) {
+                    res.status(404).send(`Save project request failed ${err} ${error}`)
                 }
 
 
@@ -459,13 +453,13 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     res.send(response)
 
                 }
-                else {
-                    res.status(404).send(`Cound not make request to add existing company, please try again later`)
+                catch (error) {
+                    res.status(404).send(`Save profile request failed ${error} ${err}`)
                 }
 
 

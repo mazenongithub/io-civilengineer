@@ -324,7 +324,7 @@ module.exports = app => {
                                 res.send(response)
                             }
                             else {
-                                res.status(404).send({ message: `Charge was valid, error occurred updating invoice, check charge` });
+                                res.status(404).send({ message: `Charge was valid, error occurred updating invoic charge` });
                             }
 
                         });
