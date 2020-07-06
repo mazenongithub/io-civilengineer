@@ -11,9 +11,36 @@ var bodyParser = require("body-parser");
 
 module.exports = app => {
 
+    app.get('/construction/loadallusers', (req, res) => {
+
+        request({
+                url: `https://civilengineer.io/construction/api/loadallusers.php`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+                    const response = JSON.parse(body)
+
+
+                    res.send(response)
 
 
 
+                }
+                catch (error) {
+                    res.status(404).send(`Error making request for csis ${error} ${err}`)
+                }
+
+                //values returned from DB
+
+
+            }) // end request
+
+
+    })
     app.get('/construction/loadcsi', (req, res) => {
 
         request({
