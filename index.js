@@ -49,7 +49,8 @@ app.all('*', function(req, res, next) {
 app.use(session({
         secret: 'some string',
         cookie: {
-            maxAge: 1000 * 60 * 60 * 30
+            maxAge: 1000 * 60 * 60 * 30,
+            sameSite: 'none'
         }
     }
 

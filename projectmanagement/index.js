@@ -141,7 +141,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     console.log(response, body)
                     if (response.hasOwnProperty("myuser")) {
@@ -157,7 +157,7 @@ module.exports = app => {
 
                 }
 
-                else {
+                catch (err) {
                     res.status(404).send({ message: `Error Making Request ${err}` })
                 }
 
@@ -261,6 +261,65 @@ module.exports = app => {
 
             })
 
+
+
+    })
+
+
+    app.get('/projectmanagement/:profile/checkprofile', (req, res) => {
+        const profile = req.params.profile;
+
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/checkproviderid.php?profile=${profile}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
+
+    })
+
+    app.get('/projectmanagement/:emailaddress/checkemail', (req, res) => {
+        const emailaddress = req.params.emailaddress;
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php?emailaddress=${emailaddress}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
 
 
     })

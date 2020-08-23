@@ -41,6 +41,35 @@ module.exports = app => {
 
 
     })
+    
+        app.get('/construction/: companyurl / checkcompany', (req, res) => {
+        const companyurl = req.params.companyurl;
+
+        request({
+                url: `https://civilengineer.io/construction/api/checkcompanyid.php?url=${companyurl}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
+
+    })
     app.get('/construction/loadcsi', (req, res) => {
 
         request({
@@ -405,7 +434,7 @@ module.exports = app => {
     })
 
     app.post('/construction/:providerid/addexistingcompany', checkUserLogin, (req, res) => {
-
+        console.log("addexistingcompany")
         request.post({
                 url: `https://civilengineer.io/construction/api/addexistingcompany.php`,
                 form: req.body,
@@ -417,6 +446,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
+                    console.log(body)
                     res.send(response)
 
                 }
