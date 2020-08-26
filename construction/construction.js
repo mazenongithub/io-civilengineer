@@ -41,8 +41,8 @@ module.exports = app => {
 
 
     })
-    
-        app.get('/construction/: companyurl / checkcompany', (req, res) => {
+
+    app.get('/construction/:companyurl/checkcompany', (req, res) => {
         const companyurl = req.params.companyurl;
 
         request({
@@ -284,11 +284,48 @@ module.exports = app => {
 
     })
 
+
+    app.post('/construction/applelogin', (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/construction/api/applelogin.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+                    const response = JSON.parse(body)
+                    if (response.hasOwnProperty("myuser")) {
+                        let user = { construction: response.myuser.providerid }
+                        req.session.user = user;
+
+
+                    }
+
+                    res.send(response)
+
+
+                }
+                catch (error) {
+                    res.status(404).send({ message: ` Invalid Login, Please Try Again Later ${error} ${err}` })
+                }
+
+
+            })
+
+
+    })
+
+
     app.post('/construction/clientlogin', (req, res) => {
 
         const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
         const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
-        console.log(values)
+
         request.post({
                 url: `https://civilengineer.io/construction/api/loginclientnode.php`,
                 form: values,
@@ -387,7 +424,7 @@ module.exports = app => {
 
                             }
                             catch (errors) {
-                                console.log(errors)
+
                                 res.redirect(`${keys.clientAPI}`)
                             }
 
@@ -397,7 +434,7 @@ module.exports = app => {
                 }
                 catch (error) {
 
-                    console.log(error)
+
                     res.redirect(`${keys.clientAPI}`)
 
                 }
@@ -434,7 +471,7 @@ module.exports = app => {
     })
 
     app.post('/construction/:providerid/addexistingcompany', checkUserLogin, (req, res) => {
-        console.log("addexistingcompany")
+
         request.post({
                 url: `https://civilengineer.io/construction/api/addexistingcompany.php`,
                 form: req.body,
@@ -446,7 +483,6 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
-                    console.log(body)
                     res.send(response)
 
                 }

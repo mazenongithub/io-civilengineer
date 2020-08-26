@@ -10,6 +10,9 @@ const UTCString = require('./functions/utcstring');
 const balanceavailable = require('./functions/balanceavailable');
 const checkuser = require('./functions/checkuser');
 const checkproject = require('./functions/checkproject');
+const checkprofile = require('./functions/checkprofile');
+const checkemail = require('./functions/checkemail')
+
 module.exports = app => {
     //app.use(function(req, res, next) {
     //    res.header("Access-Control-Allow-Origin", keys.clientAPI);
@@ -143,7 +146,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
-                    console.log(response, body)
+
                     if (response.hasOwnProperty("myuser")) {
                         let user = { pm: response.myuser.providerid }
                         req.session.user = user;
@@ -172,7 +175,7 @@ module.exports = app => {
     app.post('/projectmanagement/clientlogin', (req, res) => {
         const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
         const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
-        console.log(values)
+
 
 
         request.post({
@@ -186,7 +189,6 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 if (!err) {
                     const response = JSON.parse(body)
-                    console.log(response)
 
                     if (response.hasOwnProperty("myuser")) {
                         let user = { pm: response.myuser.providerid }
@@ -219,7 +221,6 @@ module.exports = app => {
     })
 
     app.post('/projectmanagement/settleinvoice', checkLogin, validateInvoice, balanceavailable, (req, res) => {
-        console.log(req.body)
 
 
         request.post({
@@ -266,7 +267,7 @@ module.exports = app => {
     })
 
 
-    app.get('/projectmanagement/:profile/checkprofile', (req, res) => {
+    app.get('/projectmanagement/:profile/checkprofile', checkprofile, (req, res) => {
         const profile = req.params.profile;
 
         request({
@@ -295,7 +296,42 @@ module.exports = app => {
 
     })
 
-    app.get('/projectmanagement/:emailaddress/checkemail', (req, res) => {
+    app.post('/projectmanagement/applelogin', (req, res) => {
+
+        request.post({
+                url: `https://civilengineer.io/projectmanagement/api/applelogin.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+                    const response = JSON.parse(body)
+                    if (response.hasOwnProperty("myuser")) {
+                        let user = { pm: response.myuser.providerid }
+                        req.session.user = user;
+
+
+                    }
+
+                    res.send(response)
+
+
+                }
+                catch (error) {
+                    res.status(404).send({ message: ` Invalid Login, Please Try Again Later ${error} ${err}` })
+                }
+
+
+            })
+
+
+    })
+
+    app.get('/projectmanagement/:emailaddress/checkemail',checkemail, (req, res) => {
         const emailaddress = req.params.emailaddress;
         request({
                 url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php?emailaddress=${emailaddress}`,
@@ -313,8 +349,8 @@ module.exports = app => {
 
 
                 }
-                catch (err) {
-                    res.status(404).send({ message: `Error validating email` })
+                catch (error) {
+                    res.status(404).send({ message: `Error validating email ${error} ${err}` })
                 }
 
 
@@ -368,7 +404,7 @@ module.exports = app => {
                     created = new Date(created * 1000)
                     created = UTCString(created)
                     const values = { providerid, projectid, amount, chargeid, created }
-                    console.log(values)
+
                     request.post({
                             url: 'https://civilengineer.io/projectmanagement/api/chargecaptured.php',
                             form: values,
