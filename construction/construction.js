@@ -6,6 +6,8 @@ const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const authenticateStripe = require('./functions/authenticatestripe');
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
+const checkprofile = require('./functions/checkprofile');
+const checkemail = require('./functions/checkemail')
 
 var bodyParser = require("body-parser");
 
@@ -47,6 +49,65 @@ module.exports = app => {
 
         request({
                 url: `https://civilengineer.io/construction/api/checkcompanyid.php?url=${companyurl}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
+
+    })
+
+
+    app.get('/construction/:emailaddress/checkemail', checkemail, (req, res) => {
+        const emailaddress = req.params.emailaddress;
+        request({
+                url: `https://civilengineer.io/construction/api/checkemailaddress.php?emailaddress=${emailaddress}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (error) {
+                    res.status(404).send({ message: `Error validating email ${error} ${err}` })
+                }
+
+
+
+            })
+
+
+    })
+
+    app.get('/construction/:profile/checkprofile', checkprofile, (req, res) => {
+        const profile = req.params.profile;
+
+        request({
+                url: `https://civilengineer.io/construction/api/checkproviderid.php?profile=${profile}`,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`
@@ -380,6 +441,35 @@ module.exports = app => {
                 }
             }
         )
+    })
+
+    app.get('/construction/:profile/checkprofile', checkprofile, (req, res) => {
+        const profile = req.params.profile;
+
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/checkproviderid.php?profile=${profile}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+                catch (err) {
+                    res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
+
     })
 
 
