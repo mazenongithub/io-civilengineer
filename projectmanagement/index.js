@@ -11,7 +11,8 @@ const balanceavailable = require('./functions/balanceavailable');
 const checkuser = require('./functions/checkuser');
 const checkproject = require('./functions/checkproject');
 const checkprofile = require('./functions/checkprofile');
-const checkemail = require('./functions/checkemail')
+const checkemail = require('./functions/checkemail');
+const checkprojectid = require('./functions/checkprojectid')
 
 module.exports = app => {
     //app.use(function(req, res, next) {
@@ -220,6 +221,36 @@ module.exports = app => {
 
     })
 
+    app.post('/projectmanagement/checknewprojectid', checkprojectid, (req, res) => {
+        console.log(req.body)
+        request.post({
+                url: 'https://civilengineer.io/projectmanagement/api/checknewprojectid.php',
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+
+                    const response = JSON.parse(body);
+                    res.send(response)
+
+
+                }
+                catch (error) {
+
+                    res.status(404).send({ message: `${err} ${error}` })
+
+                }
+
+
+
+            })
+
+    })
+
     app.post('/projectmanagement/settleinvoice', checkLogin, validateInvoice, balanceavailable, (req, res) => {
 
 
@@ -331,7 +362,7 @@ module.exports = app => {
 
     })
 
-    app.get('/projectmanagement/:emailaddress/checkemail',checkemail, (req, res) => {
+    app.get('/projectmanagement/:emailaddress/checkemail', checkemail, (req, res) => {
         const emailaddress = req.params.emailaddress;
         request({
                 url: `https://civilengineer.io/projectmanagement/api/checkemailaddress.php?emailaddress=${emailaddress}`,

@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
 
 
                     if (response.hasOwnProperty("myuser")) {
-                        if (response.myuser.emailaddress === req.params.emailaddress) {
+                        if (response.myuser.emailaddress.toLowerCase() === req.params.emailaddress.toLowerCase()) {
                             res.send({ valid: req.params.emailaddress })
                         }
                         else {

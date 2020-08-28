@@ -34,7 +34,7 @@ module.exports = (req, res, next) => {
                     let response = JSON.parse(body)
 
                     if (response.hasOwnProperty("myuser")) {
-                        if (response.myuser.profile === req.params.profile) {
+                        if (response.myuser.profile.toLowerCase() === req.params.profile.toLowerCase()) {
                             res.send({ valid: req.params.profile })
                         }
                         else {
