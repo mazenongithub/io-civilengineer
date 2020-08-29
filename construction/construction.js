@@ -7,8 +7,8 @@ const authenticateStripe = require('./functions/authenticatestripe');
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 const checkprofile = require('./functions/checkprofile');
-const checkemail = require('./functions/checkemail')
-
+const checkemail = require('./functions/checkemail');
+const checkcompany = require('./functions/checkcompany');
 var bodyParser = require("body-parser");
 
 module.exports = app => {
@@ -65,6 +65,36 @@ module.exports = app => {
                 }
                 catch (err) {
                     res.status(404).send({ message: `Error validating email` })
+                }
+
+
+
+            })
+
+    })
+
+    app.post('/construction/checknewcompanyid', checkcompany, (req, res) => {
+        console.log(req.body)
+        request.post({
+                url: 'https://civilengineer.io/construction/api/checkcompanyid.php',
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+
+                    const response = JSON.parse(body);
+                    res.send(response)
+
+
+                }
+                catch (error) {
+
+                    res.status(404).send({ message: `${err} ${error}` })
+
                 }
 
 
