@@ -74,7 +74,7 @@ module.exports = app => {
     })
 
     app.post('/construction/checknewcompanyid', checkcompany, (req, res) => {
-        console.log(req.body)
+   
         request.post({
                 url: 'https://civilengineer.io/construction/api/checkcompanyid.php',
                 form: req.body,

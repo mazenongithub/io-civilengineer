@@ -1,7 +1,7 @@
 const request = require("request");
 const keys = require('../keys');
 module.exports = (req, res, next) => {
-    console.log('middleware')
+
     let providerid = false;
     let url = false;
     if (req.hasOwnProperty("session")) {
