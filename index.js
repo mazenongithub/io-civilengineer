@@ -57,6 +57,7 @@ app.use(session({
     }
 
 ));
+app.set('trust proxy', 1);
 
 
 require('./construction')(app)
