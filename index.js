@@ -31,8 +31,9 @@ app.use(bodyParser.json({
 
 
 const cors = {
-    origin: ["http://pm.civilengineer.io", "https://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
+    origin: ["http://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io"]
 }
+
 
 
 app.all('*', function(req, res, next) {
@@ -50,8 +51,7 @@ app.use(session({
         secret: 'some string',
         cookie: {
             maxAge: 1000 * 60 * 60 * 30,
-            sameSite: 'none',
-            secure: true
+            sameSite: 'none'
         }
     }
 
