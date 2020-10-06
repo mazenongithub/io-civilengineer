@@ -74,7 +74,7 @@ module.exports = app => {
     })
 
     app.post('/construction/checknewcompanyid', checkcompany, (req, res) => {
-   
+
         request.post({
                 url: 'https://civilengineer.io/construction/api/checkcompanyid.php',
                 form: req.body,
@@ -161,6 +161,7 @@ module.exports = app => {
             })
 
     })
+
     app.get('/construction/loadcsi', (req, res) => {
 
         request({
