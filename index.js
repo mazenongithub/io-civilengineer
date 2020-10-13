@@ -31,7 +31,7 @@ app.use(bodyParser.json({
 
 
 const cors = {
-    origin: ["http://pm.civilengineer.io", "https://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io", "https://construction.civilengineer.io"]
+    origin: ["http://design.civilengineer.io", "https://design.civilengineer.io", "http://pm.civilengineer.io", "https://pm.civilengineer.io", "http://localhost:3000", "http://petitions.civilengineer.io", "http://construction.civilengineer.io", "https://construction.civilengineer.io"]
 }
 
 
@@ -62,7 +62,7 @@ app.set('trust proxy', 1);
 
 require('./construction')(app)
 require('./projectmanagement')(app)
-
+require('./design')(app)
 
 app.get('/', (req, res) => {
     let response = { response: ` api.civilengineer.io ` }
