@@ -1,6 +1,7 @@
 /node_modules
 /keys/dev.js
 /petitions/keys/dev.js
+/design/keys/dev.js
 /geotechnical/keys/dev.js
 /projectmanagment/keys/dev.js
 construction/keys/dev.js
