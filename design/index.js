@@ -163,41 +163,7 @@ module.exports = app => {
 
     })
 
-    app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
 
-        const companyid = req.params.companyid;
-
-        request({
-                url: `https://civilengineer.io/design/api/loadcsi.php?companyid=${companyid}`,
-                headers: {
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-
-                try {
-                    const response = JSON.parse(body)
-                    if (response.hasOwnProperty("csis")) {
-
-                        res.send(response)
-
-                    }
-
-                }
-                catch (error) {
-                    res.status(404).send(`Error making request for csis ${error} ${err}`)
-                }
-
-
-
-
-                //values returned from DB
-
-
-            }) // end request
-
-
-    })
 
 
     app.get('/design/:companyurl/checkcompanyurl', checkCompany, (req, res) => {
@@ -276,8 +242,11 @@ module.exports = app => {
     })
 
 
+
+
     app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
         const companyid = req.params.companyid;
+        console.log("loadcsi", companyid)
 
         request({
                 url: `https://civilengineer.io/design/api/loadcsi.php?companyid=${companyid}`,
