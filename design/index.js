@@ -5,6 +5,7 @@ module.exports = app => {
     const checkUser = require('./functions/checkuser');
     const checkProfile = require('./functions/checkprofile');
     const checkEmail = require('./functions/checkemail')
+    const checkCompany = require('./functions/checkcompany')
     mongoose.connect('mongodb://mazenonmlab:100%25Original@ds113749.mlab.com:13749/specifications', { useNewUrlParser: true },
         (err) => {
             if (err) {
@@ -131,6 +132,80 @@ module.exports = app => {
 
         request({
                 url: `https://civilengineer.io/design/api/checkproviderid.php?profile=${profile}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+
+                    res.send(response)
+
+
+
+
+                }
+
+                catch (err) {
+
+                    res.status(404).send({ message: ` There was an error making the request ${err}` })
+
+
+
+                }
+
+            })
+
+    })
+
+    app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
+
+        const companyid = req.params.companyid;
+
+        request({
+                url: `https://civilengineer.io/design/api/loadcsi.php?companyid=${companyid}`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+                    const response = JSON.parse(body)
+                    if (response.hasOwnProperty("csis")) {
+
+                        res.send(response)
+
+                    }
+
+                }
+                catch (error) {
+                    res.status(404).send(`Error making request for csis ${error} ${err}`)
+                }
+
+
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+
+    })
+
+
+    app.get('/design/:companyurl/checkcompanyurl', checkCompany, (req, res) => {
+
+        const companyurl = req.params.companyurl;
+
+        request({
+                url: `https://civilengineer.io/design/api/checkcompany.php?companyurl=${companyurl}`,
                 headers: {
                     'Content-Type': 'application/json',
                     'Permission': `${keys.grantAuthorization}`

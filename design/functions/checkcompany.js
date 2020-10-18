@@ -2,17 +2,16 @@ const request = require("request");
 const keys = require('../keys');
 module.exports = (req, res, next) => {
     const companyurl = req.params.companyurl;
-    let providerid = false;
-    let url = false;
+    let providerid = 'mazen'
+    let url = `https://civilengineer.io/design/api/loadprofile.php?profile=${providerid}`
     if (req.hasOwnProperty("session")) {
-
 
         if (req.session.hasOwnProperty("user")) {
 
             if (req.session.user.hasOwnProperty("design")) {
 
                 providerid = req.session.user.design;
-                url = `https://civilengineer.io/design/api/loadprofile.php?profile=${providerid}`
+                url = `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`
 
             }
         }
@@ -33,6 +32,7 @@ module.exports = (req, res, next) => {
                 try {
 
                     let response = JSON.parse(body)
+                 
 
                     if (response.hasOwnProperty("myuser")) {
                         if (response.myuser.hasOwnProperty("company")) {
@@ -48,6 +48,11 @@ module.exports = (req, res, next) => {
                         }
 
                     }
+
+                    else {
+                        res.status(404).send({ message: `Could not check company, user not found ${response.myuser.providerid}` })
+
+                    }
                     //values returned from DB
 
                 }
@@ -59,8 +64,9 @@ module.exports = (req, res, next) => {
             }) // end request
 
     }
+
     else {
-        next();
+        res.status(404).send({ message: `Could not check company, no user found` })
     }
 
 
