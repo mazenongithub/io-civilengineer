@@ -242,8 +242,6 @@ module.exports = app => {
     })
 
 
-
-
     app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
         const companyid = req.params.companyid;
         console.log("loadcsi", companyid)
@@ -264,8 +262,39 @@ module.exports = app => {
 
                     res.send(response)
 
+                }
+
+                catch (err) {
+
+                    res.status(404).send({ message: ` There was an error making the request ${err}` })
 
 
+
+                }
+
+            })
+
+    })
+
+
+    app.get('/design/:providerid/allcompanys', checkUser, (req, res) => {
+        const providerid = req.params.providerid;
+
+        request({
+                url: `https://civilengineer.io/design/api/allcompanys.php?providerid=${providerid}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+
+                    res.send(response)
 
                 }
 
@@ -387,8 +416,6 @@ module.exports = app => {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
 
-
-
                 }
 
             })
@@ -403,7 +430,6 @@ module.exports = app => {
         })
 
     })
-
 
 
     app.post('/design/applelogin', (req, res) => {
@@ -446,7 +472,6 @@ module.exports = app => {
 
     })
 
-
     app.get('/design/:companyid/specifications/:projectid', checkUser, (req, res) => {
         const companyid = req.params.companyid;
         const projectid = req.params.projectid;
@@ -463,6 +488,7 @@ module.exports = app => {
         })
 
     })
+
 
     app.post('/design/:projectid/saveprojectspecs', checkUser, function(req, res) {
         const projectid = req.params.projectid;
