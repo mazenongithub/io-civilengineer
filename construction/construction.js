@@ -9,9 +9,10 @@ const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 const checkprofile = require('./functions/checkprofile');
 const checkemail = require('./functions/checkemail');
 const checkcompany = require('./functions/checkcompany');
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
 module.exports = app => {
+
 
     app.get('/construction/loadallusers', (req, res) => {
 
@@ -28,7 +29,6 @@ module.exports = app => {
 
 
                     res.send(response)
-
 
 
                 }
@@ -161,6 +161,7 @@ module.exports = app => {
             })
 
     })
+
 
     app.get('/construction/loadcsi', (req, res) => {
 

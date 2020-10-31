@@ -22,31 +22,26 @@ module.exports = app => {
             companyid: String,
             projectid: String,
             specifications: [{
-                companyid: String,
-                projectid: String,
-                specifications: [{
-                    csiid: String,
-                    paragraph: {
-                        listType: String,
-                        list: [{
-                                contentid: String,
-                                content: String,
-                                sublist: {
-                                    listType: String,
-                                    list: [{
-                                        contentid: String,
-                                        content: String,
+                csiid: String,
+                paragraph: {
+                    listType: String,
+                    list: [{
+                            contentid: String,
+                            content: String,
+                            sublist: {
+                                listType: String,
+                                list: [{
+                                    contentid: String,
+                                    content: String,
 
-                                    }]
-                                }
-
+                                }]
                             }
 
-                        ]
+                        }
 
-                    }
+                    ]
 
-                }]
+                }
 
             }]
 
@@ -293,7 +288,6 @@ module.exports = app => {
                 try {
 
                     const response = JSON.parse(body)
-
                     res.send(response)
 
                 }
@@ -301,8 +295,6 @@ module.exports = app => {
                 catch (err) {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
-
-
 
                 }
 
@@ -331,16 +323,11 @@ module.exports = app => {
 
                     res.send(response)
 
-
-
-
                 }
 
                 catch (err) {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
-
-
 
                 }
 
@@ -369,15 +356,11 @@ module.exports = app => {
 
                     res.send(response)
 
-
-
-
                 }
 
                 catch (err) {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
-
 
 
                 }
@@ -472,7 +455,7 @@ module.exports = app => {
 
     })
 
-    app.get('/design/:companyid/specifications/:projectid', checkUser, (req, res) => {
+    app.get('/design/:companyid/specifications/:projectid', (req, res) => {
         const companyid = req.params.companyid;
         const projectid = req.params.projectid;
         const filter = { companyid, projectid }
@@ -480,8 +463,44 @@ module.exports = app => {
 
             if (err) {
                 console.log(err)
+                res.status(404).send({ message: ' Specification Request Failed ' })
             }
             else {
+                if (!succ) {
+                    res.send({})
+                }
+                else {
+                    res.send(succ)
+                }
+
+            }
+
+        })
+
+    })
+
+    app.get('/design/:projectid/specifications', (req, res) => {
+
+        const projectid = req.params.projectid;
+        const filter = {}
+        specifications.find(filter, (err, succ) => {
+
+            if (err) {
+                console.log(err)
+            }
+            else {
+                const specs = [];
+                if (succ.hasOwnProperty("length")) {
+
+                    succ.map(spec => {
+                        if (spec.hasOwnProperty("specifications")) {
+                            spec.specifications.map(section => {
+                                specs.push(section)
+
+                            })
+                        }
+                    })
+                }
                 res.send(succ)
             }
 
