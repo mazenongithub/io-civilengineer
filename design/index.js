@@ -50,7 +50,7 @@ module.exports = app => {
 
 
     );
-    const specifications = mongoose.model("specifications", Schema);
+  
 
 
     app.post('/design/:projectid/savecostestimate', checkUser, (req, res) => {
@@ -303,7 +303,6 @@ module.exports = app => {
     })
 
 
-
     app.post('/design/:providerid/saveprofile', checkUser, (req, res) => {
 
         request.post({
@@ -334,7 +333,6 @@ module.exports = app => {
             })
 
     })
-
 
 
     app.post('/design/savecsi', checkUser, (req, res) => {
@@ -370,7 +368,6 @@ module.exports = app => {
     })
 
 
-
     app.post('/design/:csiid/deletecsi', checkUser, (req, res) => {
 
         request.post({
@@ -389,9 +386,6 @@ module.exports = app => {
                     const response = JSON.parse(body)
 
                     res.send(response)
-
-
-
 
                 }
 
@@ -440,14 +434,11 @@ module.exports = app => {
                     }
 
 
-
                 }
 
                 catch (err) {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
-
-
 
                 }
             })
@@ -456,6 +447,8 @@ module.exports = app => {
     })
 
     app.get('/design/:companyid/specifications/:projectid', (req, res) => {
+        
+        const specifications = mongoose.model("specifications", Schema);
         const companyid = req.params.companyid;
         const projectid = req.params.projectid;
         const filter = { companyid, projectid }
@@ -479,37 +472,11 @@ module.exports = app => {
 
     })
 
-    app.get('/design/:projectid/specifications', (req, res) => {
-
-        const projectid = req.params.projectid;
-        const filter = {}
-        specifications.find(filter, (err, succ) => {
-
-            if (err) {
-                console.log(err)
-            }
-            else {
-                const specs = [];
-                if (succ.hasOwnProperty("length")) {
-
-                    succ.map(spec => {
-                        if (spec.hasOwnProperty("specifications")) {
-                            spec.specifications.map(section => {
-                                specs.push(section)
-
-                            })
-                        }
-                    })
-                }
-                res.send(succ)
-            }
-
-        })
-
-    })
+  
 
 
     app.post('/design/:projectid/saveprojectspecs', checkUser, function(req, res) {
+        const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;
         const specs = req.body.specs;
 
