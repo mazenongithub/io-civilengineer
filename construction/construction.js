@@ -58,7 +58,7 @@ module.exports = app => {
 
     );
 
-    app.get('/construction/:projectid/specifications', (req, res) => {
+    app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
 
         const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;
@@ -409,10 +409,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser', (req, res) => {
+    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
-        //let providerid = req.session.user.construction;
-        let providerid = 'mazen'
+        let providerid = req.session.user.construction;
+
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
