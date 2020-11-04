@@ -6,6 +6,7 @@ var app = express();
 var session = require('express-session')
 const keys = require('./keys');
 const multer = require("multer");
+
 //const cors = require('cors')
 
 const fileFilter = (req, file, cb) => {
@@ -69,10 +70,14 @@ app.set('trust proxy', 1);
 require('./construction')(app)
 require('./projectmanagement')(app)
 require('./design')(app)
+require('./specifications')(app)
 
 app.get('/', (req, res) => {
     let response = { response: ` api.civilengineer.io ` }
     res.send(response)
 })
+
+
+
 
 app.listen(process.env.PORT);

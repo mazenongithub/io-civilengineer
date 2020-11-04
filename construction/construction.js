@@ -10,77 +10,12 @@ const checkprofile = require('./functions/checkprofile');
 const checkemail = require('./functions/checkemail');
 const checkcompany = require('./functions/checkcompany');
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+
 
 module.exports = app => {
-    mongoose.connect('mongodb://mazenonmlab:100%25Original@ds113749.mlab.com:13749/specifications', { useNewUrlParser: true },
-        (err) => {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                console.log('connection successfully')
-            }
+  
 
-        }
-    )
-
-    const Schema = new mongoose.Schema({
-            companyid: String,
-            projectid: String,
-            specifications: [{
-                csiid: String,
-                paragraph: {
-                    listType: String,
-                    list: [{
-                            contentid: String,
-                            content: String,
-                            sublist: {
-                                listType: String,
-                                list: [{
-                                    contentid: String,
-                                    content: String,
-
-                                }]
-                            }
-
-                        }
-
-                    ]
-
-                }
-
-            }]
-
-
-        }, { strict: false }
-
-
-    );
-
-    app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
-
-        const specifications = mongoose.model("specifications", Schema);
-        const projectid = req.params.projectid;
-        const filter = {}
-        specifications.find(filter, (err, succ) => {
-
-            if (err) {
-                console.log(err)
-            }
-            else {
-
-                let response = {}
-                if (succ) {
-                    response = succ;
-                }
-                res.send(response)
-            }
-
-        })
-
-    })
-
+  
 
     app.get('/construction/loadallusers', (req, res) => {
 
@@ -187,7 +122,6 @@ module.exports = app => {
 
                     const response = JSON.parse(body)
                     res.send(response)
-
 
                 }
                 catch (error) {
@@ -409,9 +343,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
+    app.get('/construction/checkuser',  (req, res) => {
 
-        let providerid = req.session.user.construction;
+        //let providerid = req.session.user.construction;
+        let providerid = 'mazen'
 
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
