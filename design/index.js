@@ -50,7 +50,7 @@ module.exports = app => {
 
 
     );
-  
+
 
 
     app.post('/design/:projectid/savecostestimate', checkUser, (req, res) => {
@@ -90,6 +90,7 @@ module.exports = app => {
 
     app.get('/design/checkuser', checkUser, (req, res) => {
         const providerid = req.session.user.design;
+
         request({
                 url: `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`,
                 headers: {
@@ -141,9 +142,6 @@ module.exports = app => {
 
                     res.send(response)
 
-
-
-
                 }
 
                 catch (err) {
@@ -182,8 +180,6 @@ module.exports = app => {
                     res.send(response)
 
 
-
-
                 }
 
                 catch (err) {
@@ -220,15 +216,11 @@ module.exports = app => {
                     res.send(response)
 
 
-
-
                 }
 
                 catch (err) {
 
                     res.status(404).send({ message: ` There was an error making the request ${err}` })
-
-
 
                 }
 
@@ -239,7 +231,6 @@ module.exports = app => {
 
     app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
         const companyid = req.params.companyid;
-        console.log("loadcsi", companyid)
 
         request({
                 url: `https://civilengineer.io/design/api/loadcsi.php?companyid=${companyid}`,
@@ -446,8 +437,8 @@ module.exports = app => {
 
     })
 
-    app.get('/design/:companyid/specifications/:projectid', (req, res) => {
-        
+    app.get('/design/:companyid/specifications/:projectid', checkUser, (req, res) => {
+
         const specifications = mongoose.model("specifications", Schema);
         const companyid = req.params.companyid;
         const projectid = req.params.projectid;
@@ -472,10 +463,10 @@ module.exports = app => {
 
     })
 
-  
 
 
-    app.post('/design/:projectid/saveprojectspecs', checkUser, function(req, res) {
+
+    app.post('/design/:projectid/saveprojectspecs', checkUser, (req, res) => {
         const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;
         const specs = req.body.specs;
