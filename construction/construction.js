@@ -13,9 +13,9 @@ const bodyParser = require("body-parser");
 
 
 module.exports = app => {
-  
 
-  
+
+
 
     app.get('/construction/loadallusers', (req, res) => {
 
@@ -343,11 +343,9 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser',  (req, res) => {
+    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
-        //let providerid = req.session.user.construction;
-        let providerid = 'mazen'
-
+        let providerid = req.session.user.construction;
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
