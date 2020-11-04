@@ -165,7 +165,7 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/loadcsi', (req, res) => {
+    app.get('/construction/loadcsi', checkUserLogin, (req, res) => {
 
         request({
                 url: `https://civilengineer.io/construction/api/loadcsi.php`,
@@ -346,6 +346,7 @@ module.exports = app => {
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         let providerid = req.session.user.construction;
+
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {

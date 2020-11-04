@@ -53,7 +53,7 @@ module.exports = app => {
 
         const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;
-        const filter = {}
+        const filter = { projectid }
         specifications.find(filter, (err, succ) => {
 
             if (err) {
