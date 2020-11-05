@@ -3,7 +3,8 @@
 /petitions/keys/dev.js
 /design/keys/dev.js
 /geotechnical/keys/dev.js
-/projectmanagment/keys/dev.js
+/projectmanagment/keys/dev.js 
 construction/keys/dev.js
 gfk/keys/dev.js
+specifications/keys/dev.js
 .gitignore

@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const checkUserLogin = require('../construction/functions/checkuserlogin');
 const checkUser = require('../design/functions/checkuser');
+const keys = require('./keys')
 module.exports = app => {
 
-    mongoose.connect('mongodb://mazenonmlab:100%25Original@ds113749.mlab.com:13749/specifications', { useNewUrlParser: true },
+    mongoose.connect(`${keys.SPECIFICATIONS}`, { useNewUrlParser: true },
         (err) => {
             if (err) {
                 console.log(err)
@@ -47,6 +48,30 @@ module.exports = app => {
 
 
     );
+
+    app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
+
+        const specifications = mongoose.model("specifications", Schema);
+        const projectid = req.params.projectid;
+        const filter = { projectid }
+        specifications.find(filter, (err, succ) => {
+
+            if (err) {
+                console.log(err)
+            }
+            else {
+
+                let response = {}
+                if (succ) {
+                    response = succ;
+                }
+                res.send(response)
+            }
+
+        })
+
+    })
+
 
 
     app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
@@ -97,7 +122,6 @@ module.exports = app => {
         })
 
     })
-
 
 
 
