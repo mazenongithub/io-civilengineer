@@ -56,7 +56,7 @@ module.exports = app => {
 
     })
 
-    app.get('/projectmanagement/loadcsi', (req, res) => {
+    app.get('/projectmanagement/loadcsi', checkLogin, (req, res) => {
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadcsi.php`,
