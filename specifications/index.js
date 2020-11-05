@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const checkUserLogin = require('../construction/functions/checkuserlogin');
 const checkUser = require('../design/functions/checkuser');
+const checkLogin = require('../projectmanagement/functions/checklogin');
 const keys = require('./keys')
 module.exports = app => {
 
@@ -48,6 +49,29 @@ module.exports = app => {
 
 
     );
+
+    app.get('/projectmanagement/:projectid/specifications', checkLogin, (req, res) => {
+
+        const specifications = mongoose.model("specifications", Schema);
+        const projectid = req.params.projectid;
+        const filter = { projectid }
+        specifications.find(filter, (err, succ) => {
+
+            if (err) {
+                console.log(err)
+            }
+            else {
+
+                let response = {}
+                if (succ) {
+                    response = succ;
+                }
+                res.send(response)
+            }
+
+        })
+
+    })
 
     app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
 
