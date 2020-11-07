@@ -14,9 +14,6 @@ const bodyParser = require("body-parser");
 
 module.exports = app => {
 
-
-
-
     app.get('/construction/loadallusers', (req, res) => {
 
         request({

@@ -50,7 +50,7 @@ module.exports = app => {
 
     );
 
-    app.get('/projectmanagement/:projectid/specifications', (req, res) => {
+    app.get('/projectmanagement/:projectid/specifications', checkLogin, (req, res) => {
 
         const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;
@@ -73,7 +73,7 @@ module.exports = app => {
 
     })
 
-    app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
+    app.get('/construction/:projectid/specifications', (req, res) => {
 
         const specifications = mongoose.model("specifications", Schema);
         const projectid = req.params.projectid;

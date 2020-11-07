@@ -56,7 +56,7 @@ module.exports = app => {
 
     })
 
-    app.get('/projectmanagement/loadcsi', (req, res) => {
+    app.get('/projectmanagement/loadcsi', checkLogin, (req, res) => {
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadcsi.php`,
@@ -96,7 +96,7 @@ module.exports = app => {
 
 
 
-    app.get('/projectmanagement/checkuser', (req, res) => {
+    app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
         //const providerid = req.session.user.pm
         const providerid = 'rickjones'
         request({
