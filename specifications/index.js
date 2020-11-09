@@ -73,29 +73,6 @@ module.exports = app => {
 
     })
 
-    app.get('/construction/:projectid/specifications', (req, res) => {
-
-        const specifications = mongoose.model("specifications", Schema);
-        const projectid = req.params.projectid;
-        const filter = { projectid }
-        specifications.find(filter, (err, succ) => {
-
-            if (err) {
-                console.log(err)
-            }
-            else {
-
-                let response = {}
-                if (succ) {
-                    response = succ;
-                }
-                res.send(response)
-            }
-
-        })
-
-    })
-
 
 
     app.get('/construction/:projectid/specifications', checkUserLogin, (req, res) => {
