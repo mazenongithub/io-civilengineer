@@ -23,7 +23,7 @@ module.exports = app => {
     //});
 
 
-    app.post('/construction/:providerid/uploadprofilephoto', checkLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
+    app.post('/projectmanagement/:providerid/uploadprofilephoto', checkLogin, removeProfilePhoto, uploadProfilePhoto, (req, res) => {
         const values = { myuser: req.body.myuser }
         request.post({
                 url: `https://civilengineer.io/projectmanagement/api/userendpoint.php`,
@@ -98,7 +98,7 @@ module.exports = app => {
 
     app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
         const providerid = req.session.user.pm
-   
+       
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
