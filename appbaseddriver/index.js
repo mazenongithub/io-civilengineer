@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const keys = require('./keys')
 
 module.exports = app => {
 
@@ -53,11 +52,55 @@ module.exports = app => {
 
     app.get('/appbaseddriver', (req, res) => {
 
+        const driver = {
+            driverid: 'mazen',
+            google: 'google',
+            apple: 'apple',
+            profile: 'profile',
+            firstname: 'firstname',
+            lastname: 'lastname',
+            emailaddress: 'emailaddress',
+            profileurl: 'profileurl',
+            phonenumber: 'phonenumber',
+            equipment: [{
+                equipmentid: 'equipmentid',
+                equipment: 'equipment',
+                ownership: {
+                    dateofpurchase: 'dateofpurchase',
+                    purchaseprice: 'purchaseprice',
+                    saledate: 'saledate',
+                    saleprice: 'saleprice',
+                    apr: 'apr',
+                    costs: [{
+                        costid: 'costid',
+                        dateofpurchase: 'dateofpurchase',
+                        purchaseprice: 'purchaseprice',
+                        saledate: 'saledate',
+                        saleprice: 'saleprice',
+                        apr: 'apr'
+                    }]
+
+                },
+                driver: {
+                    shifts: [{
+                        shiftid: 'shiftid',
+                        timein: 'timein',
+                        timeout: 'timeout',
+                        deliveries: 'deliveries',
+                        income: 'income'
+                    }]
+                }
+
+            }]
+
+
+        }
+
 
         const mydriver = mongoose.model("appbaseddriver", DriverSchema);
 
         const filter = { driverid: 'mazen' }
-        const driver = { driverid: 'mazen', apple: 'apple' }
+
 
         const options = {
 
