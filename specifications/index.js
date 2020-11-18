@@ -5,17 +5,6 @@ const checkLogin = require('../projectmanagement/functions/checklogin');
 const keys = require('./keys')
 module.exports = app => {
 
-    mongoose.connect(`${keys.SPECIFICATIONS}`, { useNewUrlParser: true },
-        (err) => {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                console.log('connection successfully')
-            }
-
-        }
-    )
 
     const Schema = new mongoose.Schema({
             companyid: String,

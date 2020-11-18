@@ -4,9 +4,8 @@
     const checkProfile = require('./functions/checkprofile');
     const checkEmail = require('./functions/checkemail')
     const checkCompany = require('./functions/checkcompany')
-    
-    module.exports = app => {
 
+    module.exports = app => {
 
 
         app.post('/design/:projectid/savecostestimate', checkUser, (req, res) => {
@@ -46,7 +45,7 @@
 
         app.get('/design/checkuser', checkUser, (req, res) => {
             const providerid = req.session.user.design;
-
+           
             request({
                     url: `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`,
                     headers: {

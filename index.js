@@ -6,8 +6,20 @@ var app = express();
 var session = require('express-session')
 const keys = require('./keys');
 const multer = require("multer");
+const mongoose = require("mongoose")
 
 //const cors = require('cors')
+
+mongoose.connect(`${keys.MONGODB}`, { useNewUrlParser: true, useUnifiedTopology: true },
+    (err) => {
+        if (err) {
+            console.log(err)
+        }
+
+    }
+)
+
+
 
 const fileFilter = (req, file, cb) => {
     if (
@@ -71,6 +83,7 @@ require('./construction')(app)
 require('./projectmanagement')(app)
 require('./design')(app)
 require('./specifications')(app)
+require('./appbaseddriver')(app)
 
 app.get('/', (req, res) => {
     let response = { response: ` api.civilengineer.io ` }
