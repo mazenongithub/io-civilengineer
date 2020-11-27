@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 const request = require("request")
 const keys = require("./keys")
 const checkuser = require("./functions/checkuser");
-const checkdriverid = require("./functions/checkdriverid")
 
 module.exports = app => {
 
@@ -49,6 +48,35 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddriver", DriverSchema);
 
+    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
+
+        const driverid = req.params.driverid;
+        const myuser = req.body.myuser;
+        console.log(mydriver)
+
+        const filter = { _id: myuser._id }
+
+        const options = {
+
+            strict: false,
+            new: true,
+            upsert: true,
+            useFindAndModify: false
+
+
+        }
+        mydriver.findByIdAndUpdate(filter, myuser, options, function(err, succ) {
+            if (err) {
+
+                console.log(err);
+            }
+            else {
+                res.send(succ);
+            }
+        });
+
+    });
+
 
 
     app.post('/appbaseddriver/clientlogin', (req, res) => {
@@ -70,7 +98,7 @@ module.exports = app => {
             mydriver.findOne(filter, (err, succ) => {
 
                 if (succ) {
-                    req.session.user = { appbaseddriver: succ.driverid }
+                    req.session.user = { appbaseddriver: succ._id }
                     res.send(succ)
                 }
 
@@ -98,7 +126,7 @@ module.exports = app => {
 
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
-                    req.session.user = { appbaseddriver: succ.driverid }
+                    req.session.user = { appbaseddriver: succ._id }
                     res.send(succ)
                 }
                 else {
@@ -112,28 +140,107 @@ module.exports = app => {
     })
 
 
-    app.get('/appbaseddriver/:driverid/checkdriverid', checkdriverid, (req, res) => {
-        console.log(req.params.driverid)
 
-        mydriver.findOne({ driverid: req.params.driverid }, function(err, succ) {
-            console.log(succ, err)
-            if (succ) {
-                res.send({ invalid: `${req.params.driverid} is taken ` })
-            }
-            else {
-
-                res.send({ valid: req.params.driverid });
-            }
-
+    app.get('/appbaseddriver/:driverid/logout', checkuser, (req, res) => {
+        req.session.destroy();
+        res.send({
+            "message": `${req.params.driverid} has been logged out`
         })
 
     })
 
 
-    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+    app.get('/appbaseddriver/:emailaddress/checkemailaddress', checkuser, (req, res) => {
 
-        mydriver.findOne({ driverid: req.session.user.appbaseddriver }, function(err, succ) {
+        const driverid = req.session.user.appbaseddriver;
+        mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
+                console.log(succ.emailaddress, req.params.emailaddress)
+                if (succ.emailaddress === req.params.emailaddress) {
+                    res.send({ valid: req.params.emailaddress })
+                }
+                else {
+                    mydriver.findOne({ emailaddress: req.params.emailaddress }, function(err_1, succ_1) {
+                        if (succ_1) {
+                            res.send({ invalid: `${req.params.emailaddress} is taken` })
+
+                        }
+                        else {
+                            res.send({ valid: `${req.params.emailaddress}` })
+
+                        }
+                    })
+
+
+                }
+
+            }
+
+        })
+
+
+
+    })
+
+
+    app.get('/appbaseddriver/:driverid/checkdriverid', (req, res) => {
+
+        if (req.session.hasOwnProperty("user")) {
+            if (req.session.user.hasOwnProperty("appbaseddriver")) {
+                const driverid = req.session.user.appbaseddriver;
+                mydriver.findById({ _id: driverid }, function(err, succ) {
+                    if (succ) {
+                        if (succ.driverid === req.params.driverid) {
+                            res.send({ valid: req.params.driverid })
+                        }
+                        else {
+                            mydriver.findOne({ driverid: req.params.driverid }, function(err_1, succ_1) {
+                                if (succ_1) {
+                                    res.send({ invalid: `${req.params.driverid} is taken` })
+
+                                }
+                                else {
+                                    res.send({ valid: `${req.params.driverid}` })
+
+                                }
+                            })
+
+
+                        }
+
+                    }
+
+                })
+
+            }
+
+
+        }
+        else {
+            mydriver.findOne({ driverid: req.params.driverid }, function(err_2, succ_2) {
+                if (succ_2) {
+                    res.send({ invalid: `${req.params.driverid} is taken` })
+
+                }
+                else {
+                    res.send({ valid: `${req.params.driverid}` })
+
+                }
+            })
+        }
+
+
+
+    })
+
+
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+        const driverid = req.session.user.appbaseddriver;
+        //const driverid = '5fc14cf79e9f91244648e819';
+        req.session.user = { appbaseddriver: driverid }
+        mydriver.findById({ _id: driverid }, function(err, succ) {
+            if (succ) {
+
                 res.send(succ)
 
             }
