@@ -15,6 +15,9 @@ mongoose.connect(`${keys.MONGODB}`, { useNewUrlParser: true, useUnifiedTopology:
         if (err) {
             console.log(err)
         }
+        else {
+            console.log(`MongoDB`)
+        }
 
     }
 )
