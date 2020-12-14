@@ -49,7 +49,7 @@ module.exports = app => {
 
     });
 
-    const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
+    const mydriver = mongoose.model("appbaseddriver", DriverSchema);
 
     app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
@@ -125,7 +125,7 @@ module.exports = app => {
         else if (req.body.type === 'register') {
 
             const { driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl } = req.body
-            const newdriver = { driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl }
+            const newdriver = new mydriver({ driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl })
 
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
