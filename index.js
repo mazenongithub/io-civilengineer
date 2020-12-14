@@ -13,10 +13,7 @@ const mongoose = require("mongoose")
 mongoose.connect(`${keys.MONGODB}`, { useNewUrlParser: true, useUnifiedTopology: true },
     (err) => {
         if (err) {
-            console.log(`MONGO CONNECT ERROR KEY:${keys.MONGODB}`)
-        }
-        else {
-            console.log(`MongoDB`)
+            console.log(`MONGO CONNECT ERROR CHECK CONNECTION STRING`)
         }
 
     }
