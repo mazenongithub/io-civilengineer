@@ -49,7 +49,7 @@ module.exports = app => {
 
     });
 
-    const mydriver = mongoose.model("appbaseddriver", DriverSchema);
+    const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
     app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
@@ -239,7 +239,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
         const driverid = req.session.user.appbaseddriver;
-  
+
         req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
