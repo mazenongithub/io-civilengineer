@@ -18,17 +18,20 @@ module.exports = app => {
         equipment: [{
             equipmentid: String,
             equipment: String,
-            financed: {
-                purchasedate: String,
-                principal: String,
-                salvage: String,
-                apr: String,
-            },
             costs: [{
                 costid: String,
-                purchasedate: String,
-                purchaseprice: String,
                 detail: String,
+                startdate: String,
+                amount: String,
+                loan: {
+                    apr: String,
+                    months: String
+                },
+                reoccuring: {
+                    frequency: String,
+                    interval: String,
+                }
+
             }],
             driver: {
                 shifts: [{
@@ -36,7 +39,7 @@ module.exports = app => {
                     timein: String,
                     timeout: String,
                     deliveries: String,
-                    income: String,
+                    earnings: String,
                 }]
             }
 
@@ -236,7 +239,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
         const driverid = req.session.user.appbaseddriver;
-        //const driverid = '5fc14cf79e9f91244648e819';
+  
         req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
@@ -254,78 +257,6 @@ module.exports = app => {
 
 
     })
-
-
-    app.get('/appbaseddriver/sampleuser', (req, res) => {
-
-        const driver = {
-            driverid: 'mazen',
-            google: 'google',
-            apple: '000353.66d2a1610de24944b898df602ab5e7a7.0305',
-            profile: 'profile',
-            firstname: 'firstname',
-            lastname: 'lastname',
-            emailaddress: 'emailaddress',
-            profileurl: 'profileurl',
-            phonenumber: 'phonenumber',
-            equipment: [{
-                equipmentid: 'equipmentid',
-                equipment: 'equipment',
-                financed: {
-                    purchasedate: 'dateofpurchase',
-                    principal: 'purchaseprice',
-                    salvage: 'saleprice',
-                    apr: 'apr'
-                },
-                costs: [{
-                    costid: 'costid',
-                    purchasedate: 'dateofpurchase',
-                    purchaseprice: 'purchaseprice',
-                    detail: 'saleprice'
-                }],
-                driver: {
-                    shifts: [{
-                        shiftid: 'shiftid',
-                        timein: 'timein',
-                        timeout: 'timeout',
-                        deliveries: 'deliveries',
-                        income: 'income'
-                    }]
-                }
-
-            }]
-
-
-        }
-
-
-
-
-        const filter = { driverid: 'mazen' }
-
-
-        const options = {
-
-            strict: false,
-            new: true,
-            upsert: true,
-            useFindAndModify: false
-
-
-        }
-        mydriver.findOneAndUpdate(filter, driver, options, function(err, succ) {
-            if (err) {
-
-                console.log(err);
-            }
-            else {
-                res.send(succ);
-            }
-        });
-
-
-
-    });
 
 
 

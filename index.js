@@ -52,7 +52,9 @@ const cors = {
         "http://pm.civilengineer.io",
         "http://localhost:3000",
         "http://petitions.civilengineer.io",
-        "http://construction.civilengineer.io"
+        "http://construction.civilengineer.io",
+        "http://appbaseddriver.civilengineer.io",
+
     ]
 }
 
