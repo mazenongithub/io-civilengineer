@@ -18,18 +18,18 @@ module.exports = app => {
         equipment: [{
             equipmentid: String,
             equipment: String,
+            salvagedate: String,
+            salvage: String,
             costs: [{
                 costid: String,
                 detail: String,
-                startdate: String,
+                purchasedate: String,
                 amount: String,
                 loan: {
                     apr: String,
-                    months: String
                 },
                 reoccurring: {
-                    frequency: String,
-                    interval: String,
+                    frequency: String
                 }
 
             }],
@@ -239,6 +239,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
         const driverid = req.session.user.appbaseddriver;
+
         req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
