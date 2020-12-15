@@ -51,11 +51,11 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
         const driverid = req.params.driverid;
         const myuser = req.body.myuser;
-        console.log("58", myuser.equipment[0].costs)
+
 
         const filter = { _id: myuser._id }
 
@@ -237,9 +237,8 @@ module.exports = app => {
     })
 
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
-        //const driverid = req.session.user.appbaseddriver;
-        const driverid = '5fd7f0ddc609076ba21acd87'
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+        const driverid = req.session.user.appbaseddriver;
         req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
