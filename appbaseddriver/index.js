@@ -18,21 +18,20 @@ module.exports = app => {
         equipment: [{
             equipmentid: String,
             equipment: String,
-            salvagedate: String,
-            salvage: String,
+            repayment: {
+                salvagedate: String,
+                salvage: String,
+                purchasedate: String,
+                purchase: String,
+                apr: String
+            },
             costs: [{
                 costid: String,
                 detail: String,
                 purchasedate: String,
-                amount: String,
-                loan: {
-                    apr: String,
-                },
-                reoccurring: {
-                    frequency: String
-                }
-
+                amount: String
             }],
+
             driver: {
                 shifts: [{
                     shiftid: String,
