@@ -39,6 +39,7 @@ module.exports = app => {
                     timeout: String,
                     deliveries: String,
                     earnings: String,
+                    miles: String
                 }]
             }
 
@@ -54,7 +55,6 @@ module.exports = app => {
 
         const driverid = req.params.driverid;
         const myuser = req.body.myuser;
-
 
         const filter = { _id: myuser._id }
 
@@ -238,6 +238,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
         const driverid = req.session.user.appbaseddriver;
+
 
         req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
