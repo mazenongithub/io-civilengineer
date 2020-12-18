@@ -39,7 +39,10 @@ module.exports = app => {
                     timeout: String,
                     deliveries: String,
                     earnings: String,
-                    miles: String
+                    miles: String,
+                    reoccurring: {
+                        frequency: String
+                    }
                 }]
             }
 
@@ -55,21 +58,18 @@ module.exports = app => {
 
         const driverid = req.params.driverid;
         const myuser = req.body.myuser;
-
         const filter = { _id: myuser._id }
 
         const options = {
-
             strict: false,
             new: true,
             upsert: true,
             useFindAndModify: false
-
-
         }
-        mydriver.findByIdAndUpdate(filter, myuser, options, function(err, succ) {
-            if (err) {
 
+        mydriver.findByIdAndUpdate(filter, myuser, options, function(err, succ) {
+
+            if (err) {
                 console.log(err);
             }
             else {
@@ -237,6 +237,7 @@ module.exports = app => {
 
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+
         const driverid = req.session.user.appbaseddriver;
 
 
