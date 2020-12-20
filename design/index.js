@@ -45,7 +45,7 @@
 
         app.get('/design/checkuser', checkUser, (req, res) => {
             const providerid = req.session.user.design;
-           
+
             request({
                     url: `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`,
                     headers: {
@@ -220,7 +220,7 @@
 
         app.get('/design/:providerid/allcompanys', checkUser, (req, res) => {
             const providerid = req.params.providerid;
-            
+
 
             request({
                     url: `https://civilengineer.io/design/api/allcompanys.php?providerid=${providerid}`,
@@ -374,7 +374,12 @@
 
                         const response = JSON.parse(body)
                         if (response.hasOwnProperty("myuser")) {
-                            let user = { design: response.myuser.myuser.providerid }
+                            let user = {};
+                            if (req.session.hasOwnProperty("user")) {
+                                user = req.session.user;
+
+                            }
+                            user.design = response.myuser.myuser.providerid;
                             req.session.user = user;
                             res.send(response)
 

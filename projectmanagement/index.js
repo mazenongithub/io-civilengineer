@@ -98,7 +98,7 @@ module.exports = app => {
 
     app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
         const providerid = req.session.user.pm
-       
+
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
@@ -149,7 +149,11 @@ module.exports = app => {
                     const response = JSON.parse(body)
 
                     if (response.hasOwnProperty("myuser")) {
-                        let user = { pm: response.myuser.providerid }
+                        let user = {}
+                        if (req.session.hasOwnProperty("user")) {
+                            user = res.session.user;
+                        }
+                        user.pm = response.myuser.providerid
                         req.session.user = user;
                         res.send(response)
 

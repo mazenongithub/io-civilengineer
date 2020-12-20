@@ -392,7 +392,12 @@ module.exports = app => {
                 try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
-                        let user = { construction: response.myuser.providerid }
+                        
+                        let user = {};
+                        if(req.session.hasOwnProperty("user")) {
+                            user = res.session.user;
+                        }
+                        user.construction = response.myuser.providerid;
                         req.session.user = user;
 
 

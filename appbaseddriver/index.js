@@ -100,7 +100,12 @@ module.exports = app => {
             mydriver.findOne(filter, (err, succ) => {
 
                 if (succ) {
-                    req.session.user = { appbaseddriver: succ._id }
+                    let user = {};
+                    if (req.session.hasOwnProperty("user")) {
+                        user = req.session.user;
+                    }
+                    user.appbaseddriver = succ._id;
+                    req.session.user = user;
                     res.send(succ)
                 }
 
