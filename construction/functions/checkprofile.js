@@ -6,17 +6,17 @@ module.exports = (req, res, next) => {
     let url = false;
     if (req.hasOwnProperty("session")) {
 
-        if (req.session.hasOwnProperty("user")) {
+  
 
-            if (req.session.user.hasOwnProperty("construction")) {
+            if (req.session.hasOwnProperty("construction")) {
 
-                if (req.session.user.hasOwnProperty("construction")) {
-                    providerid = req.session.user.construction;
+              
+                    providerid = req.session.construction;
                     url = `https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`;
 
-                }
+                
             }
-        }
+        
 
     }
 

@@ -4,21 +4,20 @@ module.exports = (req, res, next) => {
 
     let providerid = false;
     let url = false;
+
     if (req.hasOwnProperty("session")) {
 
 
-        if (req.session.hasOwnProperty("user")) {
-
-            if (req.session.user.hasOwnProperty("construction")) {
+        if (req.session.hasOwnProperty("construction")) {
 
 
-                providerid = req.session.user.construction;
-                url = `https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`;
+            providerid = req.session.construction;
+            url = `https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`;
 
-            }
         }
-
     }
+
+
 
     if (providerid) {
 
@@ -54,13 +53,6 @@ module.exports = (req, res, next) => {
             }) // end request
 
     }
-    else {
-        next();
-    }
-
-
-
-
 
 
 }

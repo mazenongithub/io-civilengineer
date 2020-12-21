@@ -100,12 +100,9 @@ module.exports = app => {
             mydriver.findOne(filter, (err, succ) => {
 
                 if (succ) {
-                    let user = {};
-                    if (req.session.hasOwnProperty("user")) {
-                        user = req.session.user;
-                    }
-                    user.appbaseddriver = succ._id;
-                    req.session.user = user;
+                   
+                    req.session.appbaseddriver = succ._id;
+                   
                     res.send(succ)
                 }
 
@@ -133,7 +130,7 @@ module.exports = app => {
 
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
-                    req.session.user = { appbaseddriver: succ._id }
+                    req.session.appbaseddriver =  succ._id;
                     res.send(succ)
                 }
                 else {
@@ -159,7 +156,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/:emailaddress/checkemailaddress', checkuser, (req, res) => {
 
-        const driverid = req.session.user.appbaseddriver;
+        const driverid = req.session.appbaseddriver;
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
                 console.log(succ.emailaddress, req.params.emailaddress)
@@ -193,8 +190,8 @@ module.exports = app => {
     app.get('/appbaseddriver/:driverid/checkdriverid', (req, res) => {
 
         if (req.session.hasOwnProperty("user")) {
-            if (req.session.user.hasOwnProperty("appbaseddriver")) {
-                const driverid = req.session.user.appbaseddriver;
+            if (req.session.hasOwnProperty("appbaseddriver")) {
+                const driverid = req.session.appbaseddriver;
                 mydriver.findById({ _id: driverid }, function(err, succ) {
                     if (succ) {
                         if (succ.driverid === req.params.driverid) {
@@ -243,10 +240,8 @@ module.exports = app => {
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
-        const driverid = req.session.user.appbaseddriver;
+        const driverid = req.session.appbaseddriver;
 
-
-        req.session.user = { appbaseddriver: driverid }
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
 

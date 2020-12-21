@@ -6,17 +6,17 @@ module.exports = (req, res, next) => {
     let url = false;
     if (req.hasOwnProperty("session")) {
 
-        if (req.session.hasOwnProperty("user")) {
 
-            if (req.session.user.hasOwnProperty("design")) {
 
-                if (req.session.user.hasOwnProperty("design")) {
-                    providerid = req.session.user.design;
-                    url = `https://civilengineer.io/design/api/loadprofile.php?profile=${providerid}`;
+        if (req.session.hasOwnProperty("design")) {
 
-                }
-            }
+
+            providerid = req.session.design;
+            url = `https://civilengineer.io/design/api/loadprofile.php?profile=${providerid}`;
+
+
         }
+
 
     }
 

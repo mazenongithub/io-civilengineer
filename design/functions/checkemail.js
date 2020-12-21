@@ -7,15 +7,15 @@ module.exports = (req, res, next) => {
     if (req.hasOwnProperty("session")) {
 
 
-        if (req.session.hasOwnProperty("user")) {
 
-            if (req.session.user.hasOwnProperty("design")) {
 
-                providerid = req.session.user.design;
-                url = `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`;
+        if (req.session.hasOwnProperty("design")) {
 
-            }
+            providerid = req.session.design;
+            url = `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`;
+
         }
+
 
     }
 

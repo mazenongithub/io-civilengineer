@@ -97,7 +97,7 @@ module.exports = app => {
 
 
     app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
-        const providerid = req.session.user.pm
+        const providerid = req.session.pm
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
@@ -109,8 +109,7 @@ module.exports = app => {
                 if (!err) {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
-                        let user = { pm: response.myuser.providerid }
-                        req.session.user = user;
+                        req.session.pm = response.myuser.providerid;
                         res.send(response)
 
                     }
@@ -149,12 +148,7 @@ module.exports = app => {
                     const response = JSON.parse(body)
 
                     if (response.hasOwnProperty("myuser")) {
-                        let user = {}
-                        if (req.session.hasOwnProperty("user")) {
-                            user = res.session.user;
-                        }
-                        user.pm = response.myuser.providerid
-                        req.session.user = user;
+                       
                         res.send(response)
 
                     }
@@ -177,54 +171,7 @@ module.exports = app => {
 
     })
 
-    app.post('/projectmanagement/clientlogin', (req, res) => {
-        const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
-        const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
-
-
-
-        request.post({
-                url: `https://civilengineer.io/projectmanagement/api/loginclientnode.php`,
-                form: values,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                if (!err) {
-                    const response = JSON.parse(body)
-
-                    if (response.hasOwnProperty("myuser")) {
-                        let user = { pm: response.myuser.providerid }
-                        req.session.user = user;
-                        res.send(response)
-
-                    }
-
-                    else {
-                        let message = "";
-                        if (response.hasOwnProperty("message")) {
-                            message = response.message;
-                            res.status(404).send({ message: `Login was not successful ${message}` })
-                        }
-
-                    }
-
-                }
-
-                else {
-                    res.status(404).send({ message: 'Login was not successful ', err })
-                }
-
-
-                //values returned from DB
-
-
-            }) // end request
-
-    })
-
+ 
     app.post('/projectmanagement/checknewprojectid', checkprojectid, (req, res) => {
         console.log(req.body)
         request.post({
@@ -346,8 +293,8 @@ module.exports = app => {
                 try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
-                        let user = { pm: response.myuser.providerid }
-                        req.session.user = user;
+                      
+                        req.session.pm = response.myuser.providerid
 
 
                     }

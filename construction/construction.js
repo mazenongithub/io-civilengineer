@@ -342,7 +342,7 @@ module.exports = app => {
 
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
-        let providerid = req.session.user.construction;
+        let providerid = req.session.construction;
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -393,12 +393,9 @@ module.exports = app => {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
                         
-                        let user = {};
-                        if(req.session.hasOwnProperty("user")) {
-                            user = res.session.user;
-                        }
-                        user.construction = response.myuser.providerid;
-                        req.session.user = user;
+                       
+                        req.session.construction = response.myuser.providerid;
+                       
 
 
                     }
@@ -418,66 +415,7 @@ module.exports = app => {
     })
 
 
-    app.post('/construction/clientlogin', (req, res) => {
 
-        const { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl } = req.body;
-        const values = { clientid, client, emailaddress, pass, profile, firstname, lastname, phonenumber, profileurl };
-
-        request.post({
-                url: `https://civilengineer.io/construction/api/loginclientnode.php`,
-                form: values,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-                    const response = JSON.parse(body)
-
-                    if (response.hasOwnProperty("myuser")) {
-                        let user = { construction: response.myuser.providerid }
-                        req.session.user = user;
-                        res.send(response)
-
-                    }
-
-                    else {
-
-                        res.status(404).send({ message: response.message })
-                    }
-
-                }
-
-                catch (error) {
-
-                    res.status(404).send(`Error making login request ${error} ${err}`)
-                }
-
-
-                //values returned from DB
-
-
-            }) // end request
-
-    })
-
-    app.get('/construction/:providerid/getuserloginlink/:stripe', checkUserLogin, (req, res) => {
-
-        stripe.accounts.createLoginLink(
-            req.params.stripe,
-            function(err, link) {
-
-                // asynchronously called
-                if (!err) {
-                    res.send(link)
-                }
-                else {
-                    res.status(404).send(err);
-                }
-            }
-        )
-    })
 
     app.get('/construction/:profile/checkprofile', checkprofile, (req, res) => {
         const profile = req.params.profile;
@@ -529,7 +467,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     let parsedjson = JSON.parse(body);
-                    let params = { stripe: parsedjson.stripe_user_id, accountid, providerid: req.session.user.construction }
+                    let params = { stripe: parsedjson.stripe_user_id, accountid, providerid: req.session.construction }
 
                     request.post({
                             url: `https://civilengineer.io/construction/api/updateaccountid.php`,

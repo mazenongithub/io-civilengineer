@@ -2,19 +2,18 @@ const request = require("request");
 const keys = require('../keys');
 module.exports = (req, res, next) => {
     const companyurl = req.params.companyurl;
-    let providerid = 'mazen'
-    let url = `https://civilengineer.io/design/api/loadprofile.php?profile=${providerid}`
+    let providerid = false;
+    let url = false;
     if (req.hasOwnProperty("session")) {
 
-        if (req.session.hasOwnProperty("user")) {
 
-            if (req.session.user.hasOwnProperty("design")) {
+        if (req.session.hasOwnProperty("design")) {
 
-                providerid = req.session.user.design;
-                url = `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`
+            providerid = req.session.design;
+            url = `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`
 
-            }
         }
+
 
     }
 
@@ -32,7 +31,7 @@ module.exports = (req, res, next) => {
                 try {
 
                     let response = JSON.parse(body)
-                 
+
 
                     if (response.hasOwnProperty("myuser")) {
                         if (response.myuser.hasOwnProperty("company")) {

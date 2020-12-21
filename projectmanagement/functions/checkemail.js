@@ -7,16 +7,16 @@ module.exports = (req, res, next) => {
     if (req.hasOwnProperty("session")) {
 
 
-        if (req.session.hasOwnProperty("user")) {
+     
 
-            if (req.session.user.hasOwnProperty("pm")) {
+            if (req.session.hasOwnProperty("pm")) {
 
 
-                providerid = req.session.user.pm;
+                providerid = req.session.pm;
                 url = `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`;
 
             }
-        }
+        
 
     }
 
