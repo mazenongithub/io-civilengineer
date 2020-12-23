@@ -162,7 +162,7 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/loadcsi', checkUserLogin, (req, res) => {
+    app.get('/construction/loadcsi', (req, res) => {
 
         request({
                 url: `https://civilengineer.io/construction/api/loadcsi.php`,
@@ -340,9 +340,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
+    app.get('/construction/checkuser', (req, res) => {
 
-        let providerid = req.session.construction;
+        //let providerid = req.session.construction;
+        let providerid = 'mazen'
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -392,10 +393,10 @@ module.exports = app => {
                 try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
-                        
-                       
+
+
                         req.session.construction = response.myuser.providerid;
-                       
+
 
 
                     }
@@ -584,7 +585,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/saveproject', (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,

@@ -31,22 +31,22 @@ module.exports = app => {
                 purchasedate: String,
                 amount: String
             }],
+        }],
+        driver: {
+            shifts: [{
+                shiftid: String,
+                timein: String,
+                timeout: String,
+                deliveries: String,
+                earnings: String,
+                miles: String,
+                reoccurring: {
+                    frequency: String
+                }
+            }]
+        }
 
-            driver: {
-                shifts: [{
-                    shiftid: String,
-                    timein: String,
-                    timeout: String,
-                    deliveries: String,
-                    earnings: String,
-                    miles: String,
-                    reoccurring: {
-                        frequency: String
-                    }
-                }]
-            }
 
-        }]
 
 
 
@@ -100,9 +100,9 @@ module.exports = app => {
             mydriver.findOne(filter, (err, succ) => {
 
                 if (succ) {
-                   
+
                     req.session.appbaseddriver = succ._id;
-                   
+
                     res.send(succ)
                 }
 
@@ -130,7 +130,7 @@ module.exports = app => {
 
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
-                    req.session.appbaseddriver =  succ._id;
+                    req.session.appbaseddriver = succ._id;
                     res.send(succ)
                 }
                 else {
