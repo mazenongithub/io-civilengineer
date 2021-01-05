@@ -5,12 +5,12 @@ module.exports = (req, res, next) => {
             return next();
         }
         else {
-            res.status(404).send({ message: `Please login to access profile content construction  ` })
+            res.status(404).send({ message: `You have to Login to Access AppBasedDriver   ` })
         }
 
     }
     else {
-        res.status(404).send({ message: 'Please login to access profile content session not found ' })
+        res.status(404).send({ message: 'You have to Login to Access AppBasedDriver ' })
     }
 
 
