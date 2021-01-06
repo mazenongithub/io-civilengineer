@@ -191,37 +191,35 @@ module.exports = app => {
 
     app.get('/appbaseddriver/:driverid/checkdriverid', (req, res) => {
 
-        if (req.session.hasOwnProperty("user")) {
-            if (req.session.hasOwnProperty("appbaseddriver")) {
-                const driverid = req.session.appbaseddriver;
-                mydriver.findById({ _id: driverid }, function(err, succ) {
-                    if (succ) {
-                        if (succ.driverid === req.params.driverid) {
-                            res.send({ valid: req.params.driverid })
-                        }
-                        else {
-                            mydriver.findOne({ driverid: req.params.driverid }, function(err_1, succ_1) {
-                                if (succ_1) {
-                                    res.send({ invalid: `${req.params.driverid} is taken` })
 
-                                }
-                                else {
-                                    res.send({ valid: `${req.params.driverid}` })
+        if (req.session.hasOwnProperty("appbaseddriver")) {
+            const driverid = req.session.appbaseddriver;
+            mydriver.findById({ _id: driverid }, function(err, succ) {
+                if (succ) {
+                    if (succ.driverid === req.params.driverid) {
+                        res.send({ valid: req.params.driverid })
+                    }
+                    else {
+                        mydriver.findOne({ driverid: req.params.driverid }, function(err_1, succ_1) {
+                            if (succ_1) {
+                                res.send({ invalid: `${req.params.driverid} is taken` })
 
-                                }
-                            })
+                            }
+                            else {
+                                res.send({ valid: `${req.params.driverid}` })
 
+                            }
+                        })
 
-                        }
 
                     }
 
-                })
+                }
 
-            }
-
+            })
 
         }
+
         else {
             mydriver.findOne({ driverid: req.params.driverid }, function(err_2, succ_2) {
                 if (succ_2) {
