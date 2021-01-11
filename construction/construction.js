@@ -340,10 +340,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser', (req, res) => {
+    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
-        //let providerid = req.session.construction;
-        let providerid = 'mazen'
+        let providerid = req.session.construction;
+
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -507,7 +507,6 @@ module.exports = app => {
 
             }) // end request
 
-
     })
 
     app.post('/construction/:providerid/createcompany', checkUserLogin, (req, res) => {
@@ -585,7 +584,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject', (req, res) => {
+    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,
@@ -598,11 +597,12 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
+                    console.log("response", response)
                     res.send(response)
 
                 }
                 catch (error) {
-                    res.status(404).send(`Save project request failed ${err} ${error}`)
+                    res.status(404).send(`Save project request failed ${err} ${error} ${body}`)
                 }
 
 
