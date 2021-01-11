@@ -597,7 +597,7 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
-                    console.log("response", response)
+
                     res.send(response)
 
                 }
