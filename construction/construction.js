@@ -344,7 +344,6 @@ module.exports = app => {
 
         let providerid = req.session.construction;
 
-
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
                     'Permission': `${keys.grantAuthorization}`
