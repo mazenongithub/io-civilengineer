@@ -10,17 +10,18 @@ class AppBasedDriver {
 
     updateDriver() {
 
-        const mydriver = Object.create(this.driver);
+        const driver = Object.create(this.driver);
 
-        if (mydriver.apple) {
-            mydriver.apple = bcrypt.hashSync(mydriver.apple, 10);
+        if (driver.apple) {
+            driver.apple = bcrypt.hashSync(driver.apple, 10);
         }
 
-        if (mydriver.google) {
-            mydriver.google = bcrypt.hashSync(mydriver.google, 10);
+        if (driver.google) {
+            driver.google = bcrypt.hashSync(driver.google, 10);
         }
 
-        return mydriver;
+
+        return driver;
     }
 
 

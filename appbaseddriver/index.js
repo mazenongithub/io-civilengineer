@@ -55,7 +55,7 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
         const driverid = req.params.driverid;
         const myuser = req.body.myuser;
@@ -149,14 +149,6 @@ module.exports = app => {
     })
 
 
-    app.get('/appbaseddriver/hello', (req, res) => {
-
-        const appbaseddriver = new AppBasedDriver();
-        res.send(appbaseddriver.helloDriver())
-
-    })
-
-
 
     app.get('/appbaseddriver/:driverid/logout', checkuser, (req, res) => {
         req.session.destroy();
@@ -205,6 +197,7 @@ module.exports = app => {
 
         if (req.session.hasOwnProperty("appbaseddriver")) {
             const driverid = req.session.appbaseddriver;
+          
             mydriver.findById({ _id: driverid }, function(err, succ) {
                 if (succ) {
                     if (succ.driverid === req.params.driverid) {
@@ -249,12 +242,9 @@ module.exports = app => {
     })
 
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
-
-
-        //const driverid = req.session.appbaseddriver;
-        const driverid = '5feb649d48fe012e2fc63bd4'
-
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+        
+        const driverid = req.session.appbaseddriver;
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
