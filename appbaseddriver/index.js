@@ -107,7 +107,8 @@ module.exports = app => {
                 if (succ) {
 
                     req.session.appbaseddriver = succ._id;
-
+                    const appbaseddriver = new AppBasedDriver(succ)
+                    succ = appbaseddriver.updateDriver();
                     res.send(succ)
                 }
 
@@ -136,6 +137,8 @@ module.exports = app => {
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
                     req.session.appbaseddriver = succ._id;
+                    const appbaseddriver = new AppBasedDriver(succ)
+                    succ = appbaseddriver.updateDriver();
                     res.send(succ)
                 }
                 else {
@@ -197,7 +200,7 @@ module.exports = app => {
 
         if (req.session.hasOwnProperty("appbaseddriver")) {
             const driverid = req.session.appbaseddriver;
-          
+
             mydriver.findById({ _id: driverid }, function(err, succ) {
                 if (succ) {
                     if (succ.driverid === req.params.driverid) {
@@ -243,7 +246,7 @@ module.exports = app => {
 
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
-        
+
         const driverid = req.session.appbaseddriver;
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
