@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const request = require("request")
 const keys = require("./keys")
 const checkuser = require("./functions/checkuser");
+const AppBasedDriver = require("./functions/appbaseddriver");
 
 module.exports = app => {
 
@@ -54,7 +55,7 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
 
         const driverid = req.params.driverid;
         const myuser = req.body.myuser;
@@ -75,6 +76,8 @@ module.exports = app => {
                 console.log(err);
             }
             else {
+                const appbaseddriver = new AppBasedDriver(succ)
+                succ = appbaseddriver.updateDriver();
                 res.send(succ);
             }
         });
@@ -142,6 +145,14 @@ module.exports = app => {
 
         }
 
+
+    })
+
+
+    app.get('/appbaseddriver/hello', (req, res) => {
+
+        const appbaseddriver = new AppBasedDriver();
+        res.send(appbaseddriver.helloDriver())
 
     })
 
@@ -238,16 +249,17 @@ module.exports = app => {
     })
 
 
-    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+    app.get('/appbaseddriver/checkuser', (req, res) => {
 
 
-        const driverid = req.session.appbaseddriver;
-
+        //const driverid = req.session.appbaseddriver;
+        const driverid = '5feb649d48fe012e2fc63bd4'
 
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
-
+                const appbaseddriver = new AppBasedDriver(succ)
+                succ = appbaseddriver.updateDriver();
                 res.send(succ)
 
             }
