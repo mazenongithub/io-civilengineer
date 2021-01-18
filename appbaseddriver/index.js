@@ -164,7 +164,7 @@ module.exports = app => {
 
     app.get('/appbaseddriver/:emailaddress/checkemailaddress', checkuser, (req, res) => {
 
-        const driverid = req.session.appbaseddriver;
+        const driverid = req.session.appbaseddriver
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
                 console.log(succ.emailaddress, req.params.emailaddress)
