@@ -162,8 +162,7 @@ module.exports = app => {
                     res.send(succ)
                 }
                 else {
-                    res.status(404).send({ message: `
-                                                            Could not register user $ { err } ` })
+                    res.status(404).send({ message: `Could not register user ${err } ` })
                 }
             });
 
@@ -177,8 +176,7 @@ module.exports = app => {
     app.get('/appbaseddriver/:driverid/logout', checkuser, (req, res) => {
         req.session.destroy();
         res.send({
-            "message": `
-                                                            $ { req.params.driverid } has been logged out `
+            "message": `${ req.params.driverid } has been logged out `
         })
 
     })
@@ -196,13 +194,11 @@ module.exports = app => {
                 else {
                     mydriver.findOne({ emailaddress: req.params.emailaddress }, function(err_1, succ_1) {
                         if (succ_1) {
-                            res.send({ invalid: `
-                                                            $ { req.params.emailaddress } is taken ` })
+                            res.send({ invalid: `${ req.params.emailaddress } is taken ` })
 
                         }
                         else {
-                            res.send({ valid: `
-                                                            $ { req.params.emailaddress } ` })
+                            res.send({ valid: `${ req.params.emailaddress } ` })
 
                         }
                     })
@@ -233,13 +229,11 @@ module.exports = app => {
                     else {
                         mydriver.findOne({ driverid: req.params.driverid }, function(err_1, succ_1) {
                             if (succ_1) {
-                                res.send({ invalid: `
-                                                            $ { req.params.driverid } is taken ` })
+                                res.send({ invalid: `${req.params.driverid} is taken ` })
 
                             }
                             else {
-                                res.send({ valid: `
-                                                            $ { req.params.driverid } ` })
+                                res.send({ valid: `${req.params.driverid}` })
 
                             }
                         })
@@ -256,13 +250,11 @@ module.exports = app => {
         else {
             mydriver.findOne({ driverid: req.params.driverid }, function(err_2, succ_2) {
                 if (succ_2) {
-                    res.send({ invalid: `
-                                                            $ { req.params.driverid } is taken ` })
+                    res.send({ invalid: `${req.params.driverid } is taken ` })
 
                 }
                 else {
-                    res.send({ valid: `
-                                                            $ { req.params.driverid } ` })
+                    res.send({ valid: `${req.params.driverid } ` })
 
                 }
             })
@@ -271,7 +263,6 @@ module.exports = app => {
 
 
     })
-
 
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
@@ -285,8 +276,7 @@ module.exports = app => {
             }
             else {
 
-                res.status(404).send({ message: `
-                                                            Please Login In to Access AppBasedDriver ` });
+                res.status(404).send({ message: `Please Login In to Access AppBasedDriver ` });
             }
 
         })
