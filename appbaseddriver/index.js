@@ -31,7 +31,10 @@ module.exports = app => {
                 costid: String,
                 detail: String,
                 purchasedate: String,
-                amount: String
+                amount: String,
+                reoccurring: {
+                    frequency: String
+                }
             }],
         }],
         driver: {
