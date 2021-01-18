@@ -3,6 +3,7 @@ const request = require("request")
 const keys = require("./keys")
 const checkuser = require("./functions/checkuser");
 const AppBasedDriver = require("./functions/appbaseddriver");
+const bcrypt = require("bcryptjs")
 
 module.exports = app => {
 
@@ -85,42 +86,54 @@ module.exports = app => {
 
 
 
+
     app.post('/appbaseddriver/clientlogin', (req, res) => {
 
         if (req.body.type === 'login') {
 
 
-            let filter = {};
-            if (req.body.google) {
-                filter = { google: req.body.google }
-
-            }
-            else if (req.body.apple) {
-                filter = { apple: req.body.apple };
-
-            }
+            let filter = { driverid: req.body.driverid }
 
 
             mydriver.findOne(filter, (err, succ) => {
 
                 if (succ) {
 
-                    req.session.appbaseddriver = succ._id;
+                    const driver = Object.create(succ);
 
-                    res.send(succ)
+                    if (driver.apple) {
+
+                        if (bcrypt.compareSync(req.body.apple, driver.apple)) {
+                            req.session.appbaseddriver = succ._id;
+                            res.send(succ)
+
+                        }
+                        else {
+                            res.status(404).send({ message: 'Apple Login Failed' })
+                        }
+
+
+                    }
+                    else if (driver.google) {
+
+                        if (bcrypt.compareSync(req.body.google, driver.google)) {
+                            req.session.appbaseddriver = succ._id;
+                            res.send(succ)
+
+                        }
+                        else {
+                            res.status(404).send({ message: `Google Login Failed ${req.body.google} and ${driver.google }` })
+
+                        }
+
+                    }
+
                 }
 
                 else {
 
-                    let errmsg = "";
-                    if (filter.hasOwnProperty("apple")) {
-                        errmsg = `Apple Client Not Registered. Please Register your account `
-                    }
-                    else if (filter.hasOwnProperty("google")) {
 
-                        errmsg = `Google Client Not Registered. Please Register your account `
-                    }
-                    res.status(404).send({ message: errmsg })
+                    res.status(404).send({ message: `Driver ID not Found ` })
                 }
 
             })
@@ -128,8 +141,18 @@ module.exports = app => {
         }
 
         else if (req.body.type === 'register') {
+            const appbaseddriver = new AppBasedDriver();
 
-            const { driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl } = req.body
+            let { driverid, firstname, lastname, emailaddress, phonenumber, profileurl, apple, google } = req.body
+
+            if (apple) {
+                apple = appbaseddriver.hashPassword(apple)
+            }
+            if (google) {
+                google = appbaseddriver.hashPassword(google)
+            }
+
+
             const newdriver = new mydriver({ driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl })
 
             mydriver.create(newdriver, function(err, succ) {
@@ -139,7 +162,8 @@ module.exports = app => {
                     res.send(succ)
                 }
                 else {
-                    res.status(404).send({ message: `Could not register user ${err}` })
+                    res.status(404).send({ message: `
+                                                            Could not register user $ { err } ` })
                 }
             });
 
@@ -153,7 +177,8 @@ module.exports = app => {
     app.get('/appbaseddriver/:driverid/logout', checkuser, (req, res) => {
         req.session.destroy();
         res.send({
-            "message": `${req.params.driverid} has been logged out`
+            "message": `
+                                                            $ { req.params.driverid } has been logged out `
         })
 
     })
@@ -171,11 +196,13 @@ module.exports = app => {
                 else {
                     mydriver.findOne({ emailaddress: req.params.emailaddress }, function(err_1, succ_1) {
                         if (succ_1) {
-                            res.send({ invalid: `${req.params.emailaddress} is taken` })
+                            res.send({ invalid: `
+                                                            $ { req.params.emailaddress } is taken ` })
 
                         }
                         else {
-                            res.send({ valid: `${req.params.emailaddress}` })
+                            res.send({ valid: `
+                                                            $ { req.params.emailaddress } ` })
 
                         }
                     })
@@ -206,11 +233,13 @@ module.exports = app => {
                     else {
                         mydriver.findOne({ driverid: req.params.driverid }, function(err_1, succ_1) {
                             if (succ_1) {
-                                res.send({ invalid: `${req.params.driverid} is taken` })
+                                res.send({ invalid: `
+                                                            $ { req.params.driverid } is taken ` })
 
                             }
                             else {
-                                res.send({ valid: `${req.params.driverid}` })
+                                res.send({ valid: `
+                                                            $ { req.params.driverid } ` })
 
                             }
                         })
@@ -227,11 +256,13 @@ module.exports = app => {
         else {
             mydriver.findOne({ driverid: req.params.driverid }, function(err_2, succ_2) {
                 if (succ_2) {
-                    res.send({ invalid: `${req.params.driverid} is taken` })
+                    res.send({ invalid: `
+                                                            $ { req.params.driverid } is taken ` })
 
                 }
                 else {
-                    res.send({ valid: `${req.params.driverid}` })
+                    res.send({ valid: `
+                                                            $ { req.params.driverid } ` })
 
                 }
             })
@@ -254,7 +285,8 @@ module.exports = app => {
             }
             else {
 
-                res.status(404).send({ message: ` Please Login In to Access AppBasedDriver` });
+                res.status(404).send({ message: `
+                                                            Please Login In to Access AppBasedDriver ` });
             }
 
         })

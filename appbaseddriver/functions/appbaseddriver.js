@@ -1,27 +1,10 @@
 const bcrypt = require('bcryptjs')
 class AppBasedDriver {
 
-    constructor(driver) {
 
-        this.driver = driver;
+    hashPassword(password) {
 
-    }
-
-
-    updateDriver() {
-
-        const driver = Object.create(this.driver);
-
-        if (driver.apple) {
-            driver.apple = bcrypt.hashSync(driver.apple, 10);
-        }
-
-        if (driver.google) {
-            driver.google = bcrypt.hashSync(driver.google, 10);
-        }
-
-
-        return driver;
+        return bcrypt.hashSync(password, 10);
     }
 
 
