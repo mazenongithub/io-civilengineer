@@ -76,8 +76,7 @@ module.exports = app => {
                 console.log(err);
             }
             else {
-                const appbaseddriver = new AppBasedDriver(succ)
-                succ = appbaseddriver.updateDriver();
+
                 res.send(succ);
             }
         });
@@ -107,8 +106,7 @@ module.exports = app => {
                 if (succ) {
 
                     req.session.appbaseddriver = succ._id;
-                    const appbaseddriver = new AppBasedDriver(succ)
-                    succ = appbaseddriver.updateDriver();
+
                     res.send(succ)
                 }
 
@@ -137,8 +135,7 @@ module.exports = app => {
             mydriver.create(newdriver, function(err, succ) {
                 if (succ) {
                     req.session.appbaseddriver = succ._id;
-                    const appbaseddriver = new AppBasedDriver(succ)
-                    succ = appbaseddriver.updateDriver();
+
                     res.send(succ)
                 }
                 else {
@@ -251,8 +248,7 @@ module.exports = app => {
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
-                const appbaseddriver = new AppBasedDriver(succ)
-                succ = appbaseddriver.updateDriver();
+
                 res.send(succ)
 
             }
