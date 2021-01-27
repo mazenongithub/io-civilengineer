@@ -1,14 +1,10 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var request = require("request");
-const parser = require('xml2json');
-var app = express();
-var session = require('express-session')
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const session = require('express-session');
 const keys = require('./keys');
 const multer = require("multer");
-const mongoose = require("mongoose")
-
-//const cors = require('cors')
+const mongoose = require("mongoose");
 
 mongoose.connect(`${keys.MONGODB}`, { useNewUrlParser: true, useUnifiedTopology: true },
     (err) => {
@@ -79,8 +75,6 @@ app.use(session({
 
 ));
 app.set('trust proxy', 1);
-
-
 require('./construction')(app)
 require('./projectmanagement')(app)
 require('./design')(app)
