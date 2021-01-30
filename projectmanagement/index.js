@@ -13,6 +13,7 @@ const checkproject = require('./functions/checkproject');
 const checkprofile = require('./functions/checkprofile');
 const checkemail = require('./functions/checkemail');
 const checkprojectid = require('./functions/checkprojectid')
+const ProjectManagement = require('./functions/projectmanagement')
 
 module.exports = app => {
     //app.use(function(req, res, next) {
@@ -56,7 +57,7 @@ module.exports = app => {
 
     })
 
-    app.get('/projectmanagement/loadcsi', checkLogin, (req, res) => {
+    app.get('/projectmanagement/loadcsi', (req, res) => {
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadcsi.php`,
@@ -148,7 +149,7 @@ module.exports = app => {
                     const response = JSON.parse(body)
 
                     if (response.hasOwnProperty("myuser")) {
-                       
+
                         res.send(response)
 
                     }
@@ -171,7 +172,7 @@ module.exports = app => {
 
     })
 
- 
+
     app.post('/projectmanagement/checknewprojectid', checkprojectid, (req, res) => {
         console.log(req.body)
         request.post({
@@ -202,7 +203,7 @@ module.exports = app => {
 
     })
 
-    app.post('/projectmanagement/settleinvoice', checkLogin, validateInvoice, balanceavailable, (req, res) => {
+    app.post('/projectmanagement/settleinvoice', (req, res) => {
 
 
         request.post({
@@ -216,25 +217,23 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const invoice = JSON.parse(body);
-                    if (invoice.hasOwnProperty("accounts")) {
+                    const projectmanagement = new ProjectManagement();
+                    const transfers = projectmanagement.getTransfersFromInvoice(invoice.invoice)
+                    transfers.map(transfer => {
 
-                        invoice.accounts.map(account => {
+                        stripe.transfers.create({
+                            amount: Math.round(Number(transfer.amount) * 100),
+                            currency: "usd",
+                            destination: transfer.stripe,
+                            transfer_group: invoice.invoice.invoiceid
 
-                            stripe.transfers.create({
-                                amount: account.amount,
-                                currency: "usd",
-                                destination: account.stripe,
-                                transfer_group: invoice.invoiceid
-                            }).then(function(transfer) {
-                                //insert transfer id
+                        }).then(function(succ) {
+                            //insert transfer id
+                            //console.log(succ)
 
-                            });
+                        });
 
-
-                        })
-
-                    }
-
+                    })
                     res.send(invoice)
 
                 }
@@ -293,7 +292,7 @@ module.exports = app => {
                 try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
-                      
+
                         req.session.pm = response.myuser.providerid
 
 
