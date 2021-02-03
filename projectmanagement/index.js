@@ -66,7 +66,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("csis")) {
 
@@ -80,8 +80,8 @@ module.exports = app => {
 
                 }
 
-                else {
-                    res.status(404).send('Error making request')
+                catch (err) {
+                    res.status(404).send(`Could not load CSI ${err}`)
                 }
 
 
@@ -97,10 +97,10 @@ module.exports = app => {
 
 
 
-    app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
+    app.get('/projectmanagement/checkuser', checkLogin,  (req, res) => {
         const providerid = req.session.pm
 
-
+     
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
@@ -108,7 +108,7 @@ module.exports = app => {
                 }
             },
             function(err, httpResponse, body) {
-                if (!err) {
+                try {
                     const response = JSON.parse(body)
                     if (response.hasOwnProperty("myuser")) {
                         req.session.pm = response.myuser.providerid;
@@ -117,13 +117,13 @@ module.exports = app => {
                     }
 
                     else {
-                        res.status(404).send('Invalid Login')
+                        res.status(404).send(`Could Not Find User. Not Found`)
                     }
 
                 }
 
-                else {
-                    res.status(404).send('Error making request')
+                catch (err) {
+                    res.status(404).send(`Could Not Find User ${err}`)
                 }
 
 
@@ -174,7 +174,7 @@ module.exports = app => {
 
 
     app.post('/projectmanagement/checknewprojectid', checkprojectid, (req, res) => {
-        console.log(req.body)
+
         request.post({
                 url: 'https://civilengineer.io/projectmanagement/api/checknewprojectid.php',
                 form: req.body,
@@ -205,7 +205,6 @@ module.exports = app => {
 
     app.post('/projectmanagement/settleinvoice', checkLogin, (req, res) => {
 
-
         request.post({
                 url: 'https://civilengineer.io/projectmanagement/api/settleinvoice.php',
                 form: req.body,
@@ -219,8 +218,9 @@ module.exports = app => {
                     const invoice = JSON.parse(body);
                     const projectmanagement = new ProjectManagement();
                     const transfers = projectmanagement.getTransfersFromInvoice(invoice.invoice)
-                    transfers.map(transfer => {
 
+                    transfers.map(transfer => {
+                      
                         stripe.transfers.create({
                             amount: Math.round(Number(transfer.amount) * 100),
                             currency: "usd",

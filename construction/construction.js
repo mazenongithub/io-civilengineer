@@ -296,7 +296,6 @@ module.exports = app => {
 
         switch (type) {
 
-
             case 'transfer.created':
                 const getstripe = transfercreated();
                 const transferid = getstripe.data.object.id
@@ -308,7 +307,7 @@ module.exports = app => {
                 const destination = getstripe.data.object.destination;
                 const invoiceid = getstripe.data.object.transfer_group;
                 const transfer = { transfer: createTransfer(transferid, created, amount, destination, invoiceid) }
-                console.log(transfer)
+
                 request.post({
                         url: 'https://civilengineer.io/construction/api/transfer.php',
                         form: transfer,
@@ -340,10 +339,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser',  checkUserLogin, (req, res) => {
+    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
         const providerid = req.session.construction;
-        
+
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -584,7 +583,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject',  checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,
@@ -610,7 +609,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveprofile',  checkUserLogin,  (req, res) => {
+    app.post('/construction/:providerid/saveprofile', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/userendpoint.php`,

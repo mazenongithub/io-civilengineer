@@ -93,8 +93,8 @@ class ProjectManagement {
 
     checkTransfers(transfers, stripe) {
         let check = true
-        transfers.map(tranfer => {
-            if (tranfer.stripe === stripe) {
+        transfers.map(transfer => {
+            if (transfer.stripe === stripe) {
 
                 check = false
 
@@ -106,9 +106,9 @@ class ProjectManagement {
 
     }
 
+
     getTransfersFromInvoice(invoice) {
 
-        console.log(invoice)
         let transfers = [];
         if (Object.create(invoice).equipment) {
 
@@ -128,8 +128,11 @@ class ProjectManagement {
         if (Object.create(invoice).materials) {
             invoice.materials.map(material => {
                 let stripe = material.stripe;
-                let amount = this.getTransferAmountbyAcct(invoice, stripe)
-                transfers.push({ stripe, amount })
+                if (this.checkTransfers(transfers, stripe)) {
+
+                    let amount = this.getTransferAmountbyAcct(invoice, stripe)
+                    transfers.push({ stripe, amount })
+                }
 
 
             })
