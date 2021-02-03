@@ -97,10 +97,10 @@ module.exports = app => {
 
 
 
-    app.get('/projectmanagement/checkuser', checkLogin,  (req, res) => {
-        const providerid = req.session.pm
+    app.get('/projectmanagement/checkuser', (req, res) => {
+        // const providerid = req.session.pm
 
-     
+        const providerid = 'gordon'
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
@@ -203,7 +203,7 @@ module.exports = app => {
 
     })
 
-    app.post('/projectmanagement/settleinvoice', checkLogin, (req, res) => {
+    app.post('/projectmanagement/settleinvoice', (req, res) => {
 
         request.post({
                 url: 'https://civilengineer.io/projectmanagement/api/settleinvoice.php',
@@ -220,7 +220,7 @@ module.exports = app => {
                     const transfers = projectmanagement.getTransfersFromInvoice(invoice.invoice)
 
                     transfers.map(transfer => {
-                      
+
                         stripe.transfers.create({
                             amount: Math.round(Number(transfer.amount) * 100),
                             currency: "usd",
