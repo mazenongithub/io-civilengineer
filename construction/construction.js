@@ -340,9 +340,10 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/checkuser', checkUserLogin, (req, res) => {
+    app.get('/construction/checkuser',  checkUserLogin, (req, res) => {
 
-        let providerid = req.session.construction;
+        const providerid = req.session.construction;
+        
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -583,7 +584,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/saveproject',  checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,
@@ -609,7 +610,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveprofile', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/saveprofile',  checkUserLogin,  (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/userendpoint.php`,
