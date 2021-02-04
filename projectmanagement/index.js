@@ -97,10 +97,9 @@ module.exports = app => {
 
 
 
-    app.get('/projectmanagement/checkuser', (req, res) => {
-        // const providerid = req.session.pm
+    app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
+        const providerid = req.session.pm
 
-        const providerid = 'gordon'
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
                 headers: {
@@ -203,7 +202,7 @@ module.exports = app => {
 
     })
 
-    app.post('/projectmanagement/settleinvoice', (req, res) => {
+    app.post('/projectmanagement/settleinvoice', checkLogin, (req, res) => {
 
         request.post({
                 url: 'https://civilengineer.io/projectmanagement/api/settleinvoice.php',
@@ -228,8 +227,7 @@ module.exports = app => {
                             transfer_group: invoice.invoice.invoiceid
 
                         }).then(function(succ) {
-                            //insert transfer id
-                            //console.log(succ)
+
 
                         });
 
