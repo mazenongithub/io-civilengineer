@@ -44,39 +44,11 @@ module.exports = app => {
 
     })
 
-    app.get('/construction/:companyurl/checkcompany', (req, res) => {
-        const companyurl = req.params.companyurl;
 
-        request({
-                url: `https://civilengineer.io/construction/api/checkcompanyid.php?url=${companyurl}`,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-
-                try {
-
-                    const response = JSON.parse(body)
-                    res.send(response)
-
-
-                }
-                catch (err) {
-                    res.status(404).send({ message: `Error validating email` })
-                }
-
-
-
-            })
-
-    })
-
-    app.post('/construction/checknewcompanyid', checkcompany, (req, res) => {
-
+    app.get('/construction/:companyurl/checkcompanyurl', checkcompany, (req, res) => {
+        const companyurl = req.params.companyurl
         request.post({
-                url: 'https://civilengineer.io/construction/api/checkcompanyid.php',
+                url: `https://civilengineer.io/construction/api/checkcompanyid.php?companyurl=${companyurl}`,
                 form: req.body,
                 headers: {
                     'Content-Type': 'application/json',
@@ -341,7 +313,8 @@ module.exports = app => {
 
     app.get('/construction/checkuser', checkUserLogin, (req, res) => {
 
-        const providerid = req.session.construction;
+        const providerid = req.session.construction
+
 
         request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
                 headers: {
@@ -442,6 +415,18 @@ module.exports = app => {
 
 
             })
+
+    })
+
+    app.get('/construction/:stripe/dashboard', (req, res) => {
+        const account = req.params.stripe
+
+        stripe.accounts.createLoginLink(account).then(succ => {
+            res.send(succ)
+
+        });
+
+
 
     })
 
@@ -557,7 +542,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/savecompany', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/savecompany', (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/savecompany.php`,
@@ -582,7 +567,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject', checkUserLogin, (req, res) => {
+    app.post('/construction/:providerid/saveproject', (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,
