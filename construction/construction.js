@@ -316,7 +316,9 @@ module.exports = app => {
         const providerid = req.session.construction
 
 
-        request.get(`https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`, {
+        const url = `https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`
+
+        request(url, {
                 headers: {
                     'Permission': `${keys.grantAuthorization}`
                 }
@@ -331,6 +333,7 @@ module.exports = app => {
 
                 }
                 catch (error) {
+
 
                     res.status(404).send({ message: `Could not make server request ${error} ${err}` })
                 }
@@ -542,7 +545,7 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/savecompany', (req, res) => {
+    app.post('/construction/:providerid/savecompany', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/savecompany.php`,
@@ -567,7 +570,8 @@ module.exports = app => {
 
     })
 
-    app.post('/construction/:providerid/saveproject', (req, res) => {
+
+    app.post('/construction/:projectid/saveproject', checkUserLogin, (req, res) => {
 
         request.post({
                 url: `https://civilengineer.io/construction/api/saveproject.php`,
@@ -585,7 +589,7 @@ module.exports = app => {
 
                 }
                 catch (error) {
-                    res.status(404).send(`Save project request failed ${err} ${error} ${body}`)
+                    res.status(404).send(`Save project request failed ${error}`)
                 }
 
 
