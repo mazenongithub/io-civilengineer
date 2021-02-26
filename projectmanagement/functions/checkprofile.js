@@ -6,18 +6,20 @@ module.exports = (req, res, next) => {
     let url = false;
     if (req.hasOwnProperty("session")) {
 
-      
 
-            if (req.session.hasOwnProperty("pm")) {
 
-             
-                    providerid = req.session.pm;
-                    url = `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`;
+        if (req.session.hasOwnProperty("pm")) {
 
-                }
-            }
-        
+
+            providerid = req.session.pm;
+
+
+        }
+    }
+
     if (providerid) {
+
+        let url = `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`;
 
         request.get(url, {
                 headers: {
@@ -29,6 +31,7 @@ module.exports = (req, res, next) => {
                 try {
 
                     let response = JSON.parse(body)
+
 
                     if (response.hasOwnProperty("myuser")) {
                         if (response.myuser.profile.toLowerCase() === req.params.profile.toLowerCase()) {

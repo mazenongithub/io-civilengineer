@@ -68,15 +68,10 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
                     const response = JSON.parse(body)
-                    if (response.hasOwnProperty("csis")) {
 
-                        res.send(response)
 
-                    }
+                    res.send(response)
 
-                    else {
-                        res.status(404).send({ message: `Could not retrieve csis` })
-                    }
 
                 }
 
@@ -94,11 +89,40 @@ module.exports = app => {
     })
 
 
+    app.get('/projectmanagement/loadallusers', (req, res) => {
+
+
+        request({
+                url: `https://civilengineer.io/projectmanagement/api/loadallusers.php`,
+                headers: {
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+                try {
+                    const response = JSON.parse(body)
+                    res.send(response)
+
+
+                }
+
+                catch (err) {
+                    res.status(404).send(`Could Not Find User ${err}`)
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+    })
 
 
 
     app.get('/projectmanagement/checkuser', checkLogin, (req, res) => {
         const providerid = req.session.pm
+
 
         request({
                 url: `https://civilengineer.io/projectmanagement/api/loadresponsenode.php?providerid=${providerid}`,
@@ -172,35 +196,6 @@ module.exports = app => {
     })
 
 
-    app.post('/projectmanagement/checknewprojectid', checkprojectid, (req, res) => {
-
-        request.post({
-                url: 'https://civilengineer.io/projectmanagement/api/checknewprojectid.php',
-                form: req.body,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                }
-            },
-            function(err, httpResponse, body) {
-                try {
-
-                    const response = JSON.parse(body);
-                    res.send(response)
-
-
-                }
-                catch (error) {
-
-                    res.status(404).send({ message: `${err} ${error}` })
-
-                }
-
-
-
-            })
-
-    })
 
     app.post('/projectmanagement/settleinvoice', checkLogin, (req, res) => {
 
