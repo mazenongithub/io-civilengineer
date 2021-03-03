@@ -1,5 +1,42 @@
 class ProjectManagement {
 
+    validateSettlement(settlement) {
+        let validate = "";
+        let pendingtransfers = 0;
+        let scheduledtransfers = 0;
+        let chargeamount = 0;
+        if (Object.create(settlement.charges)) {
+            settlement.charges.map(charge => {
+                chargeamount += Number(charge.amount);
+            })
+        }
+        if (Object.create(settlement).accounts) {
+
+            settlement.accounts.map(account => {
+
+
+                if (Object.create(account.pendingtransfers)) {
+                    account.pendingtransfers.map(transfer => {
+                        pendingtransfers += Number(transfer.amount);
+                    })
+                }
+
+                if (Object.create(account.scheduledtransfers)) {
+                    account.scheduledtransfers.map(transfer => {
+                        scheduledtransfers += Number(transfer.amount)
+                    })
+                }
+
+            })
+        }
+        const available = chargeamount - scheduledtransfers;
+        if (pendingtransfers > available) {
+            validate = `Your pending transfers ${pendingtransfers} exceeds the amount ${available} available. Please add more money to your account `
+        }
+        return validate;
+
+    }
+
     getTransferAmountbyAcct(invoice, stripe) {
 
         let amount = 0;

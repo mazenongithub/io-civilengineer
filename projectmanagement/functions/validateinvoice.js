@@ -1,41 +1,93 @@
 const keys = require('../keys');
 const request = require("request");
+const serverkeys = require('../../keys');
+const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
+const ProjectManagement = require('./projectmanagement')
 module.exports = (req, res, next) => {
-    const invoiceid = req.body.invoiceid;
-    const providerid = req.session.user.pm;
-    request({
-            url: `https://civilengineer.io/projectmanagement/api/validateinvoiceid.php?invoiceid=${invoiceid}&providerid=${providerid}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Permission': `${keys.grantAuthorization}`
+    let accountbalance = 0;
+    try {
+
+        stripe.balance.retrieve(function(err, balance) {
+            // asynchronously called
+
+            if (balance.hasOwnProperty("available")) {
+                accountbalance = balance.available[0].amount;
+
             }
-        },
-        function(err, httpResponse, body) {
-            if (!err) {
+        
 
-                const response = JSON.parse(body);
+            if (accountbalance > 0) {
 
-                if (response.validate) {
-                    next();
-                }
-                else if (response.message) {
-                    res.status(404).send({ message: `${response.message} transaction failed ` });
+                request.post({
+                        url: `https://civilengineer.io/projectmanagement/api/validateinvoice.php`,
+                        form: req.body,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Permission': `${keys.grantAuthorization}`
+                        }
+                    },
+                    function(err, httpResponse, body) {
 
-                }
-                else {
+                        try {
 
-                    res.status(404).send({ message: `Invalid matching parameters for invoiceid ${invoiceid} and providerid ${providerid}` });
-                }
+                            const settlement = JSON.parse(body)
+                          
+                            const projectmanagement = new ProjectManagement();
+                            const validateSettlement = projectmanagement.validateSettlement(settlement);
+                            if (validateSettlement) {
+                                res.status(404).send({ message: validateSettlement })
+                            }
+                            else {
+                                next();
+                            }
+
+
+                        }
+
+                        catch (err) {
+                            res.status(404).send({ message: `Could not validate invoice ${err}` })
+                        }
+
+
+                        //values returned from DB
+
+
+                    }) // end request
+
 
             }
             else {
-                res.status(404).send({ message: `Could not validate invoice` });
+                res.status(404).send({ message: `Account Balance is zero` })
+
             }
 
 
-            //values returned from DB
+
+        })
 
 
-        }) // end request
+
+
+
+
+
+
+
+
+
+    }
+    catch (err) {
+
+        res.status(404).send({ message: `Could not retrieve account balance ${err}` })
+
+    }
+  
+
+
+
+
+
+
+
 
 }

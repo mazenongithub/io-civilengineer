@@ -1,5 +1,5 @@
 const serverkeys = require('../keys');
-const keys = require('./keys')
+const keys = require('./keys');
 const request = require("request");
 const checkLogin = require('./functions/checklogin');
 const validateInvoice = require('./functions/validateinvoice');
@@ -7,13 +7,11 @@ const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 const removeProfilePhoto = require('./functions/removeprofilephoto');
 const uploadProfilePhoto = require('./functions/uploadprofilephoto');
 const UTCString = require('./functions/utcstring');
-const balanceavailable = require('./functions/balanceavailable');
 const checkuser = require('./functions/checkuser');
 const checkproject = require('./functions/checkproject');
 const checkprofile = require('./functions/checkprofile');
 const checkemail = require('./functions/checkemail');
-const checkprojectid = require('./functions/checkprojectid')
-const ProjectManagement = require('./functions/projectmanagement')
+const ProjectManagement = require('./functions/projectmanagement');
 
 module.exports = app => {
     //app.use(function(req, res, next) {
@@ -197,7 +195,7 @@ module.exports = app => {
 
 
 
-    app.post('/projectmanagement/settleinvoice', checkLogin, (req, res) => {
+    app.post('/projectmanagement/settleinvoice', checkLogin, validateInvoice, (req, res) => {
 
         request.post({
                 url: 'https://civilengineer.io/projectmanagement/api/settleinvoice.php',
@@ -209,25 +207,35 @@ module.exports = app => {
             },
             function(err, httpResponse, body) {
                 try {
-                    const invoice = JSON.parse(body);
-                    const projectmanagement = new ProjectManagement();
-                    const transfers = projectmanagement.getTransfersFromInvoice(invoice.invoice)
+                    const response = JSON.parse(body);
 
-                    transfers.map(transfer => {
+                    if (Object.create(response).invoice) {
+                        const projectmanagement = new ProjectManagement();
+                        const transfers = projectmanagement.getTransfersFromInvoice(response.invoice)
+                     
+                        transfers.map(transfer => {
+                            if (transfer.stripe) {
 
-                        stripe.transfers.create({
-                            amount: Math.round(Number(transfer.amount) * 100),
-                            currency: "usd",
-                            destination: transfer.stripe,
-                            transfer_group: invoice.invoice.invoiceid
+                                stripe.transfers.create({
+                                    amount: Math.round(Number(transfer.amount) * 100),
+                                    currency: "usd",
+                                    destination: transfer.stripe,
+                                    transfer_group: response.invoice.invoiceid
 
-                        }).then(function(succ) {
+                                }).then(function(succ) {
 
 
-                        });
+                                });
 
-                    })
-                    res.send(invoice)
+                            }
+                            
+
+                        })
+
+                    }
+                    res.send(response)
+
+
 
                 }
                 catch (error) {

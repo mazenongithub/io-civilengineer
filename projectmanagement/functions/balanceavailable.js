@@ -3,28 +3,63 @@ const request = require("request");
 const serverkeys = require('../../keys');
 const stripe = require("stripe")(serverkeys.STRIPE_SECRET);
 module.exports = (req, res, next) => {
-    stripe.balance.retrieve(function(err, balance) {
-        // asynchronously called
+    let accountbalance = 0;
+    try {
 
-        const amount = req.body.amount;
-        if (balance.hasOwnProperty("available")) {
-            const accountbalance = balance.available[0].amount;
+        stripe.balance.retrieve(function(err, balance) {
+            // asynchronously called
 
-            if (Number(accountbalance) > Number(amount)) {
-                next();
-            }
-            else {
-                res.status(404).send({ message: ` Balance insufficient to settle invoice ` })
+            if (balance.hasOwnProperty("available")) {
+                accountbalance = balance.available[0].amount;
+
             }
 
+        })
 
-        }
-        else {
-            res.status(404).send({ message: ` Account not found ` })
+    }
+    catch (err) {
 
-        }
+        res.status(404).send({ message: `Could not retrieve account balance ${err}` })
 
-    })
+    }
+
+    if (Number(accountbalance) > 0) {
+
+
+        request.post({
+                url: `https://civilengineer.io/projectmanagement/api/validateinvoice.php`,
+                form: req.body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Permission': `${keys.grantAuthorization}`
+                }
+            },
+            function(err, httpResponse, body) {
+
+                try {
+
+                    const response = JSON.parse(body)
+                    console.log(response);
+                    next();
+
+                }
+
+                catch (err) {
+                    res.status(404).send({ message: `Could not validate invoice ${err}` })
+                }
+
+
+                //values returned from DB
+
+
+            }) // end request
+
+
+    }
+    else {
+        res.status(404).send({ message: `Your account balance is 0` })
+    }
+
 
 
 
