@@ -105,6 +105,7 @@ class AppBasedDriver {
         const day = date.split('/')[2]
         let minutes = time.split(':')[1]
         let hours = time.split(':')[0];
+
         let ampm = 'am'
         if (Number(hours) >= 12) {
             ampm = 'pm'
@@ -113,6 +114,9 @@ class AppBasedDriver {
 
 
             }
+        }
+        else if (Number(hours) === 0) {
+            hours = 12;
         }
 
         return `${month}/${day} ${hours}:${minutes} ${ampm}`
@@ -548,7 +552,7 @@ class AppBasedDriver {
         if (Number(getyear) === Number(year)) {
             check = true;
         }
-        console.log(getyear, timein, year, check)
+
 
         return check;
 
