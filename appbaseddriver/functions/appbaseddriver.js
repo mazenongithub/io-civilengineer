@@ -319,7 +319,7 @@ class AppBasedDriver {
                 // eslint-disable-next-line
                 equipment.costs.map(cost => {
 
-                    console.log(cost)
+
 
                     if (this.isEmpty(cost.reoccurring)) {
 
@@ -651,7 +651,7 @@ class AppBasedDriver {
 
 
                 newEquipment.costs.cost = filteredCosts;
-                newEquipment.totalcost = this.numberWithCommas(Number(Number(equipmentcosts).toFixed(2)));
+                newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
                 driver.equipmentlist.equipment.push(newEquipment)
             })
 
