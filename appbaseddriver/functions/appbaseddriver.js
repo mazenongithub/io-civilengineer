@@ -320,9 +320,9 @@ class AppBasedDriver {
                 equipment.costs.map(cost => {
 
 
-
-                    if (this.isEmpty(cost.reoccurring)) {
-
+                    //cost = Object.create(cost)
+                    if (cost.reoccurring.frequency) {
+                        console.log("reoccurring", cost)
 
                         if (equipment.repayment) {
 
@@ -336,6 +336,7 @@ class AppBasedDriver {
 
                     }
                     else {
+                        console.log("singlecost")
                         const newCost = this.newCost(cost.detail, cost.purchasedate, cost.amount)
                         costarray.push(newCost)
 
