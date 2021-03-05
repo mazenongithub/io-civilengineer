@@ -1,4 +1,3 @@
 module.exports = {
-    clientAPI: process.env.appbaseddriverClientAPI,
-    grantAuthorization: process.env.appbaseddriverAuthorization
+    APPBASEDDRIVER_XML_API: process.env.APPBASEDDRIVER_XML_API
 }

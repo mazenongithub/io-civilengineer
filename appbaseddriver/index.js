@@ -5,6 +5,7 @@ const checkuser = require("./functions/checkuser");
 const AppBasedDriver = require("./functions/appbaseddriver");
 const bcrypt = require("bcryptjs")
 var js2xmlparser = require("js2xmlparser");
+const securexml = require("./functions/securexml");
 
 
 module.exports = app => {
@@ -266,7 +267,7 @@ module.exports = app => {
 
     })
 
-    app.get('/appbaseddriver/:driverid/year/:year/security/:security', (req, res) => {
+    app.get('/appbaseddriver/:driverid/year/:year/security/:security', securexml, (req, res) => {
         const driverid = req.params.driverid;
         const year = req.params.year;
 
