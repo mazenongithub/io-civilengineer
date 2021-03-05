@@ -98,19 +98,23 @@ class AppBasedDriver {
 
     formatTimeIn(timein) {
 
-        const datein = new Date(timein)
-        const month = this.trailingZeros(datein.getMonth() + 1)
-        const day = datein.getDate();
-        let hours = datein.getHours();
-        let ampm = 'am';
-        if (hours >= 12) {
+        timein = timein.split(' ')
+        let date = timein[0]
+        let time = timein[1]
+        const month = date.split('/')[1]
+        const day = date.split('/')[2]
+        let minutes = time.split(':')[1]
+        let hours = time.split(':')[0];
+        let ampm = 'am'
+        if (Number(hours) >= 12) {
             ampm = 'pm'
-            if (hours > 12) {
-                hours = hours - 12;
+            if (Number(hours) > 12) {
+                hours = Number(hours) - 12;
+
 
             }
         }
-        const minutes = this.trailingZeros(datein.getMinutes())
+
         return `${month}/${day} ${hours}:${minutes} ${ampm}`
     }
 
@@ -320,9 +324,9 @@ class AppBasedDriver {
                 equipment.costs.map(cost => {
 
 
-                    //cost = Object.create(cost)
+
                     if (cost.reoccurring.frequency) {
-                        console.log("reoccurring", cost)
+
 
                         if (equipment.repayment) {
 
@@ -336,7 +340,7 @@ class AppBasedDriver {
 
                     }
                     else {
-                        console.log("singlecost")
+
                         const newCost = this.newCost(cost.detail, cost.purchasedate, cost.amount)
                         costarray.push(newCost)
 
@@ -479,26 +483,15 @@ class AppBasedDriver {
 
     formatDateIn(timein) {
         const datein = new Date(timein)
-        const month = this.trailingZeros(datein.getMonth() + 1)
+        const month = datein.getMonth() + 1
         const day = datein.getDate();
-        const hours = datein.getHours();
-        const year = datein.getFullYear()
-        let ampm = 'am';
-        if (hours >= 12) {
-            ampm = 'pm'
-            if (hours > 12) {
-                hours = hours - 12;
 
-            }
-        }
-        const minutes = this.trailingZeros(datein.getMinutes())
-        return `${month}/${day}/${year}`
+        return `${month}/${day}`
     }
-
 
     newCost(detail, purchasedate, amount) {
 
-        return ({ detail, purchasedate: this.formatDateIn(purchasedate), amount: Number(amount).toFixed(2) })
+        return ({ detail, purchasedate, amount: Number(amount).toFixed(2) })
 
 
     }
@@ -521,6 +514,7 @@ class AppBasedDriver {
         for (let x = 0; x < period; x++) {
 
             let cost = this.newCost('repayment', purchasedate, monthlyvalue)
+
             costArray.push(cost)
             purchasedate = this.increaseDateStringByOneMonth(purchasedate)
 
@@ -545,11 +539,17 @@ class AppBasedDriver {
         }
     }
 
-    checkYear(newDate, year) {
+    checkYear(timein, year) {
+
+        // 2020/12/31 21:00:00-08:00
         let check = false;
-        if (new Date(newDate).getFullYear() === Number(year)) {
+        const getyear = timein.split('/')[0]
+
+        if (Number(getyear) === Number(year)) {
             check = true;
         }
+        console.log(getyear, timein, year, check)
+
         return check;
 
     }
@@ -632,10 +632,11 @@ class AppBasedDriver {
 
                 getcost.map(cost => {
 
+
                     if (this.checkYear(cost.purchasedate, year)) {
 
                         driver.totalcosts += Number(Number(cost.amount).toFixed(2))
-
+                        cost.purchasedate = this.formatDateIn(cost.purchasedate)
                         filteredCosts.push(cost)
 
                     }
