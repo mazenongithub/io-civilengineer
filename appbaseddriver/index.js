@@ -59,7 +59,7 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
 
         const myuser = req.body.myuser;
@@ -269,13 +269,13 @@ module.exports = app => {
     app.get('/appbaseddriver/:driverid/year/:year/security/:security', (req, res) => {
         const driverid = req.params.driverid;
         const year = req.params.year;
-
+    
         mydriver.findOne({ driverid: driverid }, function(err, succ) {
             if (succ) {
                 succ = Object.create(succ)
-
+    
                 try {
-
+    
                     if (succ.driverid) {
                         const appbaseddriver = new AppBasedDriver();
                         const json = appbaseddriver.annualReport(succ, year)
@@ -289,27 +289,28 @@ module.exports = app => {
                         res.set('Content-Type', 'text/xml');
                         res.send(response)
                     }
-
-
-
+    
+    
+    
                 }
                 catch (err) {
                     console.log(err)
                 }
             }
             else {
-
+    
                 res.status(404).send({ message: `Driver  ${driverid} Not Found ` });
             }
-
+    
         })
-
-
+    
+    
     })
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
-        const driverid = '5feb649d48fe012e2fc63bd4'
+      
+       const driverid = req.session.appbaseddriver;
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
