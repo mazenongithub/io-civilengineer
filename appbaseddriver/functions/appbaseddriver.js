@@ -278,6 +278,10 @@ class AppBasedDriver {
 
     }
 
+    isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
     gettransformedcostsbyequiment(equipment) {
 
 
@@ -315,10 +319,9 @@ class AppBasedDriver {
                 // eslint-disable-next-line
                 equipment.costs.map(cost => {
 
+                    console.log(cost)
 
-
-                    if (cost.reoccurring) {
-
+                    if (this.isEmpty(cost.reoccurring)) {
 
 
                         if (equipment.repayment) {
@@ -333,8 +336,10 @@ class AppBasedDriver {
 
                     }
                     else {
+                        const newCost = this.newCost(cost.detail, cost.purchasedate, cost.amount)
+                        costarray.push(newCost)
 
-                        costarray.push(cost)
+
 
                     }
 

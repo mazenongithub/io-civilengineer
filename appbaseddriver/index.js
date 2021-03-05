@@ -6,6 +6,7 @@ const AppBasedDriver = require("./functions/appbaseddriver");
 const bcrypt = require("bcryptjs")
 var js2xmlparser = require("js2xmlparser");
 
+
 module.exports = app => {
 
 
@@ -58,7 +59,7 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
 
 
         const myuser = req.body.myuser;
@@ -244,7 +245,6 @@ module.exports = app => {
                     }
 
                 }
-
             })
 
         }
@@ -307,9 +307,9 @@ module.exports = app => {
 
     })
 
-    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+    app.get('/appbaseddriver/checkuser', (req, res) => {
 
-        const driverid = req.session.appbaseddriver;
+        const driverid = '5feb649d48fe012e2fc63bd4'
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
