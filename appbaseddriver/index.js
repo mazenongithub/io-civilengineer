@@ -4,6 +4,7 @@ const keys = require("./keys")
 const checkuser = require("./functions/checkuser");
 const AppBasedDriver = require("./functions/appbaseddriver");
 const bcrypt = require("bcryptjs")
+var js2xmlparser = require("js2xmlparser");
 
 module.exports = app => {
 
@@ -45,9 +46,7 @@ module.exports = app => {
                 deliveries: String,
                 earnings: String,
                 miles: String,
-                reoccurring: {
-                    frequency: String
-                }
+
             }]
         }
 
@@ -61,7 +60,7 @@ module.exports = app => {
 
     app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
-        const driverid = req.params.driverid;
+
         const myuser = req.body.myuser;
 
         const filter = { _id: myuser._id }
@@ -263,6 +262,47 @@ module.exports = app => {
             })
         }
 
+
+
+    })
+
+    app.get('/appbaseddriver/:driverid/year/:year/security/:security', (req, res) => {
+        const driverid = req.params.driverid;
+        const year = req.params.year;
+
+        mydriver.findOne({ driverid: driverid }, function(err, succ) {
+            if (succ) {
+                succ = Object.create(succ)
+
+                try {
+
+                    if (succ.driverid) {
+                        const appbaseddriver = new AppBasedDriver();
+                        const json = appbaseddriver.annualReport(succ, year)
+                        const response = js2xmlparser.parse("driver", json)
+                        res.set('Content-Type', 'text/xml');
+                        res.send(response)
+                    }
+                    else {
+                        const json = { message: `Driver Not Found` }
+                        const response = js2xmlparser.parse("driver", json)
+                        res.set('Content-Type', 'text/xml');
+                        res.send(response)
+                    }
+
+
+
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            else {
+
+                res.status(404).send({ message: `Driver  ${driverid} Not Found ` });
+            }
+
+        })
 
 
     })
