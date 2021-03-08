@@ -316,6 +316,7 @@ module.exports = app => {
         const providerid = req.session.construction
 
 
+
         const url = `https://civilengineer.io/construction/api/loadmyprofilenode.php?providerid=${providerid}`
 
         request(url, {
@@ -421,13 +422,18 @@ module.exports = app => {
 
     })
 
-    app.get('/construction/:stripe/dashboard', (req, res) => {
-        const account = req.params.stripe
+    app.get('/construction/:stripe/dashboard', checkUserLogin, (req, res) => {
+        const account = req.params.stripe;
+        try {
+            stripe.accounts.createLoginLink(account).then(succ => {
+                res.send(succ)
 
-        stripe.accounts.createLoginLink(account).then(succ => {
-            res.send(succ)
+            });
 
-        });
+        }
+        catch (err) {
+            res.status(404).send({ message: `Could not retrieve stripe connect` })
+        }
 
 
 
