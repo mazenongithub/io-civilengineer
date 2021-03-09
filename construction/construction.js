@@ -423,10 +423,17 @@ module.exports = app => {
     })
 
     app.get('/construction/:stripe/dashboard', checkUserLogin, (req, res) => {
-        const account = req.params.stripe;
+        const account = req.params.stripe
         try {
+
             stripe.accounts.createLoginLink(account).then(succ => {
-                res.send(succ)
+                if (succ) {
+                    res.send(succ)
+
+                }
+                else {
+                    res.status(404).send({ message: `Could not retrieve stripe connect` })
+                }
 
             });
 
@@ -440,7 +447,7 @@ module.exports = app => {
     })
 
 
-    app.get('/construction/stripe/accounts', checkUserLogin, (req, res) => {
+    app.get('/construction/stripe/accounts', (req, res) => {
 
         const grant_type = 'authorization_code';
         const code = req.query.code;
