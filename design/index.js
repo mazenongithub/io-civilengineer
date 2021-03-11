@@ -376,7 +376,7 @@
                         const response = JSON.parse(body)
                         if (response.hasOwnProperty("myuser")) {
 
-                            req.session.design = response.myuser.myuser.providerid;
+                            req.session.design = response.myuser.providerid;
                             res.send(response)
 
                         }
