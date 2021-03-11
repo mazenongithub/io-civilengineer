@@ -86,7 +86,7 @@ module.exports = app => {
 
     })
 
-    app.get('/design/:companyid/specifications/:projectid', checkUser, (req, res) => {
+    app.get('/design/:companyid/specifications/:projectid', (req, res) => {
 
         const specifications = mongoose.model("specifications", Schema);
         const companyid = req.params.companyid;
