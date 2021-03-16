@@ -6,8 +6,8 @@
   });
 
   module.exports = (req, res, next) => {
-      let myuser = req.body.myuser;
-      myuser = JSON.parse(myuser);
+    
+   
       if (req.hasOwnProperty("file")) {
 
           let ext = "";

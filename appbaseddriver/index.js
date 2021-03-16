@@ -6,7 +6,8 @@ const AppBasedDriver = require("./functions/appbaseddriver");
 const bcrypt = require("bcryptjs")
 var js2xmlparser = require("js2xmlparser");
 const securexml = require("./functions/securexml");
-const uploadReceipt = require("./functions/appbaseddriver");
+const uploadReceipt = require("./functions/uploadreceipt");
+const removeReceipt = require("./functions/removereceipt");
 
 
 module.exports = app => {
@@ -38,7 +39,11 @@ module.exports = app => {
                 amount: String,
                 reoccurring: {
                     frequency: String
-                }
+                },
+                images: [{
+                    imageid: String,
+                    url: String
+                }]
             }],
         }],
         driver: {
@@ -268,10 +273,64 @@ module.exports = app => {
 
     })
 
-    app.post('/appbaseddriver/uploadreceipt', (req, res) => {
+
+    app.post('/appbaseddriver/removereceipt', removeReceipt, (req, res) => {
+
+        let myuser = req.body.myuser;
 
 
-        res.send(req.body)
+        const filter = { _id: myuser._id }
+
+        const options = {
+            strict: false,
+            new: true,
+            upsert: true,
+            useFindAndModify: false
+        }
+
+
+        mydriver.findByIdAndUpdate(filter, myuser, options, function(err, succ) {
+
+            if (err) {
+                console.log(err);
+            }
+            else {
+
+                res.send(succ);
+            }
+        });
+
+
+    })
+
+
+
+    app.post('/appbaseddriver/uploadreceipt', uploadReceipt, (req, res) => {
+
+        let myuser = req.body.myuser;
+
+
+        const filter = { _id: myuser._id }
+
+        const options = {
+            strict: false,
+            new: true,
+            upsert: true,
+            useFindAndModify: false
+        }
+
+
+        mydriver.findByIdAndUpdate(filter, myuser, options, function(err, succ) {
+
+            if (err) {
+                console.log(err);
+            }
+            else {
+
+                res.send(succ);
+            }
+        });
+
 
     })
 

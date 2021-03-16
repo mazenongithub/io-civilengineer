@@ -1,6 +1,93 @@
 const bcrypt = require('bcryptjs')
 class AppBasedDriver {
 
+    getImage(myuser, equipmentid, costid, imageid) {
+        let getimage = false;
+        const cost = this.getCost(myuser, equipmentid, costid);
+        if (cost.images) {
+            cost.images.map(image => {
+                if (image.imageid === imageid) {
+                    getimage = image;
+                }
+            })
+
+        }
+        return getimage;
+    }
+
+
+    getImageKey(myuser, equipmentid, costid, imageid) {
+        let key = false;
+        const cost = this.getCost(myuser, equipmentid, costid);
+        if (cost.images) {
+            cost.images.map((image, i) => {
+                if (image.imageid === imageid) {
+                    key = i;
+                }
+            })
+
+        }
+        return key;
+    }
+
+    getCost(myuser, equipmentid, costid) {
+        let getCost = false;
+        const equipment = this.getEquipment(myuser, equipmentid)
+        if (equipment.costs) {
+            equipment.costs.map((cost, i) => {
+                if (cost.costid === costid) {
+                    getCost = cost
+                }
+            })
+        }
+        return getCost
+    }
+
+
+    getCostKey(myuser, equipmentid, costid) {
+        let key = false;
+        const equipment = this.getEquipment(myuser, equipmentid)
+        if (equipment.costs) {
+            equipment.costs.map((cost, i) => {
+                if (cost.costid === costid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+
+    getEquipment(myuser, equipmentid) {
+
+        let getequipment = false;
+        if (myuser.equipment) {
+            myuser.equipment.map((equipment, i) => {
+                if (equipment.equipmentid === equipmentid) {
+                    getequipment = equipment;
+                }
+
+            })
+        }
+        return getequipment;
+    }
+
+
+
+    getEquipmentKey(myuser, equipmentid) {
+        let key = false;
+        if (myuser.equipment) {
+            myuser.equipment.map((equipment, i) => {
+                if (equipment.equipmentid === equipmentid) {
+                    key = i;
+                }
+
+            })
+        }
+        return key;
+    }
+
+
 
     hashPassword(password) {
 
