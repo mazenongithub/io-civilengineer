@@ -13,6 +13,7 @@ const removeReceipt = require("./functions/removereceipt");
 module.exports = app => {
 
 
+
     const DriverSchema = new mongoose.Schema({
         driverid: String,
         google: String,
@@ -46,6 +47,7 @@ module.exports = app => {
                 }]
             }],
         }],
+
         driver: {
             shifts: [{
                 shiftid: String,
@@ -227,7 +229,6 @@ module.exports = app => {
 
     app.get('/appbaseddriver/:driverid/checkdriverid', (req, res) => {
 
-
         if (req.session.hasOwnProperty("appbaseddriver")) {
             const driverid = req.session.appbaseddriver;
 
@@ -274,7 +275,7 @@ module.exports = app => {
     })
 
 
-    app.post('/appbaseddriver/removereceipt', removeReceipt, (req, res) => {
+    app.post('/appbaseddriver/removereceipt', checkuser, removeReceipt, (req, res) => {
 
         let myuser = req.body.myuser;
 
@@ -305,7 +306,7 @@ module.exports = app => {
 
 
 
-    app.post('/appbaseddriver/uploadreceipt', uploadReceipt, (req, res) => {
+    app.post('/appbaseddriver/uploadreceipt', checkuser, uploadReceipt, (req, res) => {
 
         let myuser = req.body.myuser;
 
@@ -382,9 +383,9 @@ module.exports = app => {
     app.get('/appbaseddriver/checkuser', (req, res) => {
 
 
-        //const driverid = req.session.appbaseddriver;
+        const driverid = req.session.appbaseddriver;
 
-        const driverid = '5feb649d48fe012e2fc63bd4'
+
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
 
