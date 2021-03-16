@@ -380,7 +380,7 @@ module.exports = app => {
 
 
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
 
         const driverid = req.session.appbaseddriver;
