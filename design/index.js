@@ -8,7 +8,8 @@
     module.exports = app => {
 
 
-        app.post('/design/:projectid/savecostestimate', checkUser, (req, res) => {
+        app.post('/design/:projectid/savecostestimate', (req, res) => {
+            console.log(req.body)
 
             request.post({
                     url: `https://civilengineer.io/design/api/savecostestimate.php`,
@@ -43,9 +44,9 @@
         })
 
 
-        app.get('/design/checkuser', checkUser, (req, res) => {
-            const providerid = req.session.design;
-
+        app.get('/design/checkuser', (req, res) => {
+            //const providerid = req.session.design;
+            const providerid = 'mazen'
 
             request({
                     url: `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`,
@@ -185,7 +186,7 @@
         })
 
 
-        app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
+        app.get('/design/:companyid/loadcsis', (req, res) => {
             const companyid = req.params.companyid;
 
             request({
@@ -219,7 +220,7 @@
         })
 
 
-        app.get('/design/:companyid/allcompanys', checkUser, (req, res) => {
+        app.get('/design/:companyid/allcompanys', (req, res) => {
             const companyid = req.params.companyid;
 
 

@@ -6,6 +6,7 @@ const AppBasedDriver = require("./functions/appbaseddriver");
 const bcrypt = require("bcryptjs")
 var js2xmlparser = require("js2xmlparser");
 const securexml = require("./functions/securexml");
+const uploadReceipt = require("./functions/appbaseddriver");
 
 
 module.exports = app => {
@@ -267,6 +268,15 @@ module.exports = app => {
 
     })
 
+    app.post('/appbaseddriver/uploadreceipt', (req, res) => {
+
+
+        res.send(req.body)
+
+    })
+
+
+
     app.get('/appbaseddriver/:driverid/year/:year/security/:security', securexml, (req, res) => {
         const driverid = req.params.driverid;
         const year = req.params.year;
@@ -310,11 +320,12 @@ module.exports = app => {
 
 
 
-    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+    app.get('/appbaseddriver/checkuser', (req, res) => {
 
 
-        const driverid = req.session.appbaseddriver;
+        //const driverid = req.session.appbaseddriver;
 
+        const driverid = '5feb649d48fe012e2fc63bd4'
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
 
