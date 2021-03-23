@@ -452,7 +452,7 @@ class AppBasedDriver {
 
 
                             const hours = Number(cost.recharge.duration.hours) > 0 ? ` ${cost.recharge.duration.hours} hrs ` : "";
-                            const minutes = Number(cost.recharge.duration.minutes) > 0 ? ` ${cost.recharge.duration.seconds} minutes` : "";
+                            const minutes = Number(cost.recharge.duration.minutes) > 0 ? ` ${cost.recharge.duration.minutes} minutes` : "";
                             const seconds = Number(cost.recharge.duration.seconds) > 0 ? ` ${cost.recharge.duration.seconds} seconds` : "";
                             const recharge = Number(cost.recharge.totalenergy) > 0 ? ` Total Energy: ${cost.recharge.totalenergy} kWh` : "";
                             detail += recharge
