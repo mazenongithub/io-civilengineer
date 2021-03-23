@@ -448,7 +448,7 @@ class AppBasedDriver {
 
 
                         if (cost.recharge) {
-                            console.log(cost)
+
 
 
                             const hours = Number(cost.recharge.duration.hours) > 0 ? ` ${cost.recharge.duration.hours} hrs ` : "";
@@ -457,7 +457,10 @@ class AppBasedDriver {
                             const recharge = Number(cost.recharge.totalenergy) > 0 ? ` Total Energy: ${cost.recharge.totalenergy} kWh` : "";
                             detail += recharge
                             if (cost.recharge.duration) {
-                                detail += ` Battery Charge Duration: `
+                                if (Number(cost.recharge.duration.hours) > 0 || Number(cost.recharge.duration.minutes) || Number(cost.recharge.duration.seconds)) {
+                                    detail += ` Battery Charge Duration: `
+                                }
+
                             }
 
                             detail += `${hours}${minutes}${seconds}`
