@@ -442,7 +442,31 @@ class AppBasedDriver {
                     }
                     else {
 
-                        const newCost = this.newCost(cost.detail, cost.purchasedate, cost.amount)
+                        let detail = cost.detail;
+
+
+
+
+                        if (cost.recharge) {
+                            console.log(cost)
+
+
+                            const hours = Number(cost.recharge.duration.hours) > 0 ? ` ${cost.recharge.duration.hours} hrs ` : "";
+                            const minutes = Number(cost.recharge.duration.minutes) > 0 ? ` ${cost.recharge.duration.seconds} minutes` : "";
+                            const seconds = Number(cost.recharge.duration.seconds) > 0 ? ` ${cost.recharge.duration.seconds} seconds` : "";
+                            const recharge = Number(cost.recharge.totalenergy) > 0 ? ` Total Energy: ${cost.recharge.totalenergy} kWh` : "";
+                            detail += recharge
+                            if (cost.recharge.duration) {
+                                detail += ` Battery Charge Duration: `
+                            }
+
+                            detail += `${hours}${minutes}${seconds}`
+
+                            console.log(this.newCost(detail, cost.purchasedate, cost.amount))
+                        }
+
+                        const newCost = this.newCost(detail, cost.purchasedate, cost.amount)
+
                         costarray.push(newCost)
 
 
@@ -539,7 +563,7 @@ class AppBasedDriver {
     }
 
     getOffsetDate(timein) {
-        let datein = new Date(`${timein} 00:00:00 UTC`)
+        let datein = new Date(`${timein} 00:00:00 UTC `)
         let offset = datein.getTimezoneOffset() / 60
         let sym = "+";
         if (offset > 0) {

@@ -38,6 +38,14 @@ module.exports = app => {
                 detail: String,
                 purchasedate: String,
                 amount: String,
+                recharge: {
+                    totalenergy: String,
+                    duration: {
+                        hours: String,
+                        minutes: String,
+                        seconds: String
+                    }
+                },
                 reoccurring: {
                     frequency: String
                 },
