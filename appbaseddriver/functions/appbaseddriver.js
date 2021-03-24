@@ -384,7 +384,12 @@ class AppBasedDriver {
     }
 
     isEmpty(obj) {
-        return Object.keys(obj).length === 0;
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     gettransformedcostsbyequiment(equipment) {
@@ -689,8 +694,8 @@ class AppBasedDriver {
             equipment.costs.map(cost => {
 
 
-                if (!this.isEmpty(cost.recharge.duration)) {
-                    console.log(cost.recharge)
+                if (Number(cost.recharge.totalenergy) > 0) {
+
 
                     reimburse += Number(cost.amount)
 
