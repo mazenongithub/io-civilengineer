@@ -688,7 +688,8 @@ class AppBasedDriver {
         if (equipment.costs) {
             equipment.costs.map(cost => {
 
-                if (!this.isEmpty(Object.create(cost.recharge))) {
+
+                if (!this.isEmpty(cost.recharge)) {
 
                     reimburse += Number(cost.amount)
 
