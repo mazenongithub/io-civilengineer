@@ -688,11 +688,12 @@ class AppBasedDriver {
         if (equipment.costs) {
             equipment.costs.map(cost => {
                 if (cost.recharge) {
-                    if (Number(cost.recharge.totalenergy) > 0) {
+                  
+                   
 
                         reimburse += Number(cost.amount)
 
-                    }
+                    
                 }
             })
 
