@@ -465,7 +465,7 @@ class AppBasedDriver {
 
                             detail += `${hours}${minutes}${seconds}`
 
-                            console.log(this.newCost(detail, cost.purchasedate, cost.amount))
+
                         }
 
                         const newCost = this.newCost(detail, cost.purchasedate, cost.amount)
@@ -682,6 +682,25 @@ class AppBasedDriver {
 
     }
 
+    getReimbursementByEquipment(myuser, equipmentid) {
+        const equipment = this.getEquipment(myuser, equipmentid)
+        let reimburse = 0;
+        if (equipment.costs) {
+            equipment.costs.map(cost => {
+                if (cost.recharge) {
+                    if (Number(cost.recharge.totalenergy) > 0) {
+
+                        reimburse += Number(cost.amount)
+
+                    }
+                }
+            })
+
+        }
+
+        return reimburse;
+    }
+
 
     annualReport(myuser, year) {
 
@@ -764,6 +783,7 @@ class AppBasedDriver {
                     if (this.checkYear(cost.purchasedate, year)) {
 
                         driver.totalcosts += Number(Number(cost.amount).toFixed(2))
+
                         cost.purchasedate = this.formatDateIn(cost.purchasedate)
                         filteredCosts.push(cost)
 
@@ -780,8 +800,12 @@ class AppBasedDriver {
                 })
 
 
+
                 newEquipment.costs.cost = filteredCosts;
                 newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
+
+                newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid)).toFixed(2))
+
                 driver.equipmentlist.equipment.push(newEquipment)
             })
 
