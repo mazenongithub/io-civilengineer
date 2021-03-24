@@ -690,6 +690,7 @@ class AppBasedDriver {
 
 
                 if (!this.isEmpty(cost.recharge)) {
+                    console.log(cost.recharge, cost.detail)
 
                     reimburse += Number(cost.amount)
 
