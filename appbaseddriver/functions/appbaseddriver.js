@@ -689,8 +689,7 @@ class AppBasedDriver {
             equipment.costs.map(cost => {
 
 
-                if (!this.isEmpty(cost.recharge)) {
-                    console.log(cost.recharge, cost.detail)
+                if (!this.isEmpty(cost.recharge.duration)) {
 
                     reimburse += Number(cost.amount)
 
