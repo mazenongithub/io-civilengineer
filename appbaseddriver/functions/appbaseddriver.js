@@ -687,13 +687,13 @@ class AppBasedDriver {
         let reimburse = 0;
         if (equipment.costs) {
             equipment.costs.map(cost => {
-                if (cost.recharge) {
-                  
-                   
+                if (!this.isEmpty(cost.recharge)) {
 
-                        reimburse += Number(cost.amount)
 
-                    
+
+                    reimburse += Number(cost.amount)
+
+
                 }
             })
 
