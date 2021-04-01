@@ -44,9 +44,9 @@
         })
 
 
-        app.get('/design/checkuser', (req, res) => {
-            //const providerid = req.session.design;
-            const providerid = 'mazen'
+        app.get('/design/checkuser', checkUser, (req, res) => {
+            const providerid = req.session.design;
+
 
             request({
                     url: `https://civilengineer.io/design/api/loadprofile.php?providerid=${providerid}`,
@@ -186,7 +186,7 @@
         })
 
 
-        app.get('/design/:companyid/loadcsis', (req, res) => {
+        app.get('/design/:companyid/loadcsis', checkUser, (req, res) => {
             const companyid = req.params.companyid;
 
             request({
@@ -287,7 +287,7 @@
         app.post('/design/savecsi', checkUser, (req, res) => {
 
             request.post({
-                    url: `https://civilengineer.io/design/api/savecsi.php`,
+                    url: `https://civilengineer.io/design/api/csis.php`,
                     form: req.body,
                     headers: {
                         'Content-Type': 'application/json',
@@ -398,8 +398,4 @@
 
 
     }
-
-    //var restfulSchema = new mongoose.Schema({ firstname: String, lastname: String });
-    //RestFul - 1 - Index Load all values
-    //var people = mongoose.model("people", restfulSchema);
     
