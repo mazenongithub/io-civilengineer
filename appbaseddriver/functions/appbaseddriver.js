@@ -728,8 +728,12 @@ class AppBasedDriver {
 
                 if (equipment.costs) {
 
+                    const sortedCosts = equipment.costs.sort((a, b) => {
+                        return this.sorttimes(a.purchasedate, b.purchasedate)
+                    })
 
-                    equipment.costs.map(cost => {
+
+                    sortedCosts.map(cost => {
 
                         if (this.checkYear(cost.purchasedate, year)) {
 
