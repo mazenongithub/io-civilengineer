@@ -8,8 +8,8 @@
     module.exports = app => {
 
 
-        app.post('/design/:projectid/savecostestimate', (req, res) => {
-            console.log(req.body)
+        app.post('/design/:projectid/savecostestimate', checkUser, (req, res) => {
+
 
             request.post({
                     url: `https://civilengineer.io/design/api/savecostestimate.php`,
