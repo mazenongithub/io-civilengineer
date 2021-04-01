@@ -733,7 +733,7 @@ class AppBasedDriver {
 
                         if (this.checkYear(cost.purchasedate, year)) {
 
-                            const purchasedate = cost.purchasedate;
+                            const purchasedate = this.formatDateIn(cost.purchasedate);
                             const amount = cost.amount;
                             const detail = cost.detail;
 
