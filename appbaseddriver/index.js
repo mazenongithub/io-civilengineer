@@ -314,7 +314,7 @@ module.exports = app => {
 
 
 
-    app.post('/appbaseddriver/uploadreceipt', checkuser, uploadReceipt, (req, res) => {
+    app.post('/appbaseddriver/uploadreceipt',checkuser, uploadReceipt, (req, res) => {
 
         let myuser = req.body.myuser;
 
@@ -339,6 +339,48 @@ module.exports = app => {
                 res.send(succ);
             }
         });
+
+
+    })
+
+    app.get('/appbaseddriver/:driverid/receipts/:year/security/:security', securexml, (req, res) => {
+
+        const driverid = req.params.driverid;
+        const year = req.params.year;
+
+        mydriver.findOne({ driverid: driverid }, function(err, succ) {
+            if (succ) {
+                succ = Object.create(succ)
+
+                try {
+
+                    if (succ.driverid) {
+                        const appbaseddriver = new AppBasedDriver();
+                        const json = appbaseddriver.receiptReport(succ, year)
+                        const response = js2xmlparser.parse("driver", json)
+                        res.set('Content-Type', 'text/xml');
+                        res.send(response)
+                    }
+                    else {
+                        const json = { message: `Driver Not Found` }
+                        const response = js2xmlparser.parse("driver", json)
+                        res.set('Content-Type', 'text/xml');
+                        res.send(response)
+                    }
+
+
+
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            else {
+
+                res.status(404).send({ message: `Driver  ${driverid} Not Found ` });
+            }
+
+        })
 
 
     })
@@ -391,8 +433,9 @@ module.exports = app => {
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
 
-        const driverid = req.session.appbaseddriver;
-       
+         const driverid =req.session.appbaseddriver;
+
+
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {

@@ -1,6 +1,6 @@
 const keys = require('../keys')
 module.exports = (req, res, next) => {
-    console.log(req.params.security, keys.APPBASEDDRIVER_XML_API)
+
     if (req.params.security === keys.APPBASEDDRIVER_XML_API) {
         next();
     }

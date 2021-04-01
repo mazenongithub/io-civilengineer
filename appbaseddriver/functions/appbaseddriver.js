@@ -677,10 +677,12 @@ class AppBasedDriver {
         // 2020/12/31 21:00:00-08:00
         let check = false;
         const getyear = timein.split('/')[0]
+        console.log("getyear", getyear, year)
 
         if (Number(getyear) === Number(year)) {
             check = true;
         }
+
 
 
         return check;
@@ -706,6 +708,62 @@ class AppBasedDriver {
         }
 
         return reimburse;
+    }
+
+    receiptReport(myuser, year) {
+
+        let receipts = {};
+        receipts.year = year;
+
+        const createReceipt = (purchasedate, amount, detail, url) => {
+            return ({ purchasedate, amount, detail, url })
+        }
+
+        myuser = Object.create(myuser);
+        const driver = `${myuser.firstname} ${myuser.lastname}`
+        receipts.driver = driver;
+        receipts.receipt = [];
+        if (myuser.equipment) {
+            myuser.equipment.map(equipment => {
+
+                if (equipment.costs) {
+
+
+                    equipment.costs.map(cost => {
+
+                        if (this.checkYear(cost.purchasedate, year)) {
+
+                            const purchasedate = cost.purchasedate;
+                            const amount = cost.amount;
+                            const detail = cost.detail;
+
+                            if (cost.images) {
+
+                                cost.images.map(image => {
+                                    const url = image.url;
+                                    const Receipt = createReceipt(purchasedate, amount, detail, url)
+                                    receipts.receipt.push(Receipt);
+
+
+
+
+                                })
+                            }
+
+                        }
+
+
+
+                    })
+
+                }
+
+
+
+            })
+
+        }
+        return receipts;
     }
 
 
