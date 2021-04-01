@@ -314,7 +314,7 @@ module.exports = app => {
 
 
 
-    app.post('/appbaseddriver/uploadreceipt',checkuser, uploadReceipt, (req, res) => {
+    app.post('/appbaseddriver/uploadreceipt', checkuser, uploadReceipt, (req, res) => {
 
         let myuser = req.body.myuser;
 
@@ -357,13 +357,13 @@ module.exports = app => {
                     if (succ.driverid) {
                         const appbaseddriver = new AppBasedDriver();
                         const json = appbaseddriver.receiptReport(succ, year)
-                        const response = js2xmlparser.parse("driver", json)
+                        const response = js2xmlparser.parse("receipts", json)
                         res.set('Content-Type', 'text/xml');
                         res.send(response)
                     }
                     else {
                         const json = { message: `Driver Not Found` }
-                        const response = js2xmlparser.parse("driver", json)
+                        const response = js2xmlparser.parse("receipts", json)
                         res.set('Content-Type', 'text/xml');
                         res.send(response)
                     }
@@ -433,7 +433,7 @@ module.exports = app => {
     app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
 
-         const driverid =req.session.appbaseddriver;
+        const driverid = req.session.appbaseddriver;
 
 
 
