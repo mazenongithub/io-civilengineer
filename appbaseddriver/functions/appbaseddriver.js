@@ -689,17 +689,19 @@ class AppBasedDriver {
 
     }
 
-    getReimbursementByEquipment(myuser, equipmentid) {
+    getReimbursementByEquipment(myuser, equipmentid, year) {
         const equipment = this.getEquipment(myuser, equipmentid)
         let reimburse = 0;
         if (equipment.costs) {
             equipment.costs.map(cost => {
 
+                if (this.checkYear(cost.purchasedate, year)) {
 
-                if (Number(cost.recharge.totalenergy) > 0) {
+                    if (Number(cost.recharge.totalenergy) > 0) {
 
+                        reimburse += Number(cost.amount)
 
-                    reimburse += Number(cost.amount)
+                    }
 
 
                 }
@@ -873,7 +875,7 @@ class AppBasedDriver {
                 newEquipment.costs.cost = filteredCosts;
                 newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
 
-                newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid)).toFixed(2))
+                newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid, year)).toFixed(2))
 
                 driver.equipmentlist.equipment.push(newEquipment)
             })
