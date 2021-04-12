@@ -153,7 +153,7 @@ module.exports = app => {
                 else {
 
 
-                    res.status(404).send({ message: `Driver ID not Found ` })
+                    res.status(404).send({ message: `Driver ID ${req.body.driverid} not Found ` })
                 }
 
             })
@@ -430,10 +430,10 @@ module.exports = app => {
 
 
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
-        const driverid = '5feb649d48fe012e2fc63bd4'
-        // const driverid = req.session.appbaseddriver;
+
+        const driverid = req.session.appbaseddriver;
 
 
 
