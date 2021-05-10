@@ -38,6 +38,7 @@ module.exports = app => {
                 detail: String,
                 purchasedate: String,
                 amount: String,
+                reimbursable: Boolean,
                 recharge: {
                     totalenergy: String,
                     duration: {
@@ -436,6 +437,7 @@ module.exports = app => {
         const driverid = req.session.appbaseddriver;
 
 
+        // const driverid = '5feb649d48fe012e2fc63bd4';
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {

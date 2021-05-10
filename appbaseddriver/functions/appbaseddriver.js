@@ -697,7 +697,7 @@ class AppBasedDriver {
 
                 if (this.checkYear(cost.purchasedate, year)) {
 
-                    if (Number(cost.recharge.totalenergy) > 0) {
+                    if (cost.reimbursable) {
 
                         reimburse += Number(cost.amount)
 
