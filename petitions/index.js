@@ -14,31 +14,6 @@
     module.exports = app => {
 
 
-        app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
-            console.log(`Validation Passed Params: ${req.params.profile}`);
-            const profile = req.params.profile;
-
-
-            request.get(`https://civilengineer.io/petitions/api/checkuserid.php?profile=${profile}`, {
-                    headers: {
-                        'Permission': `${keys.grantAuthorization}`
-                    }
-
-                },
-                function(err, httpResponse, body) {
-                    try {
-
-                        const response = JSON.parse(body)
-                        res.send(response)
-
-                    }
-                    catch (err) {
-                        res.status(404).send({ message: 'Server Could Not Load Response' })
-                    }
-
-                }) // end request
-
-        })
 
         app.get("/petitions/:emailaddress/checkemailaddress", (req, res) => {
             const emailaddress = req.params.emailaddress;
@@ -285,6 +260,34 @@
                 }) // end request
 
         })
+
+        app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
+            console.log(`Validation Passed Params: ${req.params.profile} Session: ${req.session.petitions.profile}`);
+            const profile = req.params.profile;
+
+
+            request.get(`https://civilengineer.io/petitions/api/checkuserid.php?profile=${profile}`, {
+                    headers: {
+                        'Permission': `${keys.grantAuthorization}`
+                    }
+
+                },
+                function(err, httpResponse, body) {
+                    try {
+
+                        const response = JSON.parse(body)
+                        res.send(response)
+
+                    }
+                    catch (err) {
+                        res.status(404).send({ message: 'Server Could Not Load Response' })
+                    }
+
+                }) // end request
+
+        })
+
+
 
         app.get('/petitions/users/checkuser', checkUser, (req, res) => {
 
