@@ -80,6 +80,7 @@ require('./projectmanagement')(app)
 require('./design')(app)
 require('./specifications')(app)
 require('./appbaseddriver')(app)
+require('./petitions')(app)
 
 app.get('/', (req, res) => {
     let response = { response: ` api.civilengineer.io ` }
