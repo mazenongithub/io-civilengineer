@@ -262,7 +262,7 @@
         })
 
         app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
-            console.log(`Validation Passed Params: ${req.params.profile} Session: ${req.session.petitions.profile}`);
+            console.log(`Validation Passed Params: ${req.params.profile} Session USER ID: ${req.session.petitions.userid}`);
             const profile = req.params.profile;
 
 
