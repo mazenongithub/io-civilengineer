@@ -66,7 +66,7 @@ module.exports = app => {
     })
 
     app.post('/petitions/:userid/comments', (req, res) => {
-        console.log(req.body)
+
         let url = `http://civilengineer.io/petitions/api/commentsendpoint.php`
 
 
@@ -307,7 +307,7 @@ module.exports = app => {
 
                 }
                 catch (err) {
-                    console.log(err)
+
                     res.status(404).send({ message: `Could not Load User ${err}` })
                 }
 
@@ -317,42 +317,7 @@ module.exports = app => {
 
     })
 
-    app.post('/petitions/users/register', (req, res) => {
-        console.log(req.body)
-        let url = `http://civilengineer.io/petitions/api/register.php`
-        request.post({
-                url,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Permission': `${keys.grantAuthorization}`
-                },
-                form: req.body
-            },
-            function(err, httpResponse, body) {
 
-                try {
-                    let json = parser.toJson(body);
-                    let parsedjson = JSON.parse(json);
-                    let response = parsedjson.response;
-                    if (response.hasOwnProperty("myuser")) {
-                        response = updateUserProfile(response);
-                        req.session.user = { petitions: response.myuser.userid };
-                    }
-                    if (response.hasOwnProperty("allusers")) {
-                        response = updateAllUsers(response);
-                    }
-
-                    res.send(response);
-
-                }
-                catch (err) {
-
-                    res.status(404).send({ message: `Server could not load response` })
-                }
-
-            }) // end request
-
-    })
 
 
     app.post('/petitions/users/login', (req, res) => {
@@ -377,7 +342,7 @@ module.exports = app => {
                         if (response.myuser) {
 
                             req.session.petitions = { userid: response.myuser.userid, profile: response.myuser.profile }
-                            console.log(req.session.petitions)
+
                         }
                         res.send(response)
 
