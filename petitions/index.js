@@ -288,7 +288,7 @@ module.exports = app => {
     app.get('/petitions/users/checkuser', checkUser, (req, res) => {
 
         const userid = req.session.petitions.userid;
-        console.log(`USER ID is ${userid}`)
+
 
         let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
         request({
@@ -308,7 +308,7 @@ module.exports = app => {
                 }
                 catch (err) {
                     console.log(err)
-                    res.status(404).send({ error: `Could not Load User ${err}` })
+                    res.status(404).send({ message: `Could not Load User ${err}` })
                 }
 
 
