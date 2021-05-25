@@ -261,10 +261,9 @@
 
         })
 
-        app.get("/petitions/:profile/checkuserid", (req, res) => {
-            console.log(`Validation Passed Params: ${req.params.profile} Session USER ID: ${req.session.petitions.userid}`);
-            const profile = req.params.profile;
+        app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
 
+            const profile = req.params.profile;
 
             request.get(`https://civilengineer.io/petitions/api/checkuserid.php?profile=${profile}`, {
                     headers: {
