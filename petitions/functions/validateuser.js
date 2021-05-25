@@ -2,7 +2,7 @@ module.exports = (req, res, next) => {
     console.log(`Validate ${req.params.profile}`);
 
     if (req.session) {
-        console.log("session", console.log(req.params.profile))
+        console.log("session", req.params.profile)
         if (req.session.petitions) {
             console.log("petitions")
             console.log(req.session.petitions, req.params.profile)
