@@ -1,13 +1,11 @@
 module.exports = (req, res, next) => {
-    console.log(`Validate ${req.params.profile}`);
 
     if (req.session) {
-        console.log("session", req.params.profile)
+
         if (req.session.petitions) {
-            console.log("petitions")
-            console.log(req.session.petitions, req.params.profile)
+
             if (req.session.petitions.profile === req.params.profile) {
-                res.send({ valid: ` Destination Profile matches session variable ` })
+                res.send({ valid: ` Destination Profile ${req.params.profile} matches session variable ` })
             }
             else {
                 next();
