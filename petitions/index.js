@@ -1,17 +1,18 @@
-const request = require("request");
-const parser = require('xml2json');
-const keys = require('./keys');
-const updateUserProfile = require('./functions/updateUserProfile');
-const updateAllUsers = require('./functions/updateAllUsers');
-const s3fileuploader = require('./functions/s3fileuploader');
-const s3deleteprofileurl = require('./functions/s3deleteprofileurl');
-const s3arguementuploader = require('./functions/s3arguementuploader');
-const s3conflictuploader = require('./functions/s3conflictuploader')
-const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
-const checkUser = require('./functions/checkuser')
-const validateUser = require('./functions/validateuser');
-
 module.exports = app => {
+
+    const request = require("request");
+    const parser = require('xml2json');
+    const keys = require('./keys');
+    const updateUserProfile = require('./functions/updateUserProfile');
+    const updateAllUsers = require('./functions/updateAllUsers');
+    const s3fileuploader = require('./functions/s3fileuploader');
+    const s3deleteprofileurl = require('./functions/s3deleteprofileurl');
+    const s3arguementuploader = require('./functions/s3arguementuploader');
+    const s3conflictuploader = require('./functions/s3conflictuploader')
+    const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
+    const checkUser = require('./functions/checkuser')
+    const validateUser = require('./functions/validateuser');
+
 
     app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
 
