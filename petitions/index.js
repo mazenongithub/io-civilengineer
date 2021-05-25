@@ -9,13 +9,16 @@ const s3arguementuploader = require('./functions/s3arguementuploader');
 const s3conflictuploader = require('./functions/s3conflictuploader')
 const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
 const checkUser = require('./functions/checkuser')
+const validateUser = require('./functions/validateuser');
+
 module.exports = app => {
 
-    app.get("/petitions/:userid/checkuserid", (req, res) => {
+    app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
 
-        const userid = req.params.userid;
+        const profile = req.params.profile;
 
-        request.get(`https://civilengineer.io/petitions/api/checkuserid.php?userid=${userid}`, {
+
+        request.get(`https://civilengineer.io/petitions/api/checkuserid.php?profile=${profile}`, {
                 headers: {
                     'Permission': `${keys.grantAuthorization}`
                 }
@@ -23,9 +26,9 @@ module.exports = app => {
             },
             function(err, httpResponse, body) {
                 try {
-                    const json = parser.toJson(body);
-                    const parsedjson = JSON.parse(json)
-                    res.send(parsedjson.response)
+
+                    const response = JSON.parse(body)
+                    res.send(response)
 
                 }
                 catch (err) {
@@ -284,8 +287,7 @@ module.exports = app => {
 
     app.get('/petitions/users/checkuser', checkUser, (req, res) => {
 
-        const userid = req.session.petitions;
-
+        const userid = req.session.petitions.userid;
 
         let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
         request({
@@ -372,7 +374,7 @@ module.exports = app => {
 
                         let response = JSON.parse(body);
                         if (response.myuser) {
-                            req.session.petitions = response.myuser.userid;
+                            req.session.petitions = { userid: response.myuser.userid, profile: response.myuser.profile }
                         }
                         res.send(response)
 
