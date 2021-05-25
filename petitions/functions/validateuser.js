@@ -1,4 +1,5 @@
 module.exports = (req, res, next) => {
+    console.log("validate user")
 
     if (req.session) {
 
