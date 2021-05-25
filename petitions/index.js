@@ -249,13 +249,14 @@ module.exports = app => {
 
 
     })
-    app.get('/petitions/users/:userid/logout', (req, res) => {
+    app.get('/petitions/users/:userid/logout', checkUser, (req, res) => {
         req.session.destroy();
-        res.redirect(`${keys.clientAPI}`)
+        res.send({ message: `User Logged Out Successfully` })
+
     })
 
-    app.get('/petitions/users/getallusers', (req, res) => {
-        let url = `http://civilengineer.io/petitions/api/allusersendpoint.php`
+    app.get('/petitions/allusers', (req, res) => {
+        let url = `http://civilengineer.io/petitions/api/allusers.php`
         request({
                 url,
                 headers: {
@@ -266,18 +267,14 @@ module.exports = app => {
             function(err, httpResponse, body) {
                 try {
 
-                    let json = parser.toJson(body);
-                    let parsedjson = JSON.parse(json);
-                    let response = parsedjson.response;
 
-                    if (response.hasOwnProperty("allusers")) {
-                        response = updateAllUsers(response);
-                    }
+                    let response = JSON.parse(body)
+
                     res.send(response)
                 }
                 catch (error) {
 
-                    res.status(404).send({ message: `  BackEnd API error  ${error}` });
+                    res.status(404).send({ message: ` Server Error, Could Not Load Petitions ${error}` });
                 }
 
 
