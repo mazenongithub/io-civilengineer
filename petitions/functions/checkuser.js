@@ -3,9 +3,12 @@ module.exports = (req, res, next) => {
         if (req.session.petitions) {
             next();
         }
+        else {
+            res.status(404).send({ message: `Cannot Access, Could not find User` })
+        }
     }
     else {
-        res.status(404).send({ message: `Cannot Access, User Not Logged` })
+        res.status(404).send({ message: `Cannot Access, Could not find User` })
     }
 
 }
