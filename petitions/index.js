@@ -375,8 +375,9 @@ module.exports = app => {
 
                         let response = JSON.parse(body);
                         if (response.myuser) {
-                            console.log("login success", response.myuser)
+
                             req.session.petitions = { userid: response.myuser.userid, profile: response.myuser.profile }
+                            console.log(req.session.petitions)
                         }
                         res.send(response)
 
