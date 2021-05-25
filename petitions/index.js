@@ -288,6 +288,7 @@ module.exports = app => {
     app.get('/petitions/users/checkuser', checkUser, (req, res) => {
 
         const userid = req.session.petitions.userid;
+        console.log(`USER ID is ${userid}`)
 
         let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
         request({
