@@ -1,7 +1,7 @@
 module.exports = (req, res, next) => {
     if (req.session) {
         if (req.session.petitions) {
-            console.log(req.sessions.petitions)
+            console.log(req.session.petitions)
             next();
         }
         else {
