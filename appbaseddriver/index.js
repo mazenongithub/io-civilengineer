@@ -77,6 +77,55 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
+    app.get('/appbaseddriver/users/clientlogin', (req, res) => {
+        // check if apple or google
+        const appbaseddriver = new AppBasedDriver();
+        // const {apple, google, driverid} = req.body
+        // const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305';
+        const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305'
+        const google = false;
+        const driverid = false;
+        let myuser = false;
+        if (apple) {
+
+            myuser = appbaseddriver.getAppleUser(mydriver, apple)
+
+
+        }
+        else if (google) {
+
+            myuser = appbaseddriver.getGoogleUser(mydriver, google)
+
+        }
+
+        // if (myuser) {
+
+        //     res.send({ myuser })
+
+        // }
+        // else if (driverid && (apple || google)) {
+
+        //     appbaseddriver.registerNewUser(mydriver, driverid, google, apple)
+
+        // }
+        // else {
+
+        //     res.send({ message: `Driver not Found` })
+
+
+        // }
+
+        // load list
+
+
+        // login user
+
+
+
+        // if unsuccesful check if Driver ID Exists Register User Send Response 
+
+    })
+
     app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
 
 

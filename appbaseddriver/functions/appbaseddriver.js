@@ -1,5 +1,55 @@
 const bcrypt = require('bcryptjs')
+
+
+
 class AppBasedDriver {
+
+    getAppleUser(mydriver, apple) {
+        let getdriver = false;
+
+        mydriver.find({ apple: { $exists: true } }, (err, alldrivers) => {
+
+                alldrivers.map(driver => {
+                    console.log(driver.apple, apple)
+
+                    if (bcrypt.compareSync(apple, driver.apple)) {
+                        console.log("driver found")
+                        getdriver = driver;
+
+
+
+                    }
+
+                })
+
+
+            }
+
+
+        )
+
+
+
+    }
+
+
+
+    getGoogleUser(mydriver, google) {
+
+        mydriver.find({ google: { $exists: true } }, (err, succ) => {
+
+                console.log(succ)
+            }
+
+
+        )
+
+
+    }
+
+    registerNewUser(mydriver, driverid, apple, google) {
+
+    }
 
     getImage(myuser, equipmentid, costid, imageid) {
         let getimage = false;
