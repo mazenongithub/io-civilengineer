@@ -80,21 +80,65 @@ module.exports = app => {
     app.get('/appbaseddriver/users/clientlogin', (req, res) => {
         // check if apple or google
         const appbaseddriver = new AppBasedDriver();
-        // const {apple, google, driverid} = req.body
+        const { firstname, lastname, emailaddress, phonenumber, profileurl, google, apple, driverid } = req.body
         // const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305';
-        const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305'
-        const google = false;
-        const driverid = false;
-        let myuser = false;
+
+
         if (apple) {
 
-            myuser = appbaseddriver.getAppleUser(mydriver, apple)
+            appbaseddriver.getAppleUser(mydriver, apple)
+                .then((succ) => {
+
+
+                    req.session.appbaseddriver = succ._id;
+                    res.send(succ)
+
+                })
+                .catch((err) => {
+
+
+                    if (driverid && (apple)) {
+
+
+                        let myuser = { driverid, firstname, lastname, emailaddress, phonenumber, profileurl, apple }
+                        myuser.apple = appbaseddriver.hashPassword(apple)
+
+                        appbaseddriver.registerNewUser(mydriver, myuser)
+
+                            .then((succ) => {
+
+                                req.session.appbaseddriver = succ._id;
+                                res.send(succ)
+
+                            })
+
+                            .catch((err) => {
+
+                                res.status(404).send({ message: `Register Error Please Contact Developer ${err}` })
+
+                            })
+
+
+                    }
+                    else {
+
+                        if (!driverid && apple) {
+
+                            res.send.status(404).send({ message: `Invalid Login Attempt Missing Driver ID ` })
+
+                        }
+                    }
+
+
+                })
 
 
         }
+
+
         else if (google) {
 
-            myuser = appbaseddriver.getGoogleUser(mydriver, google)
+
 
         }
 

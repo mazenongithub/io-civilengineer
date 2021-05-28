@@ -4,30 +4,81 @@ const bcrypt = require('bcryptjs')
 
 class AppBasedDriver {
 
+    registerNewUser(mydriver, newdriver) {
+
+        return new Promise((resolve, reject) => {
+
+            mydriver.create(newdriver, function(err, succ) {
+                if (succ) {
+
+                    resolve(succ)
+
+                }
+                else {
+
+                    reject(new Error(`Database Error: Could not Register User ${err}`))
+
+
+                }
+            });
+
+
+
+        })
+    }
+
+
     getAppleUser(mydriver, apple) {
-        let getdriver = false;
-
-        mydriver.find({ apple: { $exists: true } }, (err, alldrivers) => {
-
-                alldrivers.map(driver => {
-                    console.log(driver.apple, apple)
-
-                    if (bcrypt.compareSync(apple, driver.apple)) {
-                        console.log("driver found")
-                        getdriver = driver;
 
 
 
+        return new Promise((resolve, reject) => {
+
+            let getdriver = false;
+
+            mydriver.find({ apple: { $exists: true } }, (err, alldrivers) => {
+                let getdriver = false;
+
+                if (!err) {
+
+                    alldrivers.map(driver => {
+
+
+                        if (bcrypt.compareSync(apple, driver.apple)) {
+
+                            getdriver = driver;
+
+                        }
+
+
+
+                    })
+
+
+                    if (getdriver) {
+                        resolve(getdriver)
                     }
 
-                })
+                    else {
 
 
-            }
+                        reject(new Error('Invalid Login'))
+                    }
 
 
-        )
+                }
+                else {
+                    reject(new Error('No Apple Users found'))
+                }
 
+
+            })
+
+
+
+
+
+        }) // end of promise
 
 
     }
@@ -47,9 +98,7 @@ class AppBasedDriver {
 
     }
 
-    registerNewUser(mydriver, driverid, apple, google) {
 
-    }
 
     getImage(myuser, equipmentid, costid, imageid) {
         let getimage = false;
