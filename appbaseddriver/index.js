@@ -77,11 +77,11 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
-    app.get('/appbaseddriver/users/clientlogin', (req, res) => {
+    app.post('/appbaseddriver/users/clientlogin', (req, res) => {
         // check if apple or google
         const appbaseddriver = new AppBasedDriver();
-        const { firstname, lastname, emailaddress, phonenumber, profileurl, google, apple, driverid } = req.body
-        // const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305';
+        const { firstname, lastname, emailaddress, phonenumber, profileurl, apple, google, driverid } = req.body
+        //const apple = '000353.66d2a1610de24944b898df602ab5e7a7.0305';
 
 
         if (apple) {
@@ -114,7 +114,7 @@ module.exports = app => {
 
                             .catch((err) => {
 
-                                res.status(404).send({ message: `Register Error Please Contact Developer ${err}` })
+                                res.status(404).send({ message: `Register Error ${err}` })
 
                             })
 
@@ -124,49 +124,85 @@ module.exports = app => {
 
                         if (!driverid && apple) {
 
-                            res.send.status(404).send({ message: `Invalid Login Attempt Missing Driver ID ` })
+
+                            res.send({ register: `Register Apple ID ` })
 
                         }
-                    }
+                        else {
+
+                            res.send.status(404).send({ message: `Apple Client Missing  ` })
+
+                        } // missing driver id
+
+                    } // if driver id and apple 
 
 
-                })
+                }) // end of catch
 
 
-        }
+        } // end of apple
 
 
         else if (google) {
 
+            appbaseddriver.getGoogleUser(mydriver, google)
+                .then((succ) => {
 
 
-        }
+                    req.session.appbaseddriver = succ._id;
+                    res.send(succ)
 
-        // if (myuser) {
-
-        //     res.send({ myuser })
-
-        // }
-        // else if (driverid && (apple || google)) {
-
-        //     appbaseddriver.registerNewUser(mydriver, driverid, google, apple)
-
-        // }
-        // else {
-
-        //     res.send({ message: `Driver not Found` })
+                })
+                .catch((err) => {
 
 
-        // }
-
-        // load list
+                    if (driverid && (google)) {
 
 
-        // login user
+                        let myuser = { driverid, firstname, lastname, emailaddress, phonenumber, profileurl, google }
+                        myuser.google = appbaseddriver.hashPassword(google)
+
+                        appbaseddriver.registerNewUser(mydriver, myuser)
+
+                            .then((succ) => {
+
+                                req.session.appbaseddriver = succ._id;
+                                res.send(succ)
+
+                            })
+
+                            .catch((err) => {
+
+                                res.status(404).send({ message: `Register Error ${err}` })
+
+                            })
+
+
+                    }
+                    else {
+
+                        if (!driverid && google) {
+
+
+                            res.send({ register: `Register Google ID ` })
+
+                        }
+                        else {
+
+                            res.send.status(404).send({ message: `Google Client Missing  ` })
+
+                        } // missing driver id
+
+                    } // if driver id and apple 
+
+
+                }) // end of catch
 
 
 
-        // if unsuccesful check if Driver ID Exists Register User Send Response 
+        } // end if google
+
+
 
     })
 
@@ -198,92 +234,6 @@ module.exports = app => {
 
     });
 
-
-
-
-    app.post('/appbaseddriver/clientlogin', (req, res) => {
-
-        if (req.body.type === 'login') {
-
-
-            let filter = { driverid: req.body.driverid }
-
-
-            mydriver.findOne(filter, (err, succ) => {
-
-                if (succ) {
-
-                    const driver = Object.create(succ);
-
-                    if (driver.apple) {
-
-                        if (bcrypt.compareSync(req.body.apple, driver.apple)) {
-                            req.session.appbaseddriver = succ._id;
-                            res.send(succ)
-
-                        }
-                        else {
-                            res.status(404).send({ message: 'Apple Login Failed' })
-                        }
-
-
-                    }
-                    else if (driver.google) {
-
-                        if (bcrypt.compareSync(req.body.google, driver.google)) {
-                            req.session.appbaseddriver = succ._id;
-                            res.send(succ)
-
-                        }
-                        else {
-                            res.status(404).send({ message: `Google Login Failed ${req.body.google} and ${driver.google }` })
-
-                        }
-
-                    }
-
-                }
-
-                else {
-
-
-                    res.status(404).send({ message: `Driver ID ${req.body.driverid} not Found ` })
-                }
-
-            })
-
-        }
-
-        else if (req.body.type === 'register') {
-            const appbaseddriver = new AppBasedDriver();
-
-            let { driverid, firstname, lastname, emailaddress, phonenumber, profileurl, apple, google } = req.body
-
-            if (apple) {
-                apple = appbaseddriver.hashPassword(apple)
-            }
-            if (google) {
-                google = appbaseddriver.hashPassword(google)
-            }
-
-
-            const newdriver = new mydriver({ driverid, firstname, lastname, emailaddress, phonenumber, apple, google, profileurl })
-
-            mydriver.create(newdriver, function(err, succ) {
-                if (succ) {
-                    req.session.appbaseddriver = succ._id;
-
-                    res.send(succ)
-                }
-                else {
-                    res.status(404).send({ message: `Could not register user ${err } ` })
-                }
-            });
-
-        }
-
-
-    })
 
 
 
