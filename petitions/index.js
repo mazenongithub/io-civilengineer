@@ -70,17 +70,17 @@
         app.post('/petitions/users/saveuser', (req, res) => {
 
             const myuser = req.body.myuser
-            console.log(req.body)
 
-            // petitions.saveUser(myusers, myuser)
 
-            //     .then(succ => {
-            //         res.send(succ)
-            //     })
+            petitions.saveUser(myusers, myuser)
 
-            //     .catch(err => {
-            //         res.send({ err })
-            //     })
+                .then(succ => {
+                    res.send(succ)
+                })
+
+                .catch(err => {
+                    res.send({ err })
+                })
 
 
 
