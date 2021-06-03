@@ -393,23 +393,39 @@
 
         app.get('/petitions/users/checkuser', (req, res) => {
 
-            // const userid = req.session.petitions.userid;
             const userid = 'mazen'
-            petitions.loadUserProfile(userid)
-                .then(succ => {
-                    res.send(succ)
+
+            let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
+            request({
+                    url,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Permission': `${keys.grantAuthorization}`
+                    }
+                },
+                function(err, httpResponse, body) {
+
+                    try {
+
+                        let response = JSON.parse(body);
+                        res.send(response);
+
+                    }
+                    catch (err) {
+
+                        res.status(404).send({ message: `Could not Load User ${err}` })
+                    }
+
+
+
+
+
+
 
                 })
-
-                .catch(err => {
-                    res.status(404).send({ message: ` Could not Find User ` })
-
-                })
-
 
 
         })
-
 
 
 
