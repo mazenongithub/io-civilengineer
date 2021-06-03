@@ -10,10 +10,116 @@
     const s3petitiondeletephoto = require('./functions/s3petitiondeletephoto')
     const checkUser = require('./functions/checkuser')
     const validateUser = require('./functions/validateuser');
+    const mongoose = require('mongoose');
+    const petitions = require('./functions')
 
     module.exports = app => {
 
+        const Petitions = new mongoose.Schema({
+            userid: String,
+            firstname: String,
+            lastname: String,
+            apple: String,
+            google: String,
+            emailaddress: String,
+            phonenumber: String,
+            petitions: {
+                petitionid: String,
+                petition: String,
+                versus: String,
+                openingstatement: String,
+                url: String,
+                conflicts: [{
+                    conflictid: String,
+                    conflict: String,
+                    images: {
+                        imageid: String,
+                        image: String()
+                    },
+                    arguements: [{
+                        arguementid: String,
+                        arguement: String,
+                        images: {
+                            imageid: String,
+                            image: String
+                        }
+                    }]
+                }]
+            }
 
+        });
+
+        const Comment = new mongoose.Schema({
+
+            petitionid: String,
+            comments: [{
+                commentid: String,
+                comment: String
+            }],
+            likes: [{
+                userid: String
+            }]
+
+        });
+
+
+        const myusers = mongoose.model("petition", Petitions)
+        const comments = mongoose.model("comment", Comment)
+
+
+        app.post('/petitions/users/saveuser', (req, res) => {
+
+            const myuser = req.body.myuser
+            console.log(myuser)
+
+            petitions.saveUser(myusers, myuser)
+
+                .then(succ => {
+                    res.send(succ)
+                })
+
+                .catch(err => {
+                    res.send({ err })
+                })
+
+
+
+
+
+        })
+
+
+
+        app.get('/petitions/testuser', (req, res) => {
+
+            const testuser = {
+
+                userid: 'mazen',
+                firstname: 'Mazen',
+                lastname: 'Khenaisser',
+                apple: 'apple',
+                google: 'google',
+                emailaddress: 'mazen@civilengineer.io',
+                phonenumber: '9168231652'
+
+
+            }
+
+            petitions.saveUser(myusers, testuser)
+
+                .then(succ => {
+                    res.send(succ)
+                })
+
+                .catch(err => {
+                    res.send({ err })
+                })
+
+            // const petition = new petitions({ peitionid: 'something' })
+            // petition.save();
+            //const myuser = new MyUser
+
+        })
 
         app.get("/petitions/:emailaddress/checkemailaddress", (req, res) => {
             const emailaddress = req.params.emailaddress;
@@ -288,11 +394,11 @@
 
 
 
-        app.get('/petitions/users/checkuser', checkUser, (req, res) => {
+        app.get('/petitions/users/checkuser', (req, res) => {
 
-            const userid = req.session.petitions.userid;
+            // const userid = req.session.petitions.userid;
 
-
+            const userid = 'mazen'
             let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
             request({
                     url,

@@ -77,6 +77,7 @@ module.exports = app => {
 
     const mydriver = mongoose.model("appbaseddrivers", DriverSchema);
 
+
     app.post('/appbaseddriver/users/clientlogin', (req, res) => {
         // check if apple or google
         const appbaseddriver = new AppBasedDriver();
@@ -112,9 +113,9 @@ module.exports = app => {
 
                             })
 
-                            .catch((err) => {
+                            .catch((error) => {
 
-                                res.status(404).send({ message: `Register Error ${err}` })
+                                res.status(404).send({ message: `Register Error ${error}` })
 
                             })
 
