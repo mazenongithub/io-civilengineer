@@ -23,7 +23,7 @@
             google: String,
             emailaddress: String,
             phonenumber: String,
-            petitions: {
+            petitions: [{
                 petitionid: String,
                 petition: String,
                 versus: String,
@@ -45,7 +45,7 @@
                         }
                     }]
                 }]
-            }
+            }]
 
         });
 
@@ -70,16 +70,17 @@
         app.post('/petitions/users/saveuser', (req, res) => {
 
             const myuser = req.body.myuser
+            console.log(req.body)
 
-            petitions.saveUser(myusers, myuser)
+            // petitions.saveUser(myusers, myuser)
 
-                .then(succ => {
-                    res.send(succ)
-                })
+            //     .then(succ => {
+            //         res.send(succ)
+            //     })
 
-                .catch(err => {
-                    res.send({ err })
-                })
+            //     .catch(err => {
+            //         res.send({ err })
+            //     })
 
 
 
@@ -415,10 +416,6 @@
 
                         res.status(404).send({ message: `Could not Load User ${err}` })
                     }
-
-
-
-
 
 
 
