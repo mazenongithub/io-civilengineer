@@ -67,7 +67,7 @@
         const comments = mongoose.model("comment", Comment)
 
 
-        app.post('/petitions/users/saveuser', (req, res) => {
+        app.post('/petitions/users/saveuser', checkUser, (req, res) => {
 
             const myuser = req.body.myuser
 
@@ -88,22 +88,12 @@
 
 
 
-        app.get('/petitions/testuser', (req, res) => {
+        app.get('/petitions/users/loaduser', checkUser, (req, res) => {
 
-            const testuser = {
+     
+            const _id = req.session.petitions;
 
-                userid: 'mazen',
-                firstname: 'Mazen',
-                lastname: 'Khenaisser',
-                apple: 'apple',
-                google: 'google',
-                emailaddress: 'mazen@civilengineer.io',
-                phonenumber: '9168231652'
-
-
-            }
-
-            petitions.saveUser(myusers, testuser)
+            petitions.loadUserProfile(myusers, _id)
 
                 .then(succ => {
                     res.send(succ)
@@ -118,6 +108,141 @@
             //const myuser = new MyUser
 
         })
+
+
+        app.post('/petitions/users/clientlogin', (req, res) => {
+
+            const { firstname, lastname, emailaddress, phonenumber, profileurl, google, apple, userid } = req.body
+
+            const myuser = { firstname, lastname, emailaddress, phonenumber, profileurl, apple, google, userid }
+            console.log(myuser)
+
+
+            if (apple) {
+
+                petitions.getAppleUser(myusers, apple)
+                    .then((succ) => {
+
+                        req.session.petitions = succ._id;
+                        res.send(succ)
+
+                    })
+                    .catch((err) => {
+
+
+                        if (userid && (apple)) {
+
+
+                            let myuser = { userid, firstname, lastname, emailaddress, phonenumber, profileurl, apple }
+                            myuser.apple = petitions.hashPassword(apple)
+
+                            petitions.registerNewUser(myusers, myuser)
+
+                                .then((succ) => {
+
+                                    req.session.petitions = succ._id;
+                                    res.send(succ)
+
+                                })
+
+                                .catch((error) => {
+
+                                    res.status(404).send({ message: `Register Error ${error}` })
+
+                                })
+
+
+                        }
+                        else {
+
+                            if (!userid && apple) {
+
+
+                                res.send({ register: `Register Apple ID ` })
+
+                            }
+                            else {
+
+                                res.send.status(404).send({ message: `Apple Client Missing  ` })
+
+                            } // missing driver id
+
+                        } // if driver id and apple 
+
+
+                    }) // end of catch
+
+
+            } // end of apple
+
+
+            else if (google) {
+
+                petitions.getGoogleUser(myuser, google)
+                    .then((succ) => {
+
+
+                        req.session.petitions = succ._id;
+                        res.send(succ)
+
+                    })
+                    .catch((err) => {
+
+
+                        if (userid && (google)) {
+
+
+                            let myuser = { userid, firstname, lastname, emailaddress, phonenumber, profileurl, google }
+                            myuser.google = petitions.hashPassword(google)
+
+                            petitions.registerNewUser(myusers, myuser)
+
+                                .then((succ) => {
+
+                                    req.session.petitions = succ._id;
+                                    res.send(succ)
+
+                                })
+
+                                .catch((err) => {
+
+                                    res.status(404).send({ message: `Register Error ${err}` })
+
+                                })
+
+
+                        }
+                        else {
+
+                            if (!userid && google) {
+
+
+                                res.send({ register: `Register Google ID ` })
+
+                            }
+                            else {
+
+                                res.send.status(404).send({ message: `Google Client Missing  ` })
+
+                            } // missing driver id
+
+                        } // if driver id and apple 
+
+
+                    }) // end of catch
+
+
+
+            } // end if google
+
+
+
+        })
+
+
+
+
+
 
         app.get("/petitions/:emailaddress/checkemailaddress", (req, res) => {
             const emailaddress = req.params.emailaddress;
@@ -301,69 +426,14 @@
         })
 
 
-        app.post('/petitions/:userid/userendpoint', (req, res) => {
 
-            let url = `http://civilengineer.io/petitions/api/userendpoint.php`
-
-            request.post({
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Permission': `${keys.grantAuthorization}`
-                    },
-                    form: req.body
-                },
-                function(err, httpResponse, body) {
-                    try {
-
-
-                        let response = JSON.parse(body);
-                        res.send(response);
-
-
-                    }
-                    catch (err) {
-
-
-                        res.status(404).send({ Error: 'API Submit Failure response' })
-                    }
-
-                }) // end request
-
-
-        })
         app.get('/petitions/users/:userid/logout', checkUser, (req, res) => {
             req.session.destroy();
             res.send({ message: `User Logged Out Successfully` })
 
         })
 
-        app.get('/petitions/allusers', (req, res) => {
-            let url = `http://civilengineer.io/petitions/api/allusers.php`
-            request({
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Permission': `${keys.grantAuthorization}`
-                    }
-                },
-                function(err, httpResponse, body) {
-                    try {
 
-
-                        let response = JSON.parse(body)
-
-                        res.send(response)
-                    }
-                    catch (error) {
-
-                        res.status(404).send({ message: ` Server Error, Could Not Load Petitions ${error}` });
-                    }
-
-
-                }) // end request
-
-        })
 
         app.get("/petitions/:profile/checkuserid", validateUser, (req, res) => {
 
@@ -392,129 +462,8 @@
 
 
 
-        app.get('/petitions/users/checkuser', (req, res) => {
-
-            const userid = 'mazen'
-
-            let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
-            request({
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Permission': `${keys.grantAuthorization}`
-                    }
-                },
-                function(err, httpResponse, body) {
-
-                    try {
-
-                        let response = JSON.parse(body);
-                        res.send(response);
-
-                    }
-                    catch (err) {
-
-                        res.status(404).send({ message: `Could not Load User ${err}` })
-                    }
 
 
-
-                })
-
-
-        })
-
-
-
-        app.post('/petitions/users/login', (req, res) => {
-
-
-            let url = `http://civilengineer.io/petitions/api/login.php`
-            try {
-                request.post({
-                        url,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Permission': `${keys.grantAuthorization}`
-                        },
-                        form: req.body
-                    },
-
-                    function(err, httpResponse, body) {
-
-                        try {
-
-                            let response = JSON.parse(body);
-                            if (response.myuser) {
-
-                                req.session.petitions = { userid: response.myuser.userid, profile: response.myuser.profile }
-
-                            }
-                            res.send(response)
-
-                        }
-
-
-                        catch (err) {
-
-                            res.status(404).send({ message: `Could Not Connect to Server ${err}` })
-                        }
-
-
-
-                    }) // end request
-
-            }
-            catch (err) {
-                res.send({ error: err })
-            }
-
-
-        })
-
-
-
-        app.get('/petitions/:userid', (req, res) => {
-            let userid = req.params.userid;
-            let url = `http://civilengineer.io/petitions/api/loadmyprofile.php?userid=${userid}`
-            try {
-                request({
-                        url,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Permission': `${keys.grantAuthorization}`
-                        }
-                    },
-                    function(err, httpResponse, body) {
-                        if (!err) {
-                            let json = parser.toJson(body);
-                            let parsedjson = JSON.parse(json);
-                            let response = parsedjson.response;
-                            if (response.hasOwnProperty("myuser")) {
-                                response = updateUserProfile(response);
-
-                            }
-                            if (response.hasOwnProperty("allusers")) {
-                                response = updateAllUsers(response);
-                            }
-
-                            res.send(response);
-                        }
-                        else {
-
-                            const errorMessage = `There was an error requesting the projects  ${url}`
-                            res.send({ errorMessage });
-                        }
-
-                    }) // end request
-
-            }
-            catch (err) {
-                res.send({ error: err })
-            }
-
-
-        })
 
 
         app.post("/petitions/:userid/uploadprofileimage", s3deleteprofileurl, s3fileuploader, (req, res) => {
