@@ -32,17 +32,17 @@
                 conflicts: [{
                     conflictid: String,
                     conflict: String,
-                    images: {
+                    images: [{
                         imageid: String,
                         image: String()
-                    },
+                    }],
                     arguements: [{
                         arguementid: String,
                         arguement: String,
-                        images: {
+                        images: [{
                             imageid: String,
                             image: String
-                        }
+                        }]
                     }]
                 }]
             }]
