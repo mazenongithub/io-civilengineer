@@ -67,6 +67,39 @@
         const comments = mongoose.model("comment", Comment)
 
 
+        app.get('/petitions/getallpetitions', (req, res) => {
+
+
+            petitions.getAllPetitions(myusers)
+                .then(succ => {
+
+                    res.send({ petitions: succ })
+                })
+                .catch(err => {
+
+                    res.send({ err })
+                })
+
+        })
+
+        app.get('/petitions/getallpetitions/:petitionid', (req, res) => {
+
+            const petitionid = req.params.petitionid;
+
+            petitions.getPetitionByID(myusers, petitionid)
+
+                .then(succ => {
+
+                    res.send({ petition: succ })
+                })
+                .catch(err => {
+
+                    res.send({ err })
+                })
+
+        })
+
+
         app.post('/petitions/users/saveuser', checkUser, (req, res) => {
 
             const myuser = req.body.myuser
@@ -90,8 +123,10 @@
 
         app.get('/petitions/users/loaduser', checkUser, (req, res) => {
 
-     
+
             const _id = req.session.petitions;
+
+
 
             petitions.loadUserProfile(myusers, _id)
 
