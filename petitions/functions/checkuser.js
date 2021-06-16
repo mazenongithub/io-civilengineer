@@ -5,11 +5,11 @@ module.exports = (req, res, next) => {
             next();
         }
         else {
-            res.status(404).send({ message: `Cannot Access, Could not find User` })
+            res.send({ message: `Cannot Access, Could not find User` })
         }
     }
     else {
-        res.status(404).send({ message: `Cannot Access, Could not find User` })
+        res.send({ message: `Cannot Access, Could not find User` })
     }
 
 }
