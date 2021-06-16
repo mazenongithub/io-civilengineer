@@ -126,6 +126,9 @@
   myXML.versus = succ.petition.versus
   myXML.openingstatement = succ.petition.openingstatement;
   myXML.url = succ.petition.url;
+  myXML.firstname = succ.firstname;
+  myXML.lastname = succ.lastname;
+  myXML.userid = succ.userid;
   if (succ.petition.conflicts) {
 
    myXML.conflicts = [];
@@ -175,7 +178,7 @@
 
 
   } // if conflicts
-  
+
   return myXML;
 
  }
