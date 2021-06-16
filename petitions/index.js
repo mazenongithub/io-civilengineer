@@ -12,6 +12,7 @@
     const validateUser = require('./functions/validateuser');
     const mongoose = require('mongoose');
     const petitions = require('./functions')
+    var js2xmlparser = require("js2xmlparser");
 
     module.exports = app => {
 
@@ -82,6 +83,30 @@
 
         })
 
+        app.get('/petitions/getallpetitions/:petitionid/xml', (req, res) => {
+
+            const petitionid = req.params.petitionid;
+
+            petitions.getPetitionByID(myusers, petitionid)
+
+                .then(succ => {
+
+                    const myXML = petitions.convertPetitiontoXML(succ)
+                    const response = js2xmlparser.parse("petition", myXML)
+                    res.set('Content-Type', 'text/xml');
+                    res.send(response)
+
+
+                })
+                .catch(err => {
+                    console.log(err)
+
+                    res.send({ ErrorMessage: `Error ${err}` })
+                })
+
+        })
+
+
         app.get('/petitions/getallpetitions/:petitionid', (req, res) => {
 
             const petitionid = req.params.petitionid;
@@ -89,6 +114,11 @@
             petitions.getPetitionByID(myusers, petitionid)
 
                 .then(succ => {
+
+
+
+
+
 
                     res.send({ petition: succ })
                 })
@@ -126,7 +156,7 @@
 
             const _id = req.session.petitions;
 
-
+            // const _id = '60be9a842657581d059c85ca'
 
             petitions.loadUserProfile(myusers, _id)
 

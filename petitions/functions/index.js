@@ -120,6 +120,66 @@
 
  }
 
+ function convertPetitiontoXML(succ) {
+  let myXML = {}
+  myXML.petition = succ.petition.petition
+  myXML.versus = succ.petition.versus
+  myXML.openingstatement = succ.petition.openingstatement;
+  myXML.url = succ.petition.url;
+  if (succ.petition.conflicts) {
+
+   myXML.conflicts = [];
+
+   succ.petition.conflicts.map((conflict, i) => {
+
+
+    myXML.conflicts[i] = { conflict: conflict.conflict }
+
+    if (conflict.arguements) {
+
+
+
+     myXML.conflicts[i].arguements = [];
+
+     conflict.arguements.map((arguement, j) => {
+
+
+      myXML.conflicts[i].arguements[j] = { arguement: arguement.arguement }
+
+      if (arguement.images) {
+       myXML.conflicts[i].arguements[j].images = []
+       arguement.images.map((image, k) => {
+
+        myXML.conflicts[i].arguements[j].images[k] = { image: image.image }
+
+       })
+
+
+
+      } // if imeages
+
+
+     }) // map arguements
+
+
+
+
+    } // if arguements
+
+
+
+
+
+   }) // map conflicts
+
+
+
+  } // if conflicts
+  
+  return myXML;
+
+ }
+
  function getPetitionByID(myusermodel, petitionid) {
 
   let obj = {}
@@ -260,7 +320,8 @@
   getGoogleUser,
   registerNewUser,
   getAllPetitions,
-  getPetitionByID
+  getPetitionByID,
+  convertPetitiontoXML
 
  }
  
