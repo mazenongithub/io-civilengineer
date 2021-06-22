@@ -442,8 +442,6 @@ module.exports = app => {
 
                     if (succ.driverid) {
                         const appbaseddriver = new AppBasedDriver();
-                        console.log("success", succ.driver)
-
                         const json = appbaseddriver.annualReport(succ, year)
                         const response = js2xmlparser.parse("driver", json)
                         res.set('Content-Type', 'text/xml');
