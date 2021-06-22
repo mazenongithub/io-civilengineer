@@ -947,46 +947,48 @@ class AppBasedDriver {
 
 
         if (myuser.equipment) {
-            //     driver.equipmentlist = {};
-            //     driver.equipmentlist.equipment = [];
-            //     myuser.equipment.map(equipment => {
+            driver.equipmentlist = {};
+            driver.equipmentlist.equipment = [];
+            myuser.equipment.map(equipment => {
 
-            //         const newEquipment = createEquipment(equipment.equipment, equipment.repayment.salvagedate, equipment.repayment.salvage, equipment.repayment.purchasedate, equipment.repayment.purchase, equipment.repayment.apr)
-            //         newEquipment.costs = {};
-            //         const getcost = this.gettransformedcostsbyequiment(equipment);
-            //         let filteredCosts = [];
+                const newEquipment = createEquipment(equipment.equipment, equipment.repayment.salvagedate, equipment.repayment.salvage, equipment.repayment.purchasedate, equipment.repayment.purchase, equipment.repayment.apr)
+                newEquipment.costs = {};
+                const getcost = this.gettransformedcostsbyequiment(equipment);
+                let filteredCosts = [];
 
-            //         getcost.map(cost => {
-
-
-            //             if (this.checkYear(cost.purchasedate, year)) {
-
-            //                 driver.totalcosts += Number(Number(cost.amount).toFixed(2))
-
-            //                 cost.purchasedate = this.formatDateIn(cost.purchasedate)
-            //                 filteredCosts.push(cost)
-
-            //             }
-            //         })
-
-            //         filteredCosts.sort((a, b) => {
-            //             return this.sorttimes(a.purchasedate, b.purchasedate)
-            //         })
-            //         let equipmentcosts = 0;
-
-            //         filteredCosts.map(addCost => {
-            //             equipmentcosts += Number(addCost.amount)
-            //         })
+                getcost.map(cost => {
 
 
+                    if (this.checkYear(cost.purchasedate, year)) {
 
-            //         newEquipment.costs.cost = filteredCosts;
-            //         newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
+                                        driver.totalcosts += Number(Number(cost.amount).toFixed(2))
 
-            //         newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid, year)).toFixed(2))
+                                        cost.purchasedate = this.formatDateIn(cost.purchasedate)
+                                        filteredCosts.push(cost)
 
-            //         driver.equipmentlist.equipment.push(newEquipment)
-            //     })
+                    }
+                })
+
+                        filteredCosts.sort((a, b) => {
+                            return this.sorttimes(a.purchasedate, b.purchasedate)
+                        })
+                        let equipmentcosts = 0;
+
+                        filteredCosts.map(addCost => {
+                            equipmentcosts += Number(addCost.amount)
+                        })
+
+
+
+                        newEquipment.costs.cost = filteredCosts;
+                        newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
+
+                        newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid, year)).toFixed(2))
+
+                        driver.equipmentlist.equipment.push(newEquipment)
+
+
+            })
 
 
 
