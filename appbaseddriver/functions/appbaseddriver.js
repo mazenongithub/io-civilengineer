@@ -918,77 +918,77 @@ class AppBasedDriver {
 
         }
 
-        // if (myuser.driver) {
+        if (myuser.driver) {
 
-        //     driver.shifts = {};
-        //     driver.shifts.shift = [];
+            //     driver.shifts = {};
+            //     driver.shifts.shift = [];
 
-        //      if (myuser.driver.shifts) {
+            //      if (myuser.driver.shifts) {
 
-        //      myuser.driver.shifts.sort((a, b) => {
-        //          return this.sorttimes(a.timein, b.timein)
-        //      })
+            //      myuser.driver.shifts.sort((a, b) => {
+            //          return this.sorttimes(a.timein, b.timein)
+            //      })
 
-        //     myuser.driver.shifts.map(shift => {
+            //     myuser.driver.shifts.map(shift => {
 
-        //         if (this.checkYear(shift.timein, year)) {
-        //             driver.totalearnings += Number(Number(shift.earnings).toFixed(2))
-        //             const newShift = createShift(this.formatTimeIn(shift.timein), this.formatTimeIn(shift.timeout), this.calculatetotalhours(shift.timeout, shift.timein), shift.deliveries, Number(shift.earnings).toFixed(2), shift.miles)
-        //             driver.shifts.shift.push(newShift)
-        //         }
+            //         if (this.checkYear(shift.timein, year)) {
+            //             driver.totalearnings += Number(Number(shift.earnings).toFixed(2))
+            //             const newShift = createShift(this.formatTimeIn(shift.timein), this.formatTimeIn(shift.timeout), this.calculatetotalhours(shift.timeout, shift.timein), shift.deliveries, Number(shift.earnings).toFixed(2), shift.miles)
+            //             driver.shifts.shift.push(newShift)
+            //         }
 
-        //     })
+            //     })
 
-        //     //    }
+            //     //    }
 
-        // }
-
-
-        // if (myuser.equipment) {
-        //     driver.equipmentlist = {};
-        //     driver.equipmentlist.equipment = [];
-        //     myuser.equipment.map(equipment => {
-
-        //         const newEquipment = createEquipment(equipment.equipment, equipment.repayment.salvagedate, equipment.repayment.salvage, equipment.repayment.purchasedate, equipment.repayment.purchase, equipment.repayment.apr)
-        //         newEquipment.costs = {};
-        //         const getcost = this.gettransformedcostsbyequiment(equipment);
-        //         let filteredCosts = [];
-
-        //         getcost.map(cost => {
+            // }
 
 
-        //             if (this.checkYear(cost.purchasedate, year)) {
+            // if (myuser.equipment) {
+            //     driver.equipmentlist = {};
+            //     driver.equipmentlist.equipment = [];
+            //     myuser.equipment.map(equipment => {
 
-        //                 driver.totalcosts += Number(Number(cost.amount).toFixed(2))
+            //         const newEquipment = createEquipment(equipment.equipment, equipment.repayment.salvagedate, equipment.repayment.salvage, equipment.repayment.purchasedate, equipment.repayment.purchase, equipment.repayment.apr)
+            //         newEquipment.costs = {};
+            //         const getcost = this.gettransformedcostsbyequiment(equipment);
+            //         let filteredCosts = [];
 
-        //                 cost.purchasedate = this.formatDateIn(cost.purchasedate)
-        //                 filteredCosts.push(cost)
-
-        //             }
-        //         })
-
-        //         filteredCosts.sort((a, b) => {
-        //             return this.sorttimes(a.purchasedate, b.purchasedate)
-        //         })
-        //         let equipmentcosts = 0;
-
-        //         filteredCosts.map(addCost => {
-        //             equipmentcosts += Number(addCost.amount)
-        //         })
+            //         getcost.map(cost => {
 
 
+            //             if (this.checkYear(cost.purchasedate, year)) {
 
-        //         newEquipment.costs.cost = filteredCosts;
-        //         newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
+            //                 driver.totalcosts += Number(Number(cost.amount).toFixed(2))
 
-        //         newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid, year)).toFixed(2))
+            //                 cost.purchasedate = this.formatDateIn(cost.purchasedate)
+            //                 filteredCosts.push(cost)
 
-        //         driver.equipmentlist.equipment.push(newEquipment)
-        //     })
+            //             }
+            //         })
+
+            //         filteredCosts.sort((a, b) => {
+            //             return this.sorttimes(a.purchasedate, b.purchasedate)
+            //         })
+            //         let equipmentcosts = 0;
+
+            //         filteredCosts.map(addCost => {
+            //             equipmentcosts += Number(addCost.amount)
+            //         })
 
 
 
-        // }
+            //         newEquipment.costs.cost = filteredCosts;
+            //         newEquipment.totalcost = this.numberWithCommas(Number(equipmentcosts).toFixed(2));
+
+            //         newEquipment.reimbursement = this.numberWithCommas(Number(this.getReimbursementByEquipment(myuser, equipment.equipmentid, year)).toFixed(2))
+
+            //         driver.equipmentlist.equipment.push(newEquipment)
+            //     })
+
+
+
+        }
         // driver.totalnet = this.numberWithCommas(Number(Number(driver.totalearnings - driver.totalcosts).toFixed(2)));
         // driver.totalearnings = this.numberWithCommas(Number(driver.totalearnings).toFixed(2))
         // driver.totalcosts = this.numberWithCommas(Number(driver.totalcosts).toFixed(2))
