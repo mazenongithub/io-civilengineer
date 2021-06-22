@@ -927,9 +927,9 @@ class AppBasedDriver {
 
       
 
-                     myuser.driver.shifts.sort((a, b) => {
-                         return this.sorttimes(a.timein, b.timein)
-                     })
+                    // myuser.driver.shifts.sort((a, b) => {
+                                 //      return this.sorttimes(a.timein, b.timein)
+                                 //  })
 
                      myuser.driver.shifts.map(shift => {
 
