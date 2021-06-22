@@ -437,13 +437,13 @@ module.exports = app => {
 
         mydriver.findOne({ driverid: driverid }, function(err, succ) {
             if (succ) {
-                succ = Object.create(succ)
-                console.log(succ)
+
                 try {
 
                     if (succ.driverid) {
                         const appbaseddriver = new AppBasedDriver();
-                        console.log("succ", succ.driver)
+                        console.log("success", succ)
+
                         const json = appbaseddriver.annualReport(succ, year)
                         const response = js2xmlparser.parse("driver", json)
                         res.set('Content-Type', 'text/xml');
