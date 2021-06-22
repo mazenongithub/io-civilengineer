@@ -918,13 +918,13 @@ class AppBasedDriver {
 
         }
 
-        // if (myuser.driver) {
-        //     driver.shifts = {};
-        //     driver.shifts.shift = [];
+         if (myuser.driver) {
+            driver.shifts = {};
+            driver.shifts.shift = [];
 
-        //     myuser.driver.shifts.sort((a, b) => {
-        //         return this.sorttimes(a.timein, b.timein)
-        //     })
+            myuser.driver.shifts.sort((a, b) => {
+                return this.sorttimes(a.timein, b.timein)
+            })
 
         //     myuser.driver.shifts.map(shift => {
 
@@ -936,7 +936,7 @@ class AppBasedDriver {
 
         //     })
 
-        // }
+         }
 
 
         if (myuser.equipment) {
