@@ -920,8 +920,8 @@ class AppBasedDriver {
 
         if (myuser.driver) {
 
-            driver.shifts = {};
-            driver.shifts.shift = [];
+            // driver.shifts = {};
+            // driver.shifts.shift = [];
 
             if (myuser.driver.shifts) {
 
