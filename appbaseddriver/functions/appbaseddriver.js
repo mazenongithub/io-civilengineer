@@ -923,23 +923,23 @@ class AppBasedDriver {
             // driver.shifts = {};
             // driver.shifts.shift = [];
 
-            if (myuser.driver.shifts) {
+            // if (myuser.driver.shifts) {
 
-                // myuser.driver.shifts.sort((a, b) => {
-                //     return this.sorttimes(a.timein, b.timein)
-                // })
+            // myuser.driver.shifts.sort((a, b) => {
+            //     return this.sorttimes(a.timein, b.timein)
+            // })
 
-                myuser.driver.shifts.map(shift => {
+            myuser.driver.shifts.map(shift => {
 
-                    if (this.checkYear(shift.timein, year)) {
-                        driver.totalearnings += Number(Number(shift.earnings).toFixed(2))
-                        const newShift = createShift(this.formatTimeIn(shift.timein), this.formatTimeIn(shift.timeout), this.calculatetotalhours(shift.timeout, shift.timein), shift.deliveries, Number(shift.earnings).toFixed(2), shift.miles)
-                        driver.shifts.shift.push(newShift)
-                    }
+                if (this.checkYear(shift.timein, year)) {
+                    driver.totalearnings += Number(Number(shift.earnings).toFixed(2))
+                    const newShift = createShift(this.formatTimeIn(shift.timein), this.formatTimeIn(shift.timeout), this.calculatetotalhours(shift.timeout, shift.timein), shift.deliveries, Number(shift.earnings).toFixed(2), shift.miles)
+                    driver.shifts.shift.push(newShift)
+                }
 
-                })
+            })
 
-            }
+            //    }
 
         }
 
