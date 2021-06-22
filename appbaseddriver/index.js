@@ -207,7 +207,7 @@ module.exports = app => {
 
     })
 
-    app.post('/appbaseddriver/:driverid/savedriver', checkuser, (req, res) => {
+    app.post('/appbaseddriver/:driverid/savedriver', (req, res) => {
 
 
         const myuser = req.body.myuser;
@@ -359,7 +359,7 @@ module.exports = app => {
 
 
 
-    app.post('/appbaseddriver/uploadreceipt', checkuser, uploadReceipt, (req, res) => {
+    app.post('/appbaseddriver/uploadreceipt', uploadReceipt, (req, res) => {
 
         let myuser = req.body.myuser;
 
@@ -475,13 +475,13 @@ module.exports = app => {
 
 
 
-    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
+    app.get('/appbaseddriver/checkuser', (req, res) => {
 
 
-        const driverid = req.session.appbaseddriver;
+        // const driverid = req.session.appbaseddriver;
 
 
-        // const driverid = '5feb649d48fe012e2fc63bd4';
+        const driverid = '60b7c81b2e541b148deeaadb';
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {

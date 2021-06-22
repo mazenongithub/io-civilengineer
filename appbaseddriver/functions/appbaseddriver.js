@@ -874,6 +874,8 @@ class AppBasedDriver {
 
     annualReport(myuser, year) {
 
+        console.log(myuser, year)
+
 
         const createShift = (timein, timeout, totalhours, deliveries, earnings, miles, frequency) => {
 
