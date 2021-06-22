@@ -874,7 +874,7 @@ class AppBasedDriver {
 
     annualReport(myuser, year) {
 
-        console.log(myuser, year)
+        console.log(myuser.driver, year)
 
 
         const createShift = (timein, timeout, totalhours, deliveries, earnings, miles, frequency) => {
@@ -903,7 +903,7 @@ class AppBasedDriver {
             })
         }
 
-        myuser = Object.create(myuser)
+        //  myuser = Object.create(myuser)
 
         let driver = {
 
