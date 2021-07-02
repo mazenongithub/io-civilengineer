@@ -475,13 +475,12 @@ module.exports = app => {
 
 
 
-    app.get('/appbaseddriver/checkuser', (req, res) => {
+    app.get('/appbaseddriver/checkuser', checkuser, (req, res) => {
 
 
-        // const driverid = req.session.appbaseddriver;
+        const driverid = req.session.appbaseddriver;
 
 
-        const driverid = '60b7c81b2e541b148deeaadb';
 
         mydriver.findById({ _id: driverid }, function(err, succ) {
             if (succ) {
