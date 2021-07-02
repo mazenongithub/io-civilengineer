@@ -87,13 +87,53 @@ class AppBasedDriver {
 
     getGoogleUser(mydriver, google) {
 
-        mydriver.find({ google: { $exists: true } }, (err, succ) => {
+        return new Promise((resolve, reject) => {
 
-                console.log(succ)
-            }
+            let getdriver = false;
+
+            mydriver.find({ google: { $exists: true } }, (err, alldrivers) => {
+                let getdriver = false;
+
+                if (!err) {
+
+                    alldrivers.map(driver => {
 
 
-        )
+                        if (bcrypt.compareSync(google, driver.google)) {
+
+                            getdriver = driver;
+
+                        }
+
+
+
+                    })
+
+
+                    if (getdriver) {
+                        resolve(getdriver)
+                    }
+
+                    else {
+
+
+                        reject(new Error('Invalid Login'))
+                    }
+
+
+                }
+                else {
+                    reject(new Error('No Apple Users found'))
+                }
+
+
+            })
+
+
+
+
+
+        }) // end of promise
 
 
     }
